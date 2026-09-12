@@ -74,37 +74,76 @@ form.addEventListener("submit", (e) => {
 })();
 
 // Fotos con click para abrir a tamaño real: galería y miniaturas del FAQ.
+// Cada grupo (galería, fotos de vestimenta) navega entre sí con flechas,
+// sin necesidad de cerrar el popup.
 (function initLightbox() {
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightbox-img");
   const closeBtn = document.getElementById("lightbox-close");
-  const items = document.querySelectorAll(".gallery-strip__item, .faq__photo");
-  if (!lightbox || !lightboxImg || !closeBtn || !items.length) return;
+  const prevBtn = document.getElementById("lightbox-prev");
+  const nextBtn = document.getElementById("lightbox-next");
+  const groups = [
+    document.querySelectorAll(".gallery-strip__item"),
+    document.querySelectorAll(".faq__photo"),
+  ].filter((group) => group.length);
+  if (!lightbox || !lightboxImg || !closeBtn || !groups.length) return;
 
-  function open(src, alt) {
-    lightboxImg.src = src;
-    lightboxImg.alt = alt || "";
+  let currentGroup = null;
+  let currentIndex = 0;
+
+  function show(index) {
+    currentIndex = (index + currentGroup.length) % currentGroup.length;
+    const img = currentGroup[currentIndex].querySelector("img");
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt || "";
+    const hasMultiple = currentGroup.length > 1;
+    prevBtn.hidden = !hasMultiple;
+    nextBtn.hidden = !hasMultiple;
+  }
+
+  function open(group, index) {
+    currentGroup = group;
+    show(index);
     lightbox.hidden = false;
   }
 
   function close() {
     lightbox.hidden = true;
     lightboxImg.src = "";
+    currentGroup = null;
   }
 
-  items.forEach((item) => {
-    item.addEventListener("click", () => {
-      const img = item.querySelector("img");
-      open(img.src, img.alt);
+  groups.forEach((group) => {
+    group.forEach((item, index) => {
+      item.addEventListener("click", () => open(group, index));
     });
   });
 
+  prevBtn.addEventListener("click", () => show(currentIndex - 1));
+  nextBtn.addEventListener("click", () => show(currentIndex + 1));
   closeBtn.addEventListener("click", close);
   lightbox.addEventListener("click", (e) => {
     if (e.target === lightbox) close();
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !lightbox.hidden) close();
+    if (lightbox.hidden) return;
+    if (e.key === "Escape") close();
+    if (e.key === "ArrowLeft") show(currentIndex - 1);
+    if (e.key === "ArrowRight") show(currentIndex + 1);
+  });
+
+  // Deslizar con el dedo en mobile para pasar de foto sin cerrar el popup.
+  let touchStartX = null;
+  lightbox.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+  });
+  lightbox.addEventListener("touchend", (e) => {
+    if (touchStartX === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX;
+    touchStartX = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta < 0) show(currentIndex + 1);
+    else show(currentIndex - 1);
   });
 })();
 
