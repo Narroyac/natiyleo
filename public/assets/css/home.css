@@ -86,7 +86,12 @@ main > * + * { margin-top: var(--section-gap); }
    donde el layout de dos columnas ya tiene espacio de sobra. */
 @media (min-width: 900px) {
   .section--viewport {
-    height: 100dvh;
+    /* La sección ya recibe un margin-top de var(--section-gap) de la regla
+       general (el gap con la sección anterior), y la sección siguiente
+       aporta su propio margin-top como gap posterior. Para que el conjunto
+       gap+tarjeta+gap sume exactamente 100dvh (sin sumar un gap extra),
+       la tarjeta descuenta esos dos gaps de su propia altura. */
+    height: calc(100dvh - 2 * var(--section-gap));
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -183,7 +188,7 @@ main > * + * { margin-top: var(--section-gap); }
   border-radius: var(--radius-passport);
   overflow: hidden;
   min-height: 0;
-  aspect-ratio: 6 / 5;
+  aspect-ratio: 4 / 5;
 }
 .hero__photo img { width: 100%; height: 100%; object-fit: cover; }
 .hero__badge {
