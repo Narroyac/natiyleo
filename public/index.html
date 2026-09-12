@@ -64,8 +64,8 @@
       <div class="section__grid">
         <div class="section__text">
           <p class="home-tag">La Velada</p>
-          <h2 class="home-heading velada-intro">Queremos celebrar este amor con las personas que más queremos. Sin protocolos, sin afanes.</h2>
-          <h2 class="home-heading velada-intro">Un día para compartir, reír sin prisa y estar juntos con la gente que realmente importa.</h2>
+          <h2 class="home-heading velada-intro">Queremos celebrar este amor con las personas que más queremos. Sin protocolos, sin afanes y sin sentir que hay que cumplir con nada más que disfrutar.</h2>
+          <h2 class="home-heading velada-intro">Queremos que sea un día para compartir, reír sin prisa, conversar, abrazarnos, brindar y guardar recuerdos bonitos juntos. Un día para estar presentes, disfrutar cada momento y celebrar rodeados de la gente que ha sido parte de nuestra historia y que hace nuestra vida más especial.</h2>
         </div>
 
         <ol class="timeline">
@@ -160,7 +160,7 @@
       </div>
     </section>
 
-    <section class="section" id="info">
+    <section class="section section--viewport" id="info">
       <div class="info-grid">
         <div class="info-card">
           <p class="home-tag info-card__tag">Info</p>
@@ -201,23 +201,27 @@
       </div>
     </section>
 
-    <section class="gallery-grid">
-      <div class="gallery-grid__row">
-        <img class="gallery-grid__item" style="flex-grow: 45;" src="./assets/img/home/gallery-1.jpg" alt="Nati y Leo" loading="lazy" />
-        <img class="gallery-grid__item" style="flex-grow: 55;" src="./assets/img/home/gallery-2.jpg" alt="Nati y Leo" loading="lazy" />
-      </div>
-      <div class="gallery-grid__row gallery-grid__row--short">
-        <img class="gallery-grid__item" style="flex-grow: 25;" src="./assets/img/home/gallery-3.jpg" alt="Nati y Leo" loading="lazy" />
-        <img class="gallery-grid__item" style="flex-grow: 29;" src="./assets/img/home/gallery-4.jpg" alt="Nati y Leo" loading="lazy" />
-        <img class="gallery-grid__item" style="flex-grow: 46;" src="./assets/img/home/gallery-5.jpg" alt="Nati y Leo" loading="lazy" />
-      </div>
+    <section class="gallery-masonry" id="gallery">
+      <button type="button" class="gallery-masonry__item"><img src="./assets/img/home/gallery-1.jpg" alt="Nati y Leo" loading="lazy" /></button>
+      <button type="button" class="gallery-masonry__item"><img src="./assets/img/home/gallery-2.jpg" alt="Nati y Leo" loading="lazy" /></button>
+      <button type="button" class="gallery-masonry__item"><img src="./assets/img/home/gallery-3.jpg" alt="Nati y Leo" loading="lazy" /></button>
+      <button type="button" class="gallery-masonry__item"><img src="./assets/img/home/gallery-4.jpg" alt="Nati y Leo" loading="lazy" /></button>
+      <button type="button" class="gallery-masonry__item"><img src="./assets/img/home/gallery-5.jpg" alt="Nati y Leo" loading="lazy" /></button>
     </section>
+
+    <div class="lightbox" id="lightbox" hidden>
+      <button type="button" class="lightbox__close" id="lightbox-close" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <img class="lightbox__img" id="lightbox-img" src="" alt="" />
+    </div>
 
     <section class="section rsvp-section" id="rsvp">
       <div class="rsvp-card">
-        <span class="rsvp-card__badge">Confirma antes del 1 de nov.</span>
-        <h2 class="rsvp-card__heading">¿Ya tienes tu código? Ingrésalo para confirmar tu asistencia.</h2>
-        <p class="rsvp-card__meta">04.Diciembre.2026, 4:00pm<br>@Club el Prado - La Ceja</p>
+        <span class="rsvp-card__badge">Confirma tu asistencia antes del 1 de noviembre.</span>
+        <h2 class="rsvp-card__heading">¿Ya tienes tu código?</h2>
+        <p class="rsvp-card__body">Ingresa tu código de invitación y cuéntanos si podrás acompañarnos en este día tan especial.</p>
+        <p class="rsvp-card__meta">04 &middot; Diciembre &middot; 2026<br>4:00 p. m.<br>@Club El Prado &middot; La Ceja</p>
 
         <form class="rsvp__form" id="rsvp-form">
           <div class="field">

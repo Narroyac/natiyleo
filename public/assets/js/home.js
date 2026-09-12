@@ -72,3 +72,38 @@ form.addEventListener("submit", (e) => {
     if (!header.contains(e.target)) close();
   });
 })();
+
+// Galería tipo Pinterest: click en una foto la abre a tamaño real.
+(function initLightbox() {
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+  const closeBtn = document.getElementById("lightbox-close");
+  const items = document.querySelectorAll(".gallery-masonry__item");
+  if (!lightbox || !lightboxImg || !closeBtn || !items.length) return;
+
+  function open(src, alt) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || "";
+    lightbox.hidden = false;
+  }
+
+  function close() {
+    lightbox.hidden = true;
+    lightboxImg.src = "";
+  }
+
+  items.forEach((item) => {
+    item.addEventListener("click", () => {
+      const img = item.querySelector("img");
+      open(img.src, img.alt);
+    });
+  });
+
+  closeBtn.addEventListener("click", close);
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) close();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !lightbox.hidden) close();
+  });
+})();
