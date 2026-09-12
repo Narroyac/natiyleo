@@ -144,28 +144,19 @@ main > * + * { margin-top: var(--section-gap); }
 .rotating-badge__ring text, .rotating-badge__ring textPath {
   fill: var(--cream);
   font-family: var(--font-sans);
-  font-size: 7.2px;
+  font-size: 8.5px;
   letter-spacing: 0.05em;
 }
 .rotating-badge__ring path[id] { fill: none; }
-.rotating-badge::before {
-  content: "";
+.rotating-badge__img {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 50%;
-  background: var(--navy);
   z-index: -1;
 }
-.rotating-badge__icon {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--cream);
-  pointer-events: none;
-}
-.rotating-badge__icon svg { width: 30px; height: 30px; }
 @keyframes rotating-badge-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -369,7 +360,7 @@ main > * + * { margin-top: var(--section-gap); }
 .location-card__photo { position: relative; min-height: 260px; }
 .location-card__photo img { width: 100%; height: 100%; object-fit: cover; }
 .location-card__badge { position: absolute; left: var(--space-4); bottom: var(--space-4); width: 76px; height: 76px; }
-.location-card__badge .rotating-badge__ring text, .location-card__badge .rotating-badge__ring textPath { font-size: 6.4px; }
+.location-card__badge .rotating-badge__ring text, .location-card__badge .rotating-badge__ring textPath { font-size: 7.5px; }
 
 @media (min-width: 900px) {
   .location-card { grid-template-columns: 1fr 1fr; height: 100%; }
@@ -396,7 +387,7 @@ main > * + * { margin-top: var(--section-gap); }
 .info-card__tag { color: var(--cream); }
 .info-card__title { color: var(--cream); font-size: 32px; margin: 0; }
 .info-card__icon { color: var(--cream); opacity: 0.9; }
-.info-card__icon svg { width: 120px; height: 120px; }
+.info-card__icon img { width: 100px; height: auto; }
 
 .faq__item {
   padding: var(--space-4) 0;
