@@ -72,7 +72,27 @@ body { overflow-x: hidden; }
 }
 .site-header__pill--cta { background: var(--navy); color: var(--cream); }
 
-.section { padding: var(--section-gap) var(--page-inset); }
+.section { padding: 0 var(--page-inset); }
+
+/* Un solo espacio entre bloques: margin-top en cada hijo de <main> salvo
+   el primero (el hero, que ya ocupa su propio 100dvh), más el footer. Antes
+   cada sección tenía padding arriba Y abajo (120px + 120px = 240px entre
+   dos secciones); con un solo margin-top por borde queda un único 120px. */
+main > * + * { margin-top: var(--section-gap); }
+.site-footer { margin-top: var(--section-gap); }
+
+/* En mobile el contenido de Ubicación varía en largo y una altura fija
+   podría cortarlo, así que el alto de viewport solo aplica desde 900px,
+   donde el layout de dos columnas ya tiene espacio de sobra. */
+@media (min-width: 900px) {
+  .section--viewport {
+    height: 100dvh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+  .section--viewport > * { flex: 1; min-height: 0; }
+}
 
 /* ---------------------------------------------------------------------- */
 /* Tipografía compartida del home                                         */
@@ -176,8 +196,17 @@ body { overflow-x: hidden; }
   text-align: center;
   min-height: 0;
 }
-.hero__center { align-self: center; }
-.hero__center .home-tag { text-align: center; }
+/* El bloque (eyebrow + nombres) se centra como conjunto en la columna,
+   pero puertas adentro todo queda alineado a la izquierda entre sí: el
+   inicio de "Nati" en la línea 1 coincide con el inicio de "¡Nos vamos a
+   casar!" y con el punto que abre la línea 2 ("• & Leo"). */
+.hero__center {
+  align-self: center;
+  width: fit-content;
+  margin: 0 auto;
+  text-align: left;
+}
+.hero__center .home-tag { text-align: left; }
 .hero__names {
   font-family: var(--font-serif);
   font-size: 56px;
@@ -314,8 +343,8 @@ body { overflow-x: hidden; }
 .location-card__badge .rotating-badge__ring text, .location-card__badge .rotating-badge__ring textPath { font-size: 6.4px; }
 
 @media (min-width: 900px) {
-  .location-card { grid-template-columns: 1fr 1fr; }
-  .location-card__text { padding: var(--space-7); display: flex; flex-direction: column; justify-content: center; }
+  .location-card { grid-template-columns: 1fr 1fr; height: 100%; }
+  .location-card__text { padding: var(--space-7); display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
   .location-heading { font-size: 32px; }
 }
 
@@ -356,7 +385,7 @@ body { overflow-x: hidden; }
 /* Galería de fotos — proporciones reales (fila 1: 45/55, fila 2: 25/29/46) */
 /* ---------------------------------------------------------------------- */
 .gallery-grid {
-  padding: 0 var(--page-inset) var(--section-gap);
+  padding: 0 var(--page-inset);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -389,8 +418,6 @@ body { overflow-x: hidden; }
   background: #ebe6da;
   border-radius: 12px;
   padding: 32px 24px;
-  max-width: 800px;
-  margin: 0 auto;
 }
 .rsvp-card__badge {
   display: inline-block;
