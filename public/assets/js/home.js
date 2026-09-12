@@ -73,12 +73,12 @@ form.addEventListener("submit", (e) => {
   });
 })();
 
-// Galería en línea horizontal: click en una foto la abre a tamaño real.
+// Fotos con click para abrir a tamaño real: galería y miniaturas del FAQ.
 (function initLightbox() {
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightbox-img");
   const closeBtn = document.getElementById("lightbox-close");
-  const items = document.querySelectorAll(".gallery-strip__item");
+  const items = document.querySelectorAll(".gallery-strip__item, .faq__photo");
   if (!lightbox || !lightboxImg || !closeBtn || !items.length) return;
 
   function open(src, alt) {
