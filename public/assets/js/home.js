@@ -73,12 +73,12 @@ form.addEventListener("submit", (e) => {
   });
 })();
 
-// Galería tipo Pinterest: click en una foto la abre a tamaño real.
+// Galería en línea horizontal: click en una foto la abre a tamaño real.
 (function initLightbox() {
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightbox-img");
   const closeBtn = document.getElementById("lightbox-close");
-  const items = document.querySelectorAll(".gallery-masonry__item");
+  const items = document.querySelectorAll(".gallery-strip__item");
   if (!lightbox || !lightboxImg || !closeBtn || !items.length) return;
 
   function open(src, alt) {

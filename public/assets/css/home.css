@@ -413,30 +413,31 @@ main > * + * { margin-top: var(--section-gap); }
 }
 
 /* ---------------------------------------------------------------------- */
-/* Galería de fotos — estilo Pinterest: columnas de alto variable, cada    */
-/* foto conserva su proporción real (vertical u horizontal), sin recortar. */
+/* Galería de fotos — una sola línea con scroll horizontal, cada foto      */
+/* conserva su proporción real (se define la altura, el ancho es libre).  */
 /* ---------------------------------------------------------------------- */
-.gallery-masonry {
+.gallery-strip {
+  display: flex;
+  gap: var(--space-3);
   padding: 0 var(--page-inset);
-  column-count: 2;
-  column-gap: var(--space-3);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
-.gallery-masonry__item {
-  display: block;
-  width: 100%;
-  margin: 0 0 var(--space-3);
+.gallery-strip__item {
+  flex: 0 0 auto;
+  height: 260px;
+  margin: 0;
   padding: 0;
   border: none;
   background: none;
   border-radius: 4px;
   overflow: hidden;
-  break-inside: avoid;
   cursor: pointer;
 }
-.gallery-masonry__item img { display: block; width: 100%; height: auto; }
+.gallery-strip__item img { display: block; width: auto; height: 100%; }
 
-@media (min-width: 600px) {
-  .gallery-masonry { column-count: 3; }
+@media (min-width: 900px) {
+  .gallery-strip__item { height: 420px; }
 }
 
 /* Lightbox: click en una foto de la galería la muestra a tamaño real,     */
