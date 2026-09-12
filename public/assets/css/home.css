@@ -505,8 +505,10 @@ main > * + * { margin-top: var(--section-gap); }
   margin: 0 0 var(--space-3);
 }
 .rsvp-card__body { font-family: var(--font-sans); font-size: 16px; line-height: 1.6; color: var(--navy); margin: 0 0 var(--space-4); }
-.rsvp-card__meta { font-family: var(--font-sans); font-size: 16px; line-height: 1.6; color: var(--navy); margin-bottom: var(--space-5); }
-.rsvp__form input { max-width: 240px; }
+.rsvp-card__meta { font-family: var(--font-sans); font-size: 16px; line-height: 1.6; color: var(--navy); margin: var(--space-5) 0 0; }
+.rsvp__form-row { display: flex; align-items: center; gap: var(--space-3); }
+.rsvp__form-row .field { flex: 1 1 auto; min-width: 0; max-width: 240px; margin-bottom: 0; }
+.rsvp__form-row .btn { flex: none; }
 .rsvp__message { min-height: 20px; font-family: var(--font-sans); font-size: 14px; color: var(--navy); margin: var(--space-3) 0 0; }
 .rsvp__message.error { color: var(--danger); }
 
