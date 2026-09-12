@@ -14,7 +14,7 @@
   :root { --page-inset: 32px; --section-gap: 120px; }
 }
 
-body { overflow-x: hidden; }
+html, body { overflow-x: hidden; max-width: 100%; }
 
 /* ---------------------------------------------------------------------- */
 /* Header — solo el botón de menú, fijo sobre todo el sitio (no hay logo   */
@@ -115,7 +115,7 @@ main > * + * { margin-top: var(--section-gap); }
   color: var(--navy);
   margin: 0 0 var(--space-4);
 }
-.velada-intro { font-size: 32px; }
+.velada-intro { font-size: 26px; }
 .home-copy {
   font-family: var(--font-sans);
   font-size: 16px;
@@ -326,6 +326,7 @@ main > * + * { margin-top: var(--section-gap); }
 
 @media (min-width: 900px) {
   .section__grid { grid-template-columns: 1fr 1fr; align-items: start; }
+  .velada-intro { font-size: 32px; }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -339,7 +340,7 @@ main > * + * { margin-top: var(--section-gap); }
   grid-template-columns: 1fr;
 }
 .location-card__text { padding: var(--space-6); }
-.location-heading { font-size: 40px; }
+.location-heading { font-size: 32px; }
 .location-block { margin-top: var(--space-5); }
 .location-block__tag {
   display: flex;
@@ -380,7 +381,7 @@ main > * + * { margin-top: var(--section-gap); }
   gap: var(--space-3);
 }
 .info-card__tag { color: var(--cream); }
-.info-card__title { color: var(--cream); font-size: 40px; margin: 0; }
+.info-card__title { color: var(--cream); font-size: 32px; margin: 0; }
 .info-card__icon { color: var(--cream); opacity: 0.9; }
 .info-card__icon svg { width: 120px; height: 120px; }
 
@@ -394,6 +395,7 @@ main > * + * { margin-top: var(--section-gap); }
 
 @media (min-width: 900px) {
   .info-grid { grid-template-columns: 320px 1fr; gap: var(--space-7); }
+  .info-card__title { font-size: 40px; }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -439,7 +441,7 @@ main > * + * { margin-top: var(--section-gap); }
   background: var(--navy);
   color: var(--cream);
   font-family: var(--font-serif);
-  font-size: 20px;
+  font-size: 16px;
   letter-spacing: 0.3px;
   padding: 6px 16px;
   border-radius: 999px;
@@ -466,6 +468,7 @@ main > * + * { margin-top: var(--section-gap); }
 
 @media (min-width: 900px) {
   .rsvp-card { padding: 40px 40px 48px; }
+  .rsvp-card__badge { font-size: 20px; }
 }
 
 /* ---------------------------------------------------------------------- */
