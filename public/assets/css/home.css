@@ -1,18 +1,25 @@
 /* Home — Nati & Leo
-   Réplica del sitio de Framer (https://sienna-level-076451.framer.app/):
-   mismo layout de escritorio (foto a pantalla completa a la izquierda del
-   hero, tarjeta de ubicación con foto real, tarjeta oscura de FAQ, grid de
-   fotos), usando los tokens de marca ya existentes en tokens.css/base.css.
-   Mobile-first: todo se apila en una columna y el layout de dos columnas
-   entra desde 900px. */
+   Reconstrucción del sitio de Framer (https://sienna-level-076451.framer.app/)
+   a partir de los valores reales verificados con getComputedStyle sobre el
+   sitio en vivo (no de los valores de respaldo del HTML exportado, que en
+   varios casos NO son los que realmente se ven — ver notas abajo).
+
+   Hallazgos clave verificados contra el sitio real:
+   - Casi todo el texto es navy sólido (#0d1f4e), NO el gris navy-soft.
+   - Los "tags" cortos (eyebrows, preguntas de FAQ, nombres de hitos) son
+     SERIF 20px navy — nunca mayúsculas ni con letter-spacing.
+   - Los títulos largos (intro de La Velada, encabezado de Ubicación, RSVP)
+     son SERIF 26-32px navy, no texto de párrafo pequeño.
+   - El copy/cuerpo (respuestas de FAQ, dirección, parqueadero) es SANS 16px
+     navy — no gris.
+   - El nombre del hero es SERIF 140px (¡no 56-84px!).
+   - Los botones y el sello circular SÍ son navy con texto crema — el rosa
+     rgb(255,204,246) que aparece en el HTML exportado es solo un valor de
+     respaldo de la variable CSS que nunca se usa en el sitio publicado
+     (verificado: el color real resuelto es navy). No se usa rosa en ningún
+     lado del sitio real. */
 
 body { overflow-x: hidden; }
-
-/* Rosa pastel: acento secundario tomado del sitio de Framer (rgb(255,204,246)),
-   usado solo en el home para el CTA del menú y el sello circular del hero —
-   no forma parte de la paleta navy/crema de tokens.css porque no se usa en
-   el resto del sitio (pasaporte/admin). */
-:root { --pink: #ffccf6; }
 
 .site-header {
   position: sticky;
@@ -35,6 +42,7 @@ body { overflow-x: hidden; }
   font-family: var(--font-serif);
   font-size: 18px;
   text-decoration: none;
+  color: var(--navy);
 }
 .site-header__toggle {
   width: 40px;
@@ -73,6 +81,7 @@ body { overflow-x: hidden; }
 .site-header__pill {
   text-decoration: none;
   color: var(--navy-ink);
+  font-family: var(--font-sans);
   font-size: 14px;
   padding: 10px 20px;
   border-radius: 999px;
@@ -80,9 +89,40 @@ body { overflow-x: hidden; }
   box-shadow: var(--shadow-soft);
   white-space: nowrap;
 }
-.site-header__pill--cta { background: var(--pink); color: var(--navy-ink); }
+.site-header__pill--cta { background: var(--navy); color: var(--cream); }
 
 .section { padding: var(--space-7) var(--space-5); max-width: 1200px; margin: 0 auto; }
+
+/* ---------------------------------------------------------------------- */
+/* Tipografía compartida del home                                         */
+/* ---------------------------------------------------------------------- */
+
+/* "Tag": eyebrows, nombres de hitos, preguntas de FAQ — serif 20px navy,
+   texto normal (nunca mayúsculas/tracking, a diferencia de .eyebrow del
+   resto del sitio, que sí es un caption pequeño en mayúsculas). */
+.home-tag {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--navy);
+  margin: 0 0 var(--space-2);
+}
+/* Título grande: intro de La Velada, encabezado de Ubicación, RSVP. */
+.home-heading {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  line-height: 1.2;
+  color: var(--navy);
+  margin: 0 0 var(--space-3);
+}
+/* Copy de cuerpo: respuestas de FAQ, dirección, parqueadero, links. */
+.home-copy {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--navy);
+  margin: 0 0 var(--space-2);
+}
+.home-link { text-decoration: underline; display: inline-block; }
 
 /* ---------------------------------------------------------------------- */
 /* Hero */
@@ -97,15 +137,18 @@ body { overflow-x: hidden; }
   padding: var(--space-7) var(--space-5) var(--space-6);
   text-align: center;
 }
-.hero .eyebrow { margin-bottom: var(--space-3); }
+.hero__content .home-tag { text-align: center; }
 .hero__names {
-  font-size: 56px;
+  font-family: var(--font-serif);
+  font-size: 64px;
   line-height: 1.15;
-  margin-bottom: var(--space-4);
+  color: var(--navy);
+  margin: 0 0 var(--space-4);
+  letter-spacing: -0.02em;
 }
 .hero__names-line { display: block; }
-.hero__dot { font-size: 0.45em; color: var(--navy-soft); }
-.hero__date { color: var(--navy-soft); margin-bottom: var(--space-5); }
+.hero__dot { font-size: 0.45em; color: var(--navy); }
+.hero__date { font-family: var(--font-serif); font-size: 20px; color: var(--navy); margin-bottom: var(--space-5); }
 .hero__cta { text-decoration: none; }
 
 .hero__photo {
@@ -121,13 +164,18 @@ body { overflow-x: hidden; }
   position: absolute;
   top: var(--space-3);
   left: var(--space-3);
-  background: var(--pink);
-  color: var(--navy-ink);
+  background: var(--navy);
+  color: var(--cream);
+  font-family: var(--font-sans);
   font-size: 11px;
   letter-spacing: 0.5px;
   padding: 8px 12px;
   border-radius: 999px;
   box-shadow: var(--shadow-floating);
+}
+
+@media (min-width: 600px) {
+  .hero__names { font-size: 96px; }
 }
 
 @media (min-width: 900px) {
@@ -139,7 +187,8 @@ body { overflow-x: hidden; }
   }
   .hero__photo { margin: 0; border-radius: 0; aspect-ratio: auto; }
   .hero__content { text-align: left; padding: var(--space-7) var(--space-7); display: flex; flex-direction: column; justify-content: center; }
-  .hero__names { font-size: 84px; }
+  .hero__content .home-tag { text-align: left; }
+  .hero__names { font-size: 140px; }
   .hero__cta { align-self: flex-start; }
 }
 
@@ -147,8 +196,6 @@ body { overflow-x: hidden; }
 /* La Velada */
 /* ---------------------------------------------------------------------- */
 .section__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
-.section h2 { font-size: 30px; }
-.section__text p { color: var(--navy-ink); }
 
 .timeline { list-style: none; margin: 0; padding: 0; position: relative; }
 .timeline::before {
@@ -158,8 +205,8 @@ body { overflow-x: hidden; }
   top: 8px;
   bottom: 8px;
   width: 1px;
-  background: var(--navy-soft);
-  opacity: 0.35;
+  background: var(--navy);
+  opacity: 0.25;
 }
 .timeline__item {
   padding: 0 0 var(--space-6) var(--space-6);
@@ -181,13 +228,14 @@ body { overflow-x: hidden; }
 .timeline__time {
   display: inline-block;
   background: var(--navy);
-  color: var(--white);
-  font-size: 12px;
-  padding: 3px 10px;
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  padding: 4px 12px;
   border-radius: 999px;
 }
-.timeline__label { font-family: var(--font-serif); font-size: 22px; margin: 0; }
-.timeline__sub { color: var(--navy-soft); font-size: 14px; margin: var(--space-2) 0 0; }
+.timeline__label { font-family: var(--font-serif); font-size: 20px; color: var(--navy); margin: 0; }
+.timeline__sub { font-family: var(--font-serif); font-size: 16px; color: var(--navy); margin: var(--space-2) 0 0; }
 .timeline__illustration {
   margin-top: var(--space-4);
   width: 168px;
@@ -217,22 +265,45 @@ body { overflow-x: hidden; }
   grid-template-columns: 1fr;
 }
 .location-card__text { padding: var(--space-6); }
-.location-card__text h2 { font-size: 24px; }
+.location-heading { font-size: 26px; }
 .location-block { margin-top: var(--space-5); }
-.location-block h3 { font-size: 17px; margin-bottom: var(--space-2); }
-.location-block__label {
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--navy-soft);
-  margin-bottom: 4px;
+.location-block__tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--navy);
+  margin: 0 0 var(--space-2);
+  font-weight: 400;
 }
-.location-card__photo { min-height: 260px; }
+.location-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--navy); flex: none; }
+.location-card__photo { position: relative; min-height: 260px; }
 .location-card__photo img { width: 100%; height: 100%; object-fit: cover; }
+.location-card__badge {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 8px;
+  letter-spacing: 0.3px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  box-shadow: var(--shadow-floating);
+}
 
 @media (min-width: 900px) {
   .location-card { grid-template-columns: 1fr 1fr; }
   .location-card__text { padding: var(--space-7); display: flex; flex-direction: column; justify-content: center; }
+  .location-heading { font-size: 32px; }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -241,7 +312,7 @@ body { overflow-x: hidden; }
 .info-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
 .info-card {
   background: var(--navy);
-  color: var(--white);
+  color: var(--cream);
   border-radius: var(--radius-passport);
   padding: var(--space-6);
   text-align: center;
@@ -251,83 +322,102 @@ body { overflow-x: hidden; }
   justify-content: center;
   gap: var(--space-3);
 }
-.info-card__eyebrow { color: rgba(255, 255, 255, 0.6); margin: 0; }
-.info-card__title { color: var(--white); font-size: 26px; margin: 0; }
-.info-card__icon { color: var(--white); opacity: 0.85; }
-.info-card__icon svg { width: 56px; height: 56px; }
+.info-card__tag { color: var(--cream); }
+.info-card__title { color: var(--cream); font-size: 26px; margin: 0; }
+.info-card__icon { color: var(--cream); opacity: 0.9; }
+.info-card__icon svg { width: 120px; height: 120px; }
 
 .faq__item {
   padding: var(--space-4) 0;
   border-bottom: 1px solid rgba(13, 31, 78, 0.15);
 }
 .faq__item:first-child { padding-top: 0; }
-.faq__item h3 { font-size: 17px; margin-bottom: var(--space-2); }
-.faq__item p { color: var(--navy-soft); margin: 0; }
-.faq__closing { margin-top: var(--space-4); color: var(--navy-ink); }
+.faq__item .home-copy { margin: 0; }
+.faq__closing { margin-top: var(--space-4); }
 
 @media (min-width: 900px) {
   .info-grid { grid-template-columns: 320px 1fr; gap: var(--space-7); }
 }
 
 /* ---------------------------------------------------------------------- */
-/* Galería de fotos */
+/* Galería de fotos — proporciones reales (fila 1: 45/55, fila 2: 25/29/46) */
 /* ---------------------------------------------------------------------- */
 .gallery-grid {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--space-5) var(--space-7);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
 }
+.gallery-grid__row { display: flex; gap: var(--space-3); }
 .gallery-grid__item {
+  flex-basis: 0;
+  min-width: 0;
   width: 100%;
-  height: 100%;
+  height: 260px;
   object-fit: cover;
-  border-radius: var(--radius-md);
-  aspect-ratio: 3 / 4;
+  border-radius: 4px;
 }
-.gallery-grid__item--wide { aspect-ratio: 4 / 5; }
+.gallery-grid__row--short .gallery-grid__item { height: 180px; }
+
+@media (max-width: 599px) {
+  .gallery-grid__row { flex-direction: column; }
+  .gallery-grid__item { height: auto; aspect-ratio: 3 / 4; }
+}
 
 @media (min-width: 900px) {
-  .gallery-grid { grid-template-columns: repeat(6, 1fr); }
-  .gallery-grid__item--wide { grid-column: span 3; aspect-ratio: 4 / 3; }
-  .gallery-grid__item:not(.gallery-grid__item--wide) { grid-column: span 2; aspect-ratio: 3 / 4; }
+  .gallery-grid__item { height: 380px; }
+  .gallery-grid__row--short .gallery-grid__item { height: 240px; }
 }
 
 /* ---------------------------------------------------------------------- */
-/* Confirma tu asistencia (código) */
+/* Confirma tu asistencia (código) — mismo tratamiento visual del RSVP real */
 /* ---------------------------------------------------------------------- */
 .rsvp-card {
-  background: var(--slot);
-  border-radius: var(--radius-passport);
-  padding: var(--space-6) var(--space-5);
-  max-width: 560px;
+  background: #ebe6da;
+  border-radius: 12px;
+  padding: 32px 24px;
+  max-width: 800px;
   margin: 0 auto;
-  text-align: center;
 }
 .rsvp-card__badge {
   display: inline-block;
   background: var(--navy);
-  color: var(--white);
+  color: var(--cream);
+  font-family: var(--font-sans);
   font-size: 12px;
-  padding: 6px 14px;
+  letter-spacing: 0.3px;
+  padding: 6px 16px;
   border-radius: 999px;
   margin-bottom: var(--space-4);
 }
-.rsvp-card h2 { font-size: 24px; }
-.rsvp-card__meta { color: var(--navy-soft); font-size: 14px; margin-bottom: var(--space-5); }
-.rsvp__form { text-align: left; }
-.rsvp__form input { text-align: center; letter-spacing: 2px; text-transform: uppercase; }
-.rsvp__message { min-height: 20px; text-align: center; color: var(--navy-soft); font-size: 14px; margin: var(--space-3) 0 0; }
+.rsvp-card__heading {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  line-height: 1.2;
+  color: var(--navy);
+  margin: 0 0 var(--space-3);
+}
+.rsvp-card__meta { font-family: var(--font-sans); font-size: 16px; line-height: 1.6; color: var(--navy); margin-bottom: var(--space-5); }
+.rsvp__form input {
+  text-align: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: var(--cream);
+  border: 0.5px solid var(--button-cream);
+  border-radius: 12px;
+}
+.rsvp__message { min-height: 20px; font-family: var(--font-sans); font-size: 14px; color: var(--navy); margin: var(--space-3) 0 0; }
 .rsvp__message.error { color: var(--danger); }
 
 @media (min-width: 900px) {
-  .rsvp-card { padding: var(--space-7); }
+  .rsvp-card { padding: 40px 40px 48px; }
+  .rsvp-card__heading { font-size: 32px; }
 }
 
 /* ---------------------------------------------------------------------- */
 /* Footer */
 /* ---------------------------------------------------------------------- */
 .site-footer { text-align: center; padding: var(--space-6) var(--space-5) var(--space-7); }
-.site-footer a { text-decoration: none; color: var(--navy-soft); font-size: 13px; }
+.site-footer a { text-decoration: none; color: var(--navy); font-family: var(--font-sans); font-size: 16px; }
