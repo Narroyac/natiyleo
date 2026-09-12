@@ -150,11 +150,14 @@ body { overflow-x: hidden; }
 .hero {
   height: 100dvh;
   min-height: 100dvh;
+  max-width: 1200px;
+  margin: 0 auto;
   display: grid;
   grid-template-rows: 1fr auto;
   grid-template-columns: 1fr;
   gap: var(--space-4);
   padding: var(--page-inset);
+  box-sizing: border-box;
 }
 .hero__photo {
   position: relative;
@@ -255,8 +258,10 @@ body { overflow-x: hidden; }
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: var(--space-3);
+  box-sizing: border-box;
 }
-.timeline__illustration svg { width: 68%; height: 68%; }
+.timeline__illustration img { width: 100%; height: 100%; object-fit: contain; }
 
 @media (min-width: 900px) {
   .section__grid { grid-template-columns: 1fr 1fr; align-items: start; }
