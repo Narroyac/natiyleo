@@ -409,8 +409,8 @@ main > * + * { margin-top: var(--section-gap); }
 
 .faq__photos { display: none; }
 .faq__photo {
-  width: 72px;
-  height: 96px;
+  width: 48px;
+  height: 64px;
   padding: 0;
   border: none;
   background: none;
@@ -424,7 +424,7 @@ main > * + * { margin-top: var(--section-gap); }
   .info-grid { grid-template-columns: 320px 1fr; gap: var(--space-7); height: 100%; }
   .info-card__title { font-size: 40px; }
   .faq { height: 100%; overflow-y: auto; }
-  .faq__photos { display: flex; gap: var(--space-2); margin-top: var(--space-3); }
+  .faq__photos { display: flex; gap: var(--space-2); margin-top: var(--space-2); }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -460,6 +460,7 @@ main > * + * { margin-top: var(--section-gap); }
 .lightbox {
   position: fixed;
   inset: 0;
+  margin: 0;
   z-index: 100;
   background: rgba(13, 31, 78, 0.92);
   display: flex;
