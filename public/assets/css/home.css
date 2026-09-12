@@ -130,8 +130,8 @@ main > * + * { margin-top: var(--section-gap); }
 /* ---------------------------------------------------------------------- */
 .rotating-badge {
   position: relative;
-  width: 96px;
-  height: 96px;
+  width: 84px;
+  height: 84px;
   color: var(--cream);
 }
 .rotating-badge__ring {
@@ -144,7 +144,7 @@ main > * + * { margin-top: var(--section-gap); }
 .rotating-badge__ring text, .rotating-badge__ring textPath {
   fill: var(--cream);
   font-family: var(--font-sans);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.05em;
 }
 .rotating-badge__ring path[id] { fill: none; }
@@ -360,13 +360,13 @@ main > * + * { margin-top: var(--section-gap); }
 .location-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--navy); flex: none; }
 .location-card__photo { position: relative; min-height: 260px; }
 .location-card__photo img { width: 100%; height: 100%; object-fit: cover; }
-.location-card__badge { position: absolute; left: var(--space-4); bottom: var(--space-4); width: 76px; height: 76px; }
-.location-card__badge .rotating-badge__ring text, .location-card__badge .rotating-badge__ring textPath { font-size: 7.5px; }
+.location-card__badge { position: absolute; left: var(--space-4); bottom: var(--space-4); }
 
 @media (min-width: 900px) {
   .location-card { grid-template-columns: 1fr 1fr; height: 100%; }
   .location-card__text { padding: var(--space-7); display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; }
   .location-heading { font-size: 40px; }
+  .location-card__badge { left: 0; top: 50%; bottom: auto; transform: translate(-50%, -50%); }
 }
 
 /* ---------------------------------------------------------------------- */
