@@ -29,7 +29,14 @@ const SHORT_LABEL = {
 };
 
 const MAPS_URL =
-  "https://www.google.com/maps/place/Club+el+Prado/data=!4m2!3m1!1s0x0:0x81b34ce9af57ac1f?sa=X&ved=1t:2428&ictx=111";
+  "https://www.google.com/maps/search/?api=1&query=Club+el+Prado+La+Ceja+Antioquia";
+const WAZE_URL =
+  "https://ul.waze.com/ul?venue_id=186515516.1865089627.37667875&overview=yes&utm_campaign=default&utm_source=waze_website&utm_medium=lm_share_location";
+
+const CONFIRM_EMPTY_URL = storageUrl("stamps/confirmar_vacia.svg");
+const CONFIRM_DONE_URL = storageUrl("stamps/confirmar_llena.svg");
+const MENU_EMPTY_URL = storageUrl("stamps/menu_vacia.svg");
+const MENU_DONE_URL = storageUrl("stamps/menu_llena.svg");
 
 const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -189,6 +196,20 @@ function stampSlotHtml(challenge) {
   `;
 }
 
+/** Estampilla grande de la página "info" (confirmar asistencia / elegir
+ * menú): a diferencia de stampSlotHtml(), el texto ya viene incrustado en
+ * el propio arte (SVG vacío/lleno subido a Supabase Storage), así que acá
+ * solo se elige qué imagen mostrar — sin label ni overlay en HTML. */
+function infoStampHtml(challenge, variant, emptySrc, doneSrc) {
+  const done = isDone(challenge);
+  const label = SHORT_LABEL[challenge.sort_order] || challenge.title;
+  return `
+    <button class="stamp-slot passport-stamp passport-stamp--${variant}${done ? " is-done" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
+      <img src="${done ? doneSrc : emptySrc}" alt="${escapeHtml(label)}" />
+    </button>
+  `;
+}
+
 function bindStampSlotHandlers(container) {
   container.querySelectorAll(".stamp-slot").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -226,21 +247,27 @@ function buildPageElement(page) {
       <div class="info-page-body">
         <div class="info-banner">
           <p>Nos encontraremos en el Club el Prado. Aquí compartiremos tanto la ceremonia como la recepción.</p>
-          <a class="info-banner-action" href="${MAPS_URL}" target="_blank" rel="noopener" aria-label="Ir">›</a>
+          <div class="info-banner-links">
+            <a href="${WAZE_URL}" target="_blank" rel="noopener">Ir con Waze ↗</a>
+            <a href="${MAPS_URL}" target="_blank" rel="noopener">Ir con Maps ↗</a>
+          </div>
         </div>
         ${
           page.rsvp
-            ? `<div class="info-page-row">
-          <p>Recuerda confirmar tu asistencia antes del 1 de noviembre.</p>
-          ${stampSlotHtml(page.rsvp)}
+            ? `<div class="info-page-row info-page-row--confirm">
+          ${infoStampHtml(page.rsvp, "confirm", CONFIRM_EMPTY_URL, CONFIRM_DONE_URL)}
         </div>`
             : ""
         }
         ${
           page.menu
-            ? `<div class="info-page-row">
-          ${stampSlotHtml(page.menu)}
-          <p>Selecciona tu menú para este día. Tu mesa asignada es: <span class="mesa-badge">${escapeHtml(mesa)}</span></p>
+            ? `<div class="info-page-row info-page-row--menu">
+          ${infoStampHtml(page.menu, "menu", MENU_EMPTY_URL, MENU_DONE_URL)}
+          <div class="info-page-menu-text">
+            <p>Puedes elegir la proteína de tu preferencia</p>
+            <p>Tu mesa asignada es la:</p>
+            <span class="mesa-badge mesa-badge--lg">${escapeHtml(mesa)}</span>
+          </div>
         </div>`
             : ""
         }

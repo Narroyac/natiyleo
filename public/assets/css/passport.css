@@ -112,14 +112,8 @@
   align-items: center;
   gap: var(--space-3);
 }
-.info-page-row p {
-  flex: 1;
-  font-family: var(--font-sans);
-  font-size: 13.5px;
-  color: var(--navy-ink);
-  line-height: 1.4;
-}
-.info-page-row .stamp-slot { flex: 0 0 auto; width: 128px; height: 108px; }
+.info-page-row--confirm { justify-content: center; }
+.info-page-row--menu { align-items: flex-start; }
 .mesa-badge {
   display: inline-block;
   background: var(--slot);
@@ -127,6 +121,39 @@
   padding: 2px 10px;
   font-weight: 600;
   color: var(--navy);
+}
+
+/* estampillas grandes de la página "info" — el arte (vacío/lleno) ya trae
+ * el texto incrustado, así que acá solo se dimensiona la imagen. */
+.passport-stamp {
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  flex: 0 0 auto;
+}
+.passport-stamp img { width: 100%; height: auto; display: block; }
+.passport-stamp.is-done img { filter: drop-shadow(0 4px 8px rgba(13, 31, 78, 0.18)); }
+.passport-stamp--confirm { width: 100%; max-width: 260px; }
+.passport-stamp--menu { width: 110px; }
+
+.info-page-menu-text { flex: 1; }
+.info-page-menu-text p {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: var(--navy-ink);
+  line-height: 1.4;
+  margin: 0 0 var(--space-1);
+}
+.mesa-badge--lg {
+  display: block;
+  width: fit-content;
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) var(--space-5);
+  border-radius: 999px;
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 600;
 }
 
 /* grilla de estampillas (retos) — se conserva el estilo "scatter"
