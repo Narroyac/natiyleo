@@ -359,7 +359,7 @@ main > * + * { margin-top: var(--section-gap); }
 
 @media (min-width: 900px) {
   .location-card { grid-template-columns: 1fr 1fr; height: 100%; }
-  .location-card__text { padding: var(--space-7); display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
+  .location-card__text { padding: var(--space-7); display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; }
   .location-heading { font-size: 32px; }
 }
 
