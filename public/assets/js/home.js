@@ -48,3 +48,27 @@ form.addEventListener("submit", (e) => {
   const saved = getSavedCode();
   if (saved) input.value = saved;
 })();
+
+// Menú hamburguesa del header (puramente visual, sin relación con el código).
+(function initNav() {
+  const header = document.querySelector(".site-header");
+  const toggle = document.getElementById("nav-toggle");
+  const menu = document.getElementById("nav-menu");
+  if (!header || !toggle || !menu) return;
+
+  function close() {
+    header.classList.remove("nav-open");
+    toggle.setAttribute("aria-expanded", "false");
+  }
+
+  toggle.addEventListener("click", () => {
+    const open = header.classList.toggle("nav-open");
+    toggle.setAttribute("aria-expanded", String(open));
+  });
+  menu.addEventListener("click", (e) => {
+    if (e.target.tagName === "A") close();
+  });
+  document.addEventListener("click", (e) => {
+    if (!header.contains(e.target)) close();
+  });
+})();
