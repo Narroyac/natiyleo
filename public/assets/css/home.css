@@ -470,23 +470,32 @@ main > * + * { margin-top: var(--section-gap); }
 .lightbox__close svg { width: 18px; height: 18px; }
 
 /* ---------------------------------------------------------------------- */
-/* Confirma tu asistencia (código) — mismo tratamiento visual del RSVP real */
+/* Confirma tu asistencia (código) — recuadro azul (como el de Info en     */
+/* FAQ) a la izquierda, y el resto del RSVP sobre el fondo oscuro de       */
+/* Ubicación a la derecha. */
 /* ---------------------------------------------------------------------- */
-.rsvp-card {
-  background: #ebe6da;
-  border-radius: 12px;
-  padding: 32px 24px;
-}
-.rsvp-card__badge {
-  display: inline-block;
+.rsvp-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+.rsvp-intro {
   background: var(--navy);
   color: var(--cream);
+  border-radius: var(--radius-passport);
+  padding: var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.rsvp-intro__text {
   font-family: var(--font-serif);
-  font-size: 16px;
-  letter-spacing: 0.3px;
-  padding: 6px 16px;
-  border-radius: 999px;
-  margin-bottom: var(--space-4);
+  font-size: 26px;
+  line-height: 1.25;
+  color: var(--cream);
+  margin: 0;
+}
+.rsvp-card {
+  background: #e4dcc8;
+  border-radius: var(--radius-passport);
+  padding: 32px 24px;
 }
 .rsvp-card__heading {
   font-family: var(--font-serif);
@@ -509,8 +518,9 @@ main > * + * { margin-top: var(--section-gap); }
 .rsvp__message.error { color: var(--danger); }
 
 @media (min-width: 900px) {
+  .rsvp-grid { grid-template-columns: 320px 1fr; gap: var(--space-7); }
+  .rsvp-intro__text { font-size: 32px; }
   .rsvp-card { padding: 40px 40px 48px; }
-  .rsvp-card__badge { font-size: 20px; }
 }
 
 /* ---------------------------------------------------------------------- */

@@ -225,20 +225,25 @@
     </div>
 
     <section class="section rsvp-section" id="rsvp">
-      <div class="rsvp-card">
-        <span class="rsvp-card__badge">Confirma tu asistencia antes del 1 de noviembre.</span>
-        <h2 class="rsvp-card__heading">¿Ya tienes tu código?</h2>
-        <p class="rsvp-card__body">Ingresa tu código de invitación y cuéntanos si podrás acompañarnos en este día tan especial.</p>
-        <p class="rsvp-card__meta">04 &middot; Diciembre &middot; 2026<br>4:00 p. m.<br>@Club El Prado &middot; La Ceja</p>
+      <div class="rsvp-grid">
+        <div class="rsvp-intro">
+          <p class="rsvp-intro__text">Confirma tu asistencia antes del 1 de noviembre.</p>
+        </div>
 
-        <form class="rsvp__form" id="rsvp-form">
-          <div class="field">
-            <label class="visually-hidden" for="rsvp-code-input">Código</label>
-            <input type="text" id="rsvp-code-input" placeholder="EJ. OSWALDO01" autocomplete="off" autocapitalize="characters" inputmode="text" required />
-          </div>
-          <button class="btn" type="submit" id="rsvp-submit">Ingresar</button>
-          <p class="rsvp__message" id="rsvp-message" role="status"></p>
-        </form>
+        <div class="rsvp-card">
+          <h2 class="rsvp-card__heading">¿Ya tienes tu código?</h2>
+          <p class="rsvp-card__body">Ingresa tu código de invitación y cuéntanos si podrás acompañarnos en este día tan especial.</p>
+          <p class="rsvp-card__meta">04 &middot; Diciembre &middot; 2026<br>4:00 p. m.<br>@Club El Prado &middot; La Ceja</p>
+
+          <form class="rsvp__form" id="rsvp-form">
+            <div class="field">
+              <label class="visually-hidden" for="rsvp-code-input">Código</label>
+              <input type="text" id="rsvp-code-input" placeholder="EJ. OSWALDO01" autocomplete="off" autocapitalize="characters" inputmode="text" required />
+            </div>
+            <button class="btn" type="submit" id="rsvp-submit">Ingresar</button>
+            <p class="rsvp__message" id="rsvp-message" role="status"></p>
+          </form>
+        </div>
       </div>
     </section>
   </main>
