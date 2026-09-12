@@ -72,7 +72,7 @@ body { overflow-x: hidden; }
 }
 .site-header__pill--cta { background: var(--navy); color: var(--cream); }
 
-.section { padding: var(--section-gap) var(--page-inset); max-width: 1200px; margin: 0 auto; }
+.section { padding: var(--section-gap) var(--page-inset); }
 
 /* ---------------------------------------------------------------------- */
 /* Tipografía compartida del home                                         */
@@ -151,8 +151,6 @@ body { overflow-x: hidden; }
 .hero {
   height: 100dvh;
   min-height: 100dvh;
-  max-width: 1200px;
-  margin: 0 auto;
   display: grid;
   grid-template-rows: 1fr auto;
   grid-template-columns: 1fr;
@@ -358,8 +356,6 @@ body { overflow-x: hidden; }
 /* Galería de fotos — proporciones reales (fila 1: 45/55, fila 2: 25/29/46) */
 /* ---------------------------------------------------------------------- */
 .gallery-grid {
-  max-width: 1200px;
-  margin: 0 auto;
   padding: 0 var(--page-inset) var(--section-gap);
   display: flex;
   flex-direction: column;
