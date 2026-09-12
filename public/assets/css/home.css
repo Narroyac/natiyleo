@@ -172,7 +172,7 @@ main > * + * { margin-top: var(--section-gap); }
   height: 100dvh;
   min-height: 100dvh;
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
   gap: var(--space-4);
   padding: var(--page-inset);
@@ -183,6 +183,7 @@ main > * + * { margin-top: var(--section-gap); }
   border-radius: var(--radius-passport);
   overflow: hidden;
   min-height: 0;
+  aspect-ratio: 6 / 5;
 }
 .hero__photo img { width: 100%; height: 100%; object-fit: cover; }
 .hero__badge {
@@ -209,7 +210,7 @@ main > * + * { margin-top: var(--section-gap); }
 .hero__center .home-tag { text-align: left; }
 .hero__names {
   font-family: var(--font-serif);
-  font-size: 56px;
+  font-size: 84px;
   line-height: 1.15;
   color: var(--navy);
   margin: 0;
@@ -225,12 +226,20 @@ main > * + * { margin-top: var(--section-gap); }
   vertical-align: middle;
   margin-bottom: 0.08em;
 }
-.hero__bottom { align-self: end; }
-.hero__date { font-family: var(--font-serif); font-size: 20px; color: var(--navy); margin-bottom: var(--space-4); }
-.hero__cta { text-decoration: none; }
+.hero__bottom {
+  align-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  text-align: left;
+}
+.hero__date { font-family: var(--font-serif); font-size: 16px; color: var(--navy); margin: 0; white-space: nowrap; }
+.hero__cta { text-decoration: none; flex: none; }
 
 @media (min-width: 600px) {
-  .hero__names { font-size: 84px; }
+  .hero__names { font-size: 100px; }
+  .hero__date { font-size: 20px; }
 }
 
 @media (min-width: 900px) {
@@ -238,6 +247,7 @@ main > * + * { margin-top: var(--section-gap); }
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
   }
+  .hero__photo { aspect-ratio: auto; }
   .hero__content { padding: var(--space-6) var(--space-7); }
   .hero__names { font-size: 128px; }
 }
