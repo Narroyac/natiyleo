@@ -191,7 +191,17 @@ main > * + * { margin-top: var(--section-gap); }
   min-height: 0;
   aspect-ratio: 4 / 5;
 }
-.hero__photo img { width: 100%; height: 100%; object-fit: cover; }
+.hero__carousel { position: relative; width: 100%; height: 100%; }
+.hero__carousel-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+.hero__carousel-img.is-active { opacity: 1; }
 .hero__badge {
   position: absolute;
   top: var(--space-3);

@@ -134,3 +134,19 @@ form.addEventListener("submit", (e) => {
     document.fonts.ready.then(align);
   }
 })();
+
+// Carrusel del hero: cambia entre las 3 fotos con un fundido suave, en
+// loop infinito, sin flechas ni controles.
+(function initHeroCarousel() {
+  const carousel = document.getElementById("hero-carousel");
+  if (!carousel) return;
+  const slides = carousel.querySelectorAll(".hero__carousel-img");
+  if (slides.length < 2) return;
+
+  let current = 0;
+  setInterval(() => {
+    slides[current].classList.remove("is-active");
+    current = (current + 1) % slides.length;
+    slides[current].classList.add("is-active");
+  }, 5000);
+})();
