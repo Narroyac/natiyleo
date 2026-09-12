@@ -155,8 +155,9 @@ main > * + * { margin-top: var(--section-gap); }
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
-  z-index: -1;
+  z-index: 0;
 }
+.rotating-badge__ring { position: relative; z-index: 1; }
 @keyframes rotating-badge-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
