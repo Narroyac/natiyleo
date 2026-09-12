@@ -1,0 +1,61 @@
+/* Pasaporte de Boda — Nati & Leo
+   Tokens de marca.
+   Navy (#0D1F4E) y beige (#F5F2EC): valores exactos dados por Nati directamente
+   de la marca del sitio. Los tonos derivados (navy-soft, navy-ink, cream-deep)
+   son mezclas calculadas a partir de estos dos, para mantener todo dentro de
+   la misma paleta real en vez de inventar tonos nuevos. Tipografías: Hedvig
+   Letters Serif/Sans, decisión ya tomada en el brief (sección 4). */
+
+:root {
+  /* Color */
+  --navy: #0d1f4e;
+  --navy-ink: #0c1d48;       /* un poco más oscuro, para texto de cuerpo largo */
+  --navy-soft: #5a6787;      /* variante suave (navy + 32% blanco), labels/detalles */
+  --cream: #f5f2ec;          /* beige de marca — fondo exterior, "mesa" */
+  --cream-deep: #dedddc;
+  --paper: #fffef9;          /* superficie de la página del pasaporte, más blanca que el beige exterior */
+  --paper-shadow: rgba(13, 31, 78, 0.18);
+  --white: #ffffff;
+  --success: #2f6b4f;
+  --danger: #a13d3d;
+
+  /* Rediseño UI (fase 3) — derivados verificados con cuentagotas contra los
+     PNG de referencias/mockups/ (iPhone 16 - 1.png y - 2.png). navy/cream/
+     paper de arriba ya son los del sitio de Framer y coinciden pixel a
+     pixel con los mockups (progress-bar-fill = #0d1f4e exacto, fondo
+     exterior = #f5f2ec exacto, fondo de página = #fffef8~9), así que por
+     la regla del spec (navy/crema mandan del sitio, derivados mandan del
+     mockup) no se tocan. Estos dos sí son nuevos, tomados directo del PNG: */
+  --slot: #f3f1ea;           /* relleno de stamp-slot vacío / badge de mesa (igual en ambos mockups) */
+  --button-cream: #f0e9de;   /* fondo del botón secundario "Ver galería de fotos" */
+
+  /* Tipografía — Hedvig Letters (brief, sección 4) */
+  --font-serif: "Hedvig Letters Serif", Georgia, "Times New Roman", serif;
+  --font-sans: "Hedvig Letters Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Escala tipográfica del pasaporte (mobile, del spec de UI sección 1) */
+  --text-greeting: 28px;   /* saludo — serif */
+  --text-body: 17px;       /* párrafos e instrucciones — sans */
+  --text-label: 15px;      /* labels de botones y slots — sans */
+  --text-counter: 14px;    /* contador "2/11" — sans */
+
+  /* Espaciado */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Otros */
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --page-radius: 14px;
+  --radius-button: 12px;
+  --radius-passport: 16px;      /* esquinas del libro — medido ~16px a escala del mockup */
+  --border-passport: 3px solid var(--navy); /* grosor medido en el PNG: 3px a 393px de ancho */
+  --shadow-soft: 0 2px 8px rgba(13, 31, 78, 0.12);
+  --shadow-floating: 0 4px 12px rgba(13, 31, 78, 0.18); /* flechas de navegación */
+  --ease-page: cubic-bezier(0.45, 0, 0.2, 1);
+}

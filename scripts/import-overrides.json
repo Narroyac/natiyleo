@@ -1,0 +1,13 @@
+{
+  "_comment": "Ajustes manuales del importador. Edítalo cuando quieras sin tocar el script. No necesitas los caracteres invisibles del Sheet — se comparan ya limpios.",
+
+  "sheetCsvUrl": "https://docs.google.com/spreadsheets/d/1hyIBupFUDeDsUzIOSgCaWZ0W0jHYrNxLFLupjzwojpE/gviz/tq?tqx=out:csv",
+
+  "_exclude_comment": "Filas del Sheet que se deben IGNORAR por completo al importar (ej. duplicados). Compara por el texto de la columna Invitado ya limpio (sin guion inicial, sin tildes de más).",
+  "exclude": [
+    "Diego esposo adri"
+  ],
+
+  "_genericCompanionWords_comment": "Si el texto después del '+' es una de estas palabras, el acompañante queda SIN nombre propio (etiqueta genérica 'Acompañante de X'). Si es cualquier otra palabra, se usa como nombre real del acompañante.",
+  "genericCompanionWords": ["esposa", "esposo", "novia", "novio", "pareja", "señora", "señor"]
+}

@@ -1,0 +1,257 @@
+/* Pasaporte de Boda — Nati & Leo — Panel de administración (desktop/tablet-first) */
+
+body { background: var(--cream); }
+
+/* ---------- login ---------- */
+.admin-login {
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+}
+.admin-login .mark {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--navy);
+  margin-bottom: var(--space-2);
+}
+.admin-login .sub { color: var(--navy-soft); margin-bottom: var(--space-6); font-size: 13px; }
+.admin-login form { text-align: left; }
+.admin-login .error-msg { color: var(--danger); font-size: 13px; margin-top: var(--space-2); display: none; }
+.admin-login .error-msg.show { display: block; }
+
+/* ---------- shell ---------- */
+.admin-shell { display: none; min-height: 100vh; }
+.admin-shell.show { display: flex; }
+
+.admin-sidebar {
+  width: 220px;
+  flex: 0 0 220px;
+  background: var(--paper);
+  border-right: 1px solid var(--cream-deep);
+  padding: var(--space-5) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.admin-sidebar .brand {
+  font-family: var(--font-serif);
+  color: var(--navy);
+  font-size: 17px;
+  padding: 0 var(--space-3) var(--space-5);
+}
+.admin-tab-btn {
+  text-align: left;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--navy-ink);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-tab-btn:hover { background: var(--cream); }
+.admin-tab-btn.active { background: var(--navy); color: var(--white); }
+.admin-sidebar .logout-btn {
+  margin-top: auto;
+  font-size: 13px;
+  color: var(--navy-soft);
+  text-align: left;
+  padding: 10px 14px;
+}
+
+.admin-main {
+  flex: 1;
+  padding: var(--space-6) var(--space-7);
+  max-width: 1400px;
+}
+.admin-panel { display: none; }
+.admin-panel.active { display: block; }
+
+.panel-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.panel-header h1 { font-size: 24px; color: var(--navy); margin: 0; }
+.panel-header .panel-sub { color: var(--navy-soft); font-size: 13px; }
+
+.stat-row {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+.stat-card {
+  background: var(--paper);
+  border: 1px solid var(--cream-deep);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  min-width: 140px;
+}
+.stat-card .stat-value { font-family: var(--font-serif); font-size: 26px; color: var(--navy); }
+.stat-card .stat-label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--navy-soft); }
+
+.admin-card {
+  background: var(--paper);
+  border: 1px solid var(--cream-deep);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.admin-table-wrap { overflow-x: auto; border: 1px solid var(--cream-deep); border-radius: var(--radius-md); }
+table.admin-table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--paper); }
+table.admin-table th {
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--navy-soft);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--cream-deep);
+  white-space: nowrap;
+}
+table.admin-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--cream);
+  vertical-align: middle;
+}
+table.admin-table tr:last-child td { border-bottom: none; }
+table.admin-table tr:hover td { background: var(--cream); }
+
+.inline-input {
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 5px 7px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-family: var(--font-sans);
+  color: var(--navy-ink);
+  width: 100%;
+  min-width: 90px;
+}
+.inline-input:hover { border-color: var(--cream-deep); }
+.inline-input:focus { border-color: var(--navy); outline: none; background: var(--white); }
+
+.badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.badge-pending { background: #eee7d6; color: #7a6a2f; }
+.badge-confirmed { background: #dcecdf; color: var(--success); }
+.badge-declined { background: #f1dede; color: var(--danger); }
+.badge-count { background: var(--cream-deep); color: var(--navy-ink); font-variant-numeric: tabular-nums; }
+.badge-rank1 { background: #f4d35e; color: #6b4f00; }
+.badge-rank2 { background: #dfe3ea; color: #454f5c; }
+.badge-rank3 { background: #e6c8a8; color: #6b4423; }
+
+.icon-btn {
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 12.5px;
+  color: var(--navy);
+  border: 1px solid var(--navy-soft);
+}
+.icon-btn:hover { background: var(--cream); }
+.icon-btn.danger { color: var(--danger); border-color: var(--danger); }
+
+.role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--cream);
+  border: 1px solid var(--cream-deep);
+  border-radius: 999px;
+  padding: 2px 9px 2px 4px;
+  font-size: 11px;
+  margin: 1px 2px 1px 0;
+}
+.role-chip img { width: 16px; height: 16px; border-radius: 50%; }
+
+/* ---------- modal (reutiliza .modal-backdrop de passport.css si se incluye, si no aquí una versión propia) ---------- */
+.admin-modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(13, 31, 78, 0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 500;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease;
+  padding: var(--space-4);
+}
+.admin-modal-backdrop.show { opacity: 1; pointer-events: auto; }
+.admin-modal-sheet {
+  background: var(--paper);
+  width: 100%; max-width: 520px;
+  max-height: 88vh;
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-5) var(--space-6);
+  position: relative;
+  transform: translateY(10px);
+  transition: transform 0.2s ease;
+}
+.admin-modal-backdrop.show .admin-modal-sheet { transform: translateY(0); }
+.admin-modal-sheet h2 { font-size: 19px; color: var(--navy); padding-right: 26px; }
+.admin-modal-close {
+  position: absolute; top: var(--space-3); right: var(--space-4);
+  font-size: 24px; color: var(--navy-soft);
+}
+
+.checkbox-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+.checkbox-row input { width: 17px; height: 17px; accent-color: var(--navy); }
+
+/* ---------- exportar recuerdo ---------- */
+.export-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+/* ---------- galería ---------- */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-4);
+}
+.gallery-item {
+  background: var(--paper);
+  border: 1px solid var(--cream-deep);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.gallery-item img,
+.gallery-item video { width: 100%; height: 160px; object-fit: cover; background: #000; }
+.gallery-item .gallery-meta { padding: var(--space-3); font-size: 12px; }
+.gallery-item .gallery-guest { font-weight: 600; color: var(--navy); }
+.gallery-item .gallery-challenge { color: var(--navy-soft); margin-bottom: 8px; }
+.gallery-item.hidden-item { opacity: 0.5; }
+.gallery-item.hidden-item::after { content: "Oculta"; }
+
+table.admin-table tr.hidden-item td { opacity: 0.5; }
+
+/* ---------- cronómetro ---------- */
+.timer-display {
+  font-family: var(--font-serif);
+  font-size: 44px;
+  color: var(--navy);
+  text-align: center;
+  margin: var(--space-4) 0;
+  font-variant-numeric: tabular-nums;
+}
+.timer-controls { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: flex-end; }
+.timer-controls .field { margin-bottom: 0; }
+.timer-controls input[type="number"] { width: 100px; }
+
+@media (max-width: 860px) {
+  .admin-shell { flex-direction: column; }
+  .admin-sidebar { width: 100%; flex: none; height: auto; position: static; flex-direction: row; overflow-x: auto; padding: var(--space-3); }
+  .admin-sidebar .brand { display: none; }
+  .admin-sidebar .logout-btn { margin-top: 0; margin-left: auto; }
+  .admin-main { padding: var(--space-4); }
+}

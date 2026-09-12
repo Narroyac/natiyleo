@@ -1,0 +1,247 @@
+/* Pasaporte de Boda — Nati & Leo — Podio en vivo (proyección, desktop/tablet-first) */
+
+.podio-shell {
+  display: none;
+  min-height: 100vh;
+  flex-direction: column;
+  gap: var(--space-6);
+  background:
+    radial-gradient(ellipse at top, rgba(255,255,255,0.06), transparent 60%),
+    var(--navy);
+  color: var(--cream);
+  padding: var(--space-6) var(--space-7) var(--space-7);
+}
+.podio-shell.show { display: flex; }
+
+/* ---------- header ---------- */
+.podio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+.podio-brand {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  color: var(--cream);
+}
+.podio-brand span { color: #e8c874; }
+
+.podio-timer-block { text-align: center; }
+.podio-timer-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(245,242,236,0.65);
+  margin-bottom: 4px;
+}
+.podio-timer-label.paused { color: #e8c874; }
+.podio-timer-label.finished { color: #d98a8a; }
+.podio-timer {
+  font-family: var(--font-serif);
+  font-size: 64px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--cream);
+  text-shadow: 0 0 30px rgba(232,200,116,0.25);
+}
+
+.podio-back {
+  font-size: 13px;
+  color: rgba(245,242,236,0.65);
+  text-decoration: none;
+  border: 1px solid rgba(245,242,236,0.3);
+  border-radius: 999px;
+  padding: 8px 16px;
+  white-space: nowrap;
+}
+.podio-back:hover { color: var(--cream); border-color: rgba(245,242,236,0.6); }
+
+/* ---------- podium (top 3) ---------- */
+.podio-podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--space-5);
+  min-height: 260px;
+  padding: 0 var(--space-4);
+}
+.podio-empty-msg {
+  align-self: center;
+  color: rgba(245,242,236,0.6);
+  font-size: 15px;
+  text-align: center;
+}
+
+.pedestal-card {
+  background: var(--paper);
+  color: var(--navy-ink);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  width: 240px;
+  text-align: center;
+  box-shadow: 0 -6px 28px rgba(0,0,0,0.25);
+  position: relative;
+}
+.pedestal-card.rank-1 { order: 2; padding-bottom: var(--space-5); }
+.pedestal-card.rank-2 { order: 1; }
+.pedestal-card.rank-3 { order: 3; }
+
+.pedestal-medal {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  margin: 0 auto var(--space-2);
+  border: 2px solid rgba(13,31,78,0.15);
+}
+.pedestal-card.rank-1 .pedestal-medal { background: #f4d35e; color: #6b4f00; width: 56px; height: 56px; font-size: 24px; }
+.pedestal-card.rank-2 .pedestal-medal { background: #dfe3ea; color: #454f5c; }
+.pedestal-card.rank-3 .pedestal-medal { background: #e6c8a8; color: #6b4423; }
+
+.pedestal-name { font-family: var(--font-serif); font-size: 19px; margin-bottom: 2px; }
+.pedestal-card.rank-1 .pedestal-name { font-size: 22px; }
+.pedestal-table { font-size: 12px; color: var(--navy-soft); margin-bottom: 6px; }
+.pedestal-time { font-size: 11.5px; color: var(--navy-soft); font-variant-numeric: tabular-nums; }
+.pedestal-base {
+  margin-top: var(--space-3);
+  background: var(--cream-deep);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: var(--navy);
+  padding: 6px 0;
+}
+.pedestal-card.rank-1 .pedestal-base { background: #f4d35e; color: #6b4f00; }
+
+/* Posición "en vivo" (todavía no es un ganador confirmado): mismo layout,
+   colores neutros en vez de oro/plata/bronce, para que no se confunda con
+   el premio real. */
+.pedestal-card.is-live .pedestal-medal,
+.pedestal-card.rank-1.is-live .pedestal-medal {
+  background: var(--cream-deep);
+  color: var(--navy);
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+.pedestal-card.is-live .pedestal-base,
+.pedestal-card.rank-1.is-live .pedestal-base {
+  background: var(--cream-deep);
+  color: var(--navy);
+}
+.pedestal-live {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--navy-soft);
+  font-variant-numeric: tabular-nums;
+}
+.live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #d9534f;
+  animation: live-pulse 1.3s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+
+.podio-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-5);
+  font-size: 11.5px;
+  color: rgba(245,242,236,0.6);
+  margin-top: calc(-1 * var(--space-3));
+}
+.legend-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.legend-dot-gold { background: #f4d35e; }
+.legend-dot-live { background: #d9534f; }
+
+/* ---------- ranking (all guests) ---------- */
+.podio-ranking-wrap {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(245,242,236,0.12);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.podio-ranking-title {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(245,242,236,0.55);
+  margin-bottom: var(--space-4);
+}
+.podio-ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.ranking-row {
+  display: grid;
+  grid-template-columns: 40px minmax(140px, 1fr) 3fr 60px;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 8px 4px;
+}
+.ranking-row .r-pos {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: rgba(245,242,236,0.55);
+  text-align: center;
+}
+.ranking-row.is-winner .r-pos { color: #e8c874; }
+.ranking-row .r-name {
+  font-size: 14.5px;
+  color: var(--cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ranking-row .r-table {
+  font-size: 11.5px;
+  color: rgba(245,242,236,0.5);
+}
+.r-progress-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(245,242,236,0.12);
+  overflow: hidden;
+}
+.r-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8792ab, #cfd6e6);
+  transition: width 0.5s ease;
+}
+.ranking-row.is-complete .r-progress-fill { background: linear-gradient(90deg, #c9a13f, #f4d35e); }
+.ranking-row .r-count {
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(245,242,236,0.65);
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .podio-shell { padding: var(--space-5); }
+  .podio-timer { font-size: 44px; }
+  .podio-podium { flex-wrap: wrap; }
+  .pedestal-card { width: 44%; }
+  .ranking-row { grid-template-columns: 30px minmax(100px,1fr) 2fr 46px; }
+}

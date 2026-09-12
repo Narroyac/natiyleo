@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Pasaporte de Boda — Nati &amp; Leo</title>
+  <meta name="description" content="Tu pasaporte para la boda de Nati &amp; Leo, 04.12.2026" />
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0d1f4e" />
+  <link rel="icon" href="../icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../icons/favicon-16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Pasaporte N&amp;L" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <style>
+    .entry {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .entry .stamp-mark {
+      width: 84px;
+      height: 84px;
+      margin: 0 auto var(--space-5);
+      border-radius: 50%;
+      border: 2px dashed var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 20px;
+      color: var(--navy);
+    }
+    .entry h1 { font-size: 30px; }
+    .entry .lede { color: var(--navy-soft); margin-bottom: var(--space-6); }
+    .code-form { display: none; }
+    .code-form.show { display: block; }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      color: var(--navy-soft);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin: var(--space-5) 0;
+    }
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--navy-soft);
+      opacity: 0.35;
+    }
+    .code-form input {
+      text-align: center;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-size: 18px;
+    }
+    #loading-state, #error-state { display: none; }
+  </style>
+</head>
+<body>
+  <div class="center-screen">
+    <div class="entry">
+      <div class="stamp-mark">04.12</div>
+
+      <div id="landing-state">
+        <h1>Pasaporte de Boda</h1>
+        <p class="lede">Nati &amp; Leo · 04.12.2026</p>
+        <button class="btn" id="show-code-form" style="width:100%">Ingresar con mi código</button>
+      </div>
+
+      <div id="loading-state">
+        <div class="spinner" style="margin: 0 auto var(--space-4);"></div>
+        <p class="lede">Buscando tu pasaporte…</p>
+      </div>
+
+      <div id="error-state">
+        <p style="color: var(--danger)">No encontramos ese código. Revísalo e intenta de nuevo, o escríbele a Nati.</p>
+        <button class="btn btn-outline" id="retry-btn" style="width:100%">Intentar otra vez</button>
+      </div>
+
+      <form class="code-form" id="code-form">
+        <div class="divider">Tu código</div>
+        <div class="field">
+          <label class="visually-hidden" for="code-input">Código</label>
+          <input type="text" id="code-input" placeholder="EJ. OSWALDO01" autocomplete="off" autocapitalize="characters" inputmode="text" required />
+        </div>
+        <button class="btn" type="submit" style="width:100%">Ver mi pasaporte</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="../assets/js/supabase-client.js"></script>
+  <script type="module" src="../assets/js/entry.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+    }
+  </script>
+</body>
+</html>

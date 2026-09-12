@@ -1,0 +1,210 @@
+/* Pasaporte de Boda — Nati & Leo — Sistema de componentes reutilizables
+   (fase 3, rediseño UI). Todo consume tokens.css — ninguna clase de acá
+   define color/tipografía/radio propio. Ver components.md para el
+   inventario documentado con fragmentos HTML de cada uno. */
+
+/* ---------- greeting ---------- */
+.greeting {
+  padding: var(--space-5) var(--space-4) var(--space-3);
+  text-align: left;
+}
+.greeting-name {
+  font-family: var(--font-serif);
+  font-size: var(--text-greeting);
+  color: var(--navy);
+  line-height: 1.25;
+}
+.greeting-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-greeting);
+  color: var(--navy);
+  line-height: 1.25;
+  font-weight: 400;
+  margin-bottom: var(--space-2);
+}
+.greeting-sub {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  color: var(--navy-soft);
+  line-height: 1.4;
+}
+
+/* ---------- progress-bar ---------- */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-4);
+  margin-bottom: var(--space-4);
+}
+.progress-bar .progress-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--cream-deep);
+  overflow: hidden;
+}
+.progress-bar .progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--navy);
+  width: 0%;
+  transition: width 0.5s var(--ease-page);
+}
+.progress-bar .progress-fill.pulse { animation: progress-pulse 0.4s ease; }
+@keyframes progress-pulse {
+  0% { filter: brightness(1); }
+  40% { filter: brightness(1.35); }
+  100% { filter: brightness(1); }
+}
+.progress-bar .progress-counter {
+  font-family: var(--font-sans);
+  font-size: var(--text-counter);
+  color: var(--navy-soft);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------- nav-arrow ---------- */
+.nav-arrow {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--navy);
+  font-size: 20px;
+  box-shadow: var(--shadow-floating);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+.nav-arrow:active { transform: scale(0.92); }
+.nav-arrow:disabled { opacity: 0; pointer-events: none; }
+
+/* ---------- btn-secondary ---------- */
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: calc(100% - var(--space-4) * 2);
+  margin: var(--space-4) auto 0;
+  padding: 14px var(--space-4);
+  background: var(--button-cream);
+  border: 1.5px solid var(--navy);
+  border-radius: var(--radius-button);
+  color: var(--navy);
+  font-family: var(--font-sans);
+  font-size: var(--text-label);
+  font-weight: 600;
+  box-shadow: var(--shadow-soft);
+  text-decoration: none;
+}
+.btn-secondary:active { transform: scale(0.98); }
+
+/* ---------- info-banner ---------- */
+.info-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--navy);
+  color: var(--cream);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+.info-banner p { flex: 1; }
+.info-banner .info-banner-action {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+.info-banner .info-banner-action:active { transform: scale(0.92); }
+
+/* ---------- stamp-slot ---------- */
+.stamp-slot {
+  position: relative;
+  background: var(--slot);
+  border-radius: 4px;
+  border: 2px dashed rgba(13, 31, 78, 0.35); /* evoca el borde troquelado de una estampilla postal */
+  padding: var(--space-3) var(--space-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+}
+.stamp-slot .stamp-slot-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-label);
+  color: var(--navy);
+  font-weight: 600;
+}
+.stamp-slot .stamp-slot-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+.stamp-slot .stamp-slot-btn:active { transform: scale(0.9); }
+.stamp-slot.is-done {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.stamp-slot.is-done .stamp-slot-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(13, 31, 78, 0.18));
+}
+
+/* sellado: rebote + marca de tinta, se dispara agregando .is-stamping */
+.stamp-slot.is-stamping .stamp-slot-img {
+  animation: stamp-seal 0.4s var(--ease-page);
+}
+@keyframes stamp-seal {
+  0% { transform: scale(0.4) rotate(-14deg); opacity: 0; }
+  60% { transform: scale(1.12) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ---------- passport-book (marco del libro) ---------- */
+.passport-book {
+  position: relative;
+  background: var(--paper);
+  border: var(--border-passport);
+  border-radius: var(--radius-passport);
+  box-shadow: var(--shadow-soft);
+  /* Sin width/max-width/aspect-ratio propios: este div es el elemento raíz
+     de StPageFlip (assets/js/vendor/page-flip.module.js) — la librería le
+     pone su propio ancho/alto inline según los settings (width/height/
+     min*/max* en initFlipbook, passport.js), y el "aspect-ratio" real lo
+     mantiene ELLA vía un truco de padding-bottom en su wrapper interno.
+     Si además le ponemos aspect-ratio acá, compiten por la altura.
+
+     Tampoco lleva overflow:hidden: StPageFlip dibuja la curva de la hoja
+     con clip-path (no rotateY + perspective como el motor anterior a
+     mano), así que ya no aplica el bug de Safari/WebKit que aplanaba el
+     3D dentro de un ancestro con border-radius+overflow:hidden — pero se
+     deja igual sin overflow:hidden acá por si algún borde de la curva se
+     asoma un poco durante la animación; el recorte redondeado real vive
+     en cada página (.book-page en passport.css). */
+}

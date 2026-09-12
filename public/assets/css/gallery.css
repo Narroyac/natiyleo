@@ -1,0 +1,273 @@
+/* Pasaporte de Boda — Nati & Leo — Galería pública (invitados, mobile-first)
+   Feed vertical de una columna, estilo Instagram: nombre arriba, foto/video
+   a todo el ancho, reacciones y acceso a comentarios siempre visibles debajo. */
+
+.gallery-app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--cream);
+  padding-bottom: var(--space-6);
+}
+
+.gallery-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  gap: var(--space-3);
+}
+.gallery-back {
+  font-size: 13.5px;
+  color: var(--navy);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.gallery-title {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  color: var(--navy);
+}
+.gallery-refresh {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--navy);
+  font-size: 17px;
+  box-shadow: 0 2px 8px rgba(13,31,78,0.08);
+}
+.gallery-refresh.spinning { animation: spin 0.7s linear; }
+
+/* ---------- filtros (fijos arriba del feed) ---------- */
+.gallery-filters {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: var(--space-3) var(--space-4);
+  background: var(--cream);
+  border-bottom: 1px solid var(--cream-deep);
+}
+.challenge-chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  flex: 1;
+  min-width: 0;
+  scrollbar-width: none;
+}
+.challenge-chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: 0 0 auto;
+  background: var(--paper);
+  border: 1px solid var(--cream-deep);
+  color: var(--navy-soft);
+  font-size: 12px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.chip.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+.mine-toggle {
+  flex: 0 0 auto;
+  background: var(--paper);
+  border: 1px solid var(--cream-deep);
+  color: var(--navy-soft);
+  font-size: 12px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.mine-toggle.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+
+.gallery-loading { display: flex; justify-content: center; padding: var(--space-6) 0; }
+.gallery-empty { text-align: center; color: var(--navy-soft); padding: var(--space-6) var(--space-5); font-size: 14px; }
+
+/* ---------- feed ---------- */
+.feed {
+  max-width: 470px;
+  margin: 0 auto;
+}
+.feed-post {
+  background: var(--paper);
+  border-bottom: 8px solid var(--cream);
+}
+.feed-post-header {
+  padding: 10px var(--space-4) 8px;
+}
+.feed-post-name {
+  font-weight: 600;
+  color: var(--navy);
+  font-size: 14px;
+}
+.feed-post-meta {
+  color: var(--navy-soft);
+  font-size: 11.5px;
+  margin-top: 1px;
+}
+
+.feed-post-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: var(--cream-deep);
+  overflow: hidden;
+}
+.feed-post-media img,
+.feed-post-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.feed-video-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: rgba(13,31,78,0.72);
+  color: var(--white);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+.feed-video-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.feed-video-play.show { opacity: 1; }
+.feed-video-play span {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(13,31,78,0.55);
+  color: var(--white);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 4px; /* centra visualmente el triángulo ▶ */
+}
+
+/* ---------- reacciones + comentarios (siempre visibles bajo la foto) ---------- */
+.feed-post-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px var(--space-4) 4px;
+}
+.reaction-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.reaction-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--cream);
+  border: 1px solid var(--cream-deep);
+  color: var(--navy-soft);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  line-height: 1;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+.reaction-pill:active { transform: scale(0.94); }
+.reaction-pill.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+.reaction-pill .rp-count {
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.comment-toggle {
+  margin-left: auto;
+  color: var(--navy-soft);
+  font-size: 12.5px;
+  padding: 6px 4px;
+  white-space: nowrap;
+}
+.comment-toggle:active { opacity: 0.6; }
+
+/* ---------- panel de comentarios (se expande dentro de la misma tarjeta) ---------- */
+.feed-post-comments {
+  padding: 4px var(--space-4) var(--space-4);
+}
+.feed-post-comments[hidden] { display: none; }
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0;
+}
+.comments-loading { display: flex; justify-content: center; padding: var(--space-2) 0; }
+.comment-item {
+  font-size: 13px;
+  color: var(--navy-ink);
+  line-height: 1.4;
+}
+.comment-item .cm-name { font-weight: 600; color: var(--navy); margin-right: 5px; }
+
+.comment-hint {
+  color: var(--navy-soft);
+  font-size: 12px;
+  margin: 6px 0;
+}
+
+.comment-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+.comment-form input {
+  flex: 1;
+  min-width: 0;
+  background: var(--cream);
+  border: 1px solid var(--cream-deep);
+  border-radius: 999px;
+  padding: 9px 14px;
+  color: var(--navy-ink);
+  font-size: 13.5px;
+  font-family: var(--font-sans);
+}
+.comment-form input::placeholder { color: var(--navy-soft); }
+.comment-form input:focus { outline: none; border-color: var(--navy); }
+.comment-form button {
+  background: var(--navy);
+  color: var(--white);
+  border-radius: 999px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.comment-form button:disabled { opacity: 0.5; }
+.comment-form.is-disabled input,
+.comment-form.is-disabled button { display: none; }
+
+@media (min-width: 600px) {
+  .feed { max-width: 520px; margin-top: var(--space-4); border-radius: var(--radius-md); overflow: hidden; }
+  .feed-post { border-bottom-width: var(--space-4); }
+}

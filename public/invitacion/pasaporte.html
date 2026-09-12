@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mi Pasaporte — Nati &amp; Leo</title>
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0d1f4e" />
+  <link rel="icon" href="../icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../icons/favicon-16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Pasaporte N&amp;L" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/passport.css" />
+</head>
+<body>
+  <div class="passport-app" id="app" style="display:none">
+    <!-- Marco fijo — no gira con el page-flip -->
+    <div class="greeting">
+      <p class="greeting-name" id="greeting-name">…,</p>
+      <h1 class="greeting-title">¡Bienvenido(a) a nuestra boda!</h1>
+      <p class="greeting-sub">Te invitamos a llenar tu pasaporte, ¡los 3 primeros en completarlo se llevarán un premio!</p>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-counter" id="progress-counter">0/11</div>
+    </div>
+
+    <main class="book-stage">
+      <button class="nav-arrow prev" id="prev-page" aria-label="Página anterior">‹</button>
+      <!-- StPageFlip monta su motor de flip (con curva de papel real) acá
+           dentro — este div queda vacío hasta que passport.js llama a
+           pageFlip.loadFromHTML(). Ver assets/js/vendor/page-flip.module.js -->
+      <div class="passport-book" id="passport-book"></div>
+      <button class="nav-arrow next" id="next-page" aria-label="Página siguiente">›</button>
+    </main>
+
+    <div class="page-dots" id="page-dots"></div>
+
+    <a class="btn-secondary" id="gallery-link" href="galeria.html">Ver galería de fotos</a>
+  </div>
+
+  <div class="center-screen" id="loading-screen">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Modal genérico para reclamar una estampilla -->
+  <div class="modal-backdrop" id="claim-modal">
+    <div class="modal-sheet">
+      <button class="modal-close" id="modal-close" aria-label="Cerrar">×</button>
+      <h2 id="modal-title"></h2>
+      <p class="lede" id="modal-instructions"></p>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Celebración al completar -->
+  <div class="modal-backdrop celebration-modal" id="celebration-modal">
+    <div class="modal-sheet">
+      <div class="medal" id="celebration-medal">🏅</div>
+      <h2 id="celebration-title">¡Pasaporte completo!</h2>
+      <p class="lede" id="celebration-body"></p>
+      <button class="btn" id="celebration-close" style="width:100%">Seguir viendo mi pasaporte</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="../assets/js/supabase-client.js"></script>
+  <script type="module" src="../assets/js/passport.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+    }
+  </script>
+</body>
+</html>

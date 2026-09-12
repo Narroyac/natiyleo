@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Podio en vivo — Pasaporte de Boda</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="../icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/admin.css" />
+  <link rel="stylesheet" href="../assets/css/podio.css" />
+</head>
+<body>
+  <!-- Login (misma cuenta compartida del panel admin) -->
+  <div class="center-screen" id="login-screen">
+    <div class="admin-login">
+      <div class="mark">Pasaporte de Boda</div>
+      <div class="sub">Podio en vivo · Nati &amp; Leo</div>
+      <form id="login-form">
+        <div class="field">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" autocomplete="current-password" required />
+        </div>
+        <button class="btn" type="submit" style="width:100%">Entrar</button>
+        <p class="error-msg" id="login-error">Contraseña incorrecta.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Podio -->
+  <div class="podio-shell" id="podio-shell">
+    <header class="podio-header">
+      <div class="podio-brand">Pasaporte de <span>Nati &amp; Leo</span></div>
+      <div class="podio-timer-block">
+        <div class="podio-timer-label" id="podio-timer-label">Sin iniciar</div>
+        <div class="podio-timer" id="podio-timer">--:--:--</div>
+      </div>
+      <a class="podio-back" href="index.html">← Panel admin</a>
+    </header>
+
+    <div class="podio-podium" id="podio-podium"></div>
+    <div class="podio-legend">
+      <span><span class="legend-dot legend-dot-gold"></span> Ganador confirmado</span>
+      <span><span class="legend-dot legend-dot-live"></span> Liderando ahora — puede cambiar</span>
+    </div>
+
+    <div class="podio-ranking-wrap">
+      <div class="podio-ranking-title">Progreso de todos los invitados</div>
+      <div class="podio-ranking" id="podio-ranking"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="../assets/js/supabase-client.js"></script>
+  <script type="module" src="../assets/js/podio.js"></script>
+</body>
+</html>

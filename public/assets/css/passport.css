@@ -1,0 +1,251 @@
+/* Pasaporte de Boda — Nati & Leo — el "libro" del pasaporte
+   Fase 3: marco fijo (greeting/progress-bar/nav-arrow/btn-secondary, en
+   components.css) + motor de page-flip específico del pasaporte (acá,
+   porque no se reutiliza en ninguna otra pantalla). */
+
+.passport-app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--cream);
+}
+
+.book-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-4);
+}
+
+.page-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  padding-bottom: var(--space-4);
+}
+.page-dots .dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--navy-soft);
+  opacity: 0.3;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.page-dots .dot.active { opacity: 1; transform: scale(1.25); }
+
+/* ---------------------------------------------------------------------
+   Motor de page-flip: StPageFlip (vendorizado en
+   assets/js/vendor/page-flip.module.js, ver initFlipbook() en
+   passport.js). Dibuja la curva real de la hoja con clip-path + rotación
+   — no es física ni canvas, es la técnica que ya traía esa librería, que
+   el brief de esta fase pre-aprobó como alternativa al rotateY hecho a
+   mano. La librería inyecta sus propias clases (.stf__parent en
+   #passport-book, .stf__item en cada .book-page) y estilos inline para
+   posición/transform/clip-path — acá solo se le da apariencia a CADA
+   página (fondo, bordes redondeados); el motor de flip en sí no se toca.
+   Respeta prefers-reduced-motion bajando flippingTime a ~0 en la config
+   de JS, no con una animación CSS aparte. */
+.book-page {
+  border-radius: var(--radius-passport);
+  /* fondo de cuadrícula: imagen de Nati (assets/img/page-bg.png) */
+  background-color: var(--paper);
+  background-image: url("../img/page-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+/* Tappable area real de estampillas/banner: si el usuario toca un <span>
+   decorativo DENTRO del botón en vez del <button> mismo, StPageFlip lo
+   toma como inicio de arrastre para pasar de página en vez de reenviar
+   el click (solo reenvía clicks cuyo target sea exactamente <a>/<button>,
+   sin mirar ancestros) — pointer-events:none en los hijos asegura que el
+   target del click siempre sea el elemento clickeable real. */
+.stamp-slot > * { pointer-events: none; }
+
+/* ---------- contenido de página ---------- */
+
+.page-content { position: relative; width: 100%; height: 100%; }
+
+.page-header {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  right: var(--space-4);
+  text-align: center;
+}
+.page-header .page-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--navy);
+}
+.page-header .page-sub {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--navy-soft);
+}
+
+/* portada — ilustración de Nati tal cual (spec: "no reconstruir en HTML") */
+.cover-page {
+  height: 100%;
+}
+.cover-page-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* página 2 — info del evento, RSVP, menú, mesa */
+.info-page-body {
+  padding: 0 var(--space-4) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.info-page-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.info-page-row p {
+  flex: 1;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: var(--navy-ink);
+  line-height: 1.4;
+}
+.info-page-row .stamp-slot { flex: 0 0 auto; width: 128px; height: 108px; }
+.mesa-badge {
+  display: inline-block;
+  background: var(--slot);
+  border-radius: var(--radius-sm);
+  padding: 2px 10px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+/* grilla de estampillas (retos) — se conserva el estilo "scatter"
+   orgánico existente hasta definir con Nati el mapeo de retos por
+   página (fase 3, paso 4); estos slots seguirán consumiendo tokens
+   igual, solo cambia su disposición cuando se apruebe. */
+.scatter {
+  position: absolute;
+  top: 74px; left: 0; right: 0; bottom: 12px;
+}
+.scatter .stamp-slot {
+  position: absolute;
+  width: 34%;
+  aspect-ratio: 4 / 5;
+}
+.scatter .stamp-slot.is-done { padding: 0; }
+.scatter .stamp-slot .stamp-slot-img {
+  width: 100%;
+  height: 100%;
+}
+.scatter[data-count="3"]:not(.alt) .stamp-slot:nth-child(1) { top: 0%;  left: 6%;  width: 36%; }
+.scatter[data-count="3"]:not(.alt) .stamp-slot:nth-child(2) { top: 30%; left: 54%; width: 34%; }
+.scatter[data-count="3"]:not(.alt) .stamp-slot:nth-child(3) { top: 58%; left: 14%; width: 28%; }
+.scatter[data-count="3"].alt .stamp-slot:nth-child(1) { top: 0%;  left: 50%; width: 38%; }
+.scatter[data-count="3"].alt .stamp-slot:nth-child(2) { top: 32%; left: 6%;  width: 32%; }
+.scatter[data-count="3"].alt .stamp-slot:nth-child(3) { top: 58%; left: 50%; width: 28%; }
+
+/* estampillas circulares de rol */
+.roles-wrap {
+  position: absolute;
+  top: 70px; left: 0; right: 0; bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: center;
+  gap: 14px 10px;
+  padding: 0 var(--space-4);
+}
+.roles-wrap .role-badge { width: 40%; }
+.roles-wrap .role-badge img { width: 100%; filter: drop-shadow(0 6px 10px rgba(13, 31, 78, 0.18)); }
+.roles-wrap .role-badge .stamp-label { margin-top: 4px; font-size: 10.5px; color: var(--navy-soft); text-align: center; }
+.roles-empty {
+  position: absolute; inset: 70px var(--space-5) var(--space-5);
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  color: var(--navy-soft);
+  font-size: 13px;
+}
+
+/* ---------- modal ---------- */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 55, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 400;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.modal-backdrop.show { opacity: 1; pointer-events: auto; }
+.modal-sheet {
+  background: var(--paper);
+  width: 100%;
+  max-width: 460px;
+  border-radius: 20px 20px 0 0;
+  padding: var(--space-5) var(--space-5) var(--space-6);
+  position: relative;
+  transform: translateY(16px);
+  transition: transform 0.25s ease;
+  max-height: 86vh;
+  overflow-y: auto;
+}
+.modal-backdrop.show .modal-sheet { transform: translateY(0); }
+.modal-close {
+  position: absolute;
+  top: var(--space-3); right: var(--space-4);
+  font-size: 26px;
+  color: var(--navy-soft);
+  line-height: 1;
+}
+.modal-sheet h2 { font-size: 20px; color: var(--navy); padding-right: 24px; }
+
+.menu-options { display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-4); }
+.menu-option {
+  border: 1.5px solid var(--navy-soft);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex; align-items: center; gap: var(--space-3);
+  text-align: left;
+}
+.menu-option.selected { border-color: var(--navy); background: rgba(13, 31, 78,0.06); }
+.menu-option input { accent-color: var(--navy); width: 18px; height: 18px; }
+
+.upload-zone {
+  border: 1.5px dashed var(--navy-soft);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+.upload-zone img.preview,
+.upload-zone video.preview {
+  max-height: 220px;
+  margin: 0 auto var(--space-3);
+  border-radius: var(--radius-sm);
+}
+.upload-zone input[type="file"] { display: none; }
+
+/* celebración */
+.celebration-modal .modal-sheet { text-align: center; padding-top: var(--space-7); }
+.celebration-modal .medal {
+  width: 100px; height: 100px;
+  margin: 0 auto var(--space-4);
+  border-radius: 50%;
+  border: 3px solid var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 34px;
+  color: var(--navy);
+}

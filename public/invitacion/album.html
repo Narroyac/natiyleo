@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Álbum — Nati &amp; Leo</title>
+  <meta name="description" content="Recuento visual de la boda de Nati &amp; Leo, organizado por reto." />
+  <link rel="icon" href="../icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../icons/favicon-16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/album.css" />
+</head>
+<body>
+  <div class="album-app">
+    <header class="album-hero">
+      <p class="album-eyebrow">El álbum de</p>
+      <h1 class="album-title">Nati &amp; Leo</h1>
+      <p class="album-date">04.12.2026 · Club el Prado, La Ceja</p>
+      <p class="album-sub">Todo lo que sus invitados capturaron durante la boda.</p>
+    </header>
+
+    <div class="album-loading" id="album-loading">
+      <div class="spinner"></div>
+    </div>
+
+    <div class="album-empty" id="album-empty" style="display:none">
+      <p>Todavía no hay fotos ni videos.</p>
+    </div>
+
+    <main id="album-sections"></main>
+  </div>
+
+  <script type="module" src="../assets/js/supabase-client.js"></script>
+  <script type="module" src="../assets/js/album.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "pasaporte-natiyleo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pasaporte de Boda — Nati & Leo. PWA de invitados + panel de administración + podio en vivo.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "import:preview": "node scripts/import-guests.mjs",
+    "import:commit": "node scripts/import-guests.mjs --commit"
+  }
+}

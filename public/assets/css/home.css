@@ -1,0 +1,270 @@
+/* Nati & Leo — Home (nuevo sitio de bienvenida)
+   Mobile-first: una columna por defecto, layouts de dos columnas se agregan
+   a partir de 768px. Reutiliza tokens.css / base.css — sin colores ni
+   tipografías nuevas. */
+
+/* ---------- Header ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(245, 242, 236, 0.92);
+  backdrop-filter: saturate(150%) blur(6px);
+  border-bottom: 1px solid var(--cream-deep);
+}
+.site-header__inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.site-header__brand {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  text-decoration: none;
+  color: var(--navy);
+}
+.site-header__nav {
+  display: none;
+  gap: var(--space-5);
+  font-size: 14px;
+}
+.site-header__nav a {
+  text-decoration: none;
+  color: var(--navy-ink);
+}
+.btn-sm {
+  padding: 9px 16px;
+  font-size: 13px;
+}
+
+/* ---------- Layout helpers ---------- */
+.section {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-4);
+}
+.section--alt {
+  background: var(--paper);
+}
+.section h2 {
+  font-size: 30px;
+  margin-bottom: var(--space-3);
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  text-align: center;
+  padding: var(--space-7) var(--space-4) var(--space-6);
+  max-width: 720px;
+  margin: 0 auto;
+}
+.hero .eyebrow { margin-bottom: var(--space-3); }
+.hero__names {
+  font-size: clamp(48px, 16vw, 96px);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-4);
+}
+.hero__dot { font-size: 0.4em; color: var(--navy-soft); }
+.hero__date {
+  color: var(--navy-soft);
+  font-size: 16px;
+  margin-bottom: var(--space-5);
+}
+.hero__cta { width: 100%; max-width: 280px; }
+
+.hero-photo {
+  margin: var(--space-7) auto 0;
+  width: 100%;
+  max-width: 1040px;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-soft) 55%, var(--cream-deep) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+.hero-photo span {
+  color: var(--cream);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+/* ---------- La Velada / timeline ---------- */
+.section__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.section__text p { color: var(--navy-ink); }
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 19px;
+  top: 6px;
+  bottom: 6px;
+  width: 1.5px;
+  background: var(--cream-deep);
+}
+.timeline__item {
+  position: relative;
+  display: flex;
+  gap: var(--space-4);
+  padding-bottom: var(--space-6);
+}
+.timeline__item:last-child { padding-bottom: 0; }
+.timeline__icon {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1.5px solid var(--navy);
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.timeline__icon svg { width: 20px; height: 20px; }
+.timeline__time {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--navy-soft);
+  margin: 0 0 2px;
+}
+.timeline__label {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  margin: 0;
+}
+.timeline__sub {
+  color: var(--navy-soft);
+  font-size: 14px;
+  margin: 4px 0 0;
+}
+
+/* ---------- Ubicación ---------- */
+.location-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+.location-card {
+  background: var(--cream);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+}
+.location-card h3 { font-size: 18px; margin-bottom: var(--space-2); }
+.location-card .btn-ghost {
+  display: inline-block;
+  margin-top: var(--space-2);
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+/* ---------- FAQ ---------- */
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+.faq__item {
+  border: 1px solid var(--cream-deep);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  background: var(--paper);
+}
+.faq__item summary {
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  list-style: none;
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after {
+  content: "+";
+  float: right;
+  color: var(--navy-soft);
+}
+.faq__item[open] summary::after { content: "–"; }
+.faq__item p {
+  margin: var(--space-3) 0 0;
+  color: var(--navy-ink);
+}
+.faq__closing {
+  margin-top: var(--space-5);
+  color: var(--navy-soft);
+  font-size: 14px;
+}
+
+/* ---------- RSVP / code widget ---------- */
+.rsvp {
+  text-align: center;
+}
+.rsvp__form {
+  max-width: 360px;
+  margin: var(--space-5) auto 0;
+}
+.rsvp__form input {
+  text-align: center;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-size: 18px;
+}
+.rsvp__message {
+  min-height: 20px;
+  margin: var(--space-3) 0 0;
+  font-size: 14px;
+  color: var(--navy-soft);
+}
+.rsvp__message.error { color: var(--danger); }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  text-align: center;
+  padding: var(--space-6) var(--space-4) var(--space-7);
+}
+.site-footer a {
+  text-decoration: none;
+  color: var(--navy-soft);
+  font-size: 14px;
+}
+
+/* ---------- Desktop (768px+) ---------- */
+@media (min-width: 768px) {
+  .site-header__nav { display: flex; }
+
+  .section__grid {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-7);
+  }
+  .section__text { flex: 0 0 38%; position: sticky; top: 96px; }
+  .timeline { flex: 1; }
+
+  .location-grid { flex-direction: row; }
+  .location-card { flex: 1; }
+
+  .hero__cta { width: auto; }
+}

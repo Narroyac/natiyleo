@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Galería — Nati &amp; Leo</title>
+  <meta name="description" content="Todas las fotos que los invitados van subiendo durante la boda de Nati &amp; Leo." />
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0d1f4e" />
+  <link rel="icon" href="../icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../icons/favicon-16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Pasaporte N&amp;L" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/gallery.css" />
+</head>
+<body>
+  <div class="gallery-app">
+    <header class="gallery-topbar">
+      <a class="gallery-back" id="back-link" href="pasaporte.html">‹ Mi pasaporte</a>
+      <div class="gallery-title">Galería</div>
+      <button class="gallery-refresh" id="refresh-btn" aria-label="Actualizar">↻</button>
+    </header>
+
+    <div class="gallery-filters">
+      <div class="challenge-chips" id="challenge-chips"></div>
+      <button type="button" class="mine-toggle" id="mine-toggle" style="display:none">Mis fotos</button>
+    </div>
+
+    <div class="gallery-loading" id="gallery-loading">
+      <div class="spinner"></div>
+    </div>
+
+    <div class="gallery-empty" id="gallery-empty" style="display:none">
+      <p>Aún no hay fotos ni videos. ¡Sé el primero en completar un reto!</p>
+    </div>
+
+    <div class="feed" id="feed"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="../assets/js/supabase-client.js"></script>
+  <script type="module" src="../assets/js/gallery.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — Pasaporte de Boda</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="../icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/admin.css" />
+</head>
+<body>
+  <!-- Login -->
+  <div class="center-screen" id="login-screen">
+    <div class="admin-login">
+      <div class="mark">Pasaporte de Boda</div>
+      <div class="sub">Panel de administración · Nati &amp; Leo</div>
+      <form id="login-form">
+        <div class="field">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" autocomplete="current-password" required />
+        </div>
+        <button class="btn" type="submit" style="width:100%">Entrar</button>
+        <p class="error-msg" id="login-error">Contraseña incorrecta.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Shell -->
+  <div class="admin-shell" id="admin-shell">
+    <aside class="admin-sidebar">
+      <div class="brand">Pasaporte<br />de Boda</div>
+      <button class="admin-tab-btn active" data-tab="invitados">Invitados</button>
+      <button class="admin-tab-btn" data-tab="galeria">Galería</button>
+      <button class="admin-tab-btn" data-tab="finalizacion">Finalización</button>
+      <button class="admin-tab-btn" data-tab="roles">Roles</button>
+      <button class="admin-tab-btn" data-tab="enlaces">Enlaces</button>
+      <a class="admin-tab-btn" href="podio.html" target="_blank" rel="noopener">Podio en vivo ↗</a>
+      <button class="logout-btn" id="logout-btn">Cerrar sesión</button>
+    </aside>
+
+    <main class="admin-main">
+      <!-- Invitados -->
+      <section class="admin-panel active" id="panel-invitados">
+        <div class="panel-header">
+          <div><h1>Invitados</h1><div class="panel-sub">Confirma, edita mesa y roles, revisa progreso.</div></div>
+        </div>
+        <div class="stat-row" id="invitados-stats"></div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Código</th>
+                <th>RSVP</th>
+                <th>Menú</th>
+                <th>Mesa</th>
+                <th>Estampillas</th>
+                <th>Roles</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="guests-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Galería -->
+      <section class="admin-panel" id="panel-galeria">
+        <div class="panel-header">
+          <div><h1>Galería</h1><div class="panel-sub">Todas las fotos subidas. Ocultar las quita de la galería pública.</div></div>
+        </div>
+
+        <div class="admin-card export-card">
+          <h2 style="margin-bottom:4px;">Exportar recuerdo</h2>
+          <p class="panel-sub" style="margin-bottom: var(--space-4);">Un compilado de todo lo que suban los invitados durante la boda.</p>
+          <div class="export-actions">
+            <button type="button" class="btn" id="export-zip-btn">Descargar ZIP</button>
+            <a class="btn btn-outline" id="view-album-link" href="../invitacion/album.html" target="_blank" rel="noopener">Ver álbum ↗</a>
+          </div>
+        </div>
+
+        <div class="gallery-grid" id="gallery-grid"></div>
+
+        <div class="admin-card" style="margin-top: var(--space-6);">
+          <h2 style="margin-bottom:4px;">Comentarios</h2>
+          <p class="panel-sub" style="margin-bottom: var(--space-4);">Comentarios de invitados en las fotos y videos. Ocultar los quita de la galería pública sin borrarlos.</p>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Invitado</th>
+                  <th>Foto de</th>
+                  <th>Comentario</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="comments-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Finalización -->
+      <section class="admin-panel" id="panel-finalizacion">
+        <div class="panel-header">
+          <div><h1>Finalización</h1><div class="panel-sub">Orden de llegada y control del cronómetro del reto.</div></div>
+        </div>
+
+        <div class="admin-card">
+          <h2 style="margin-bottom:4px;">Cronómetro</h2>
+          <p class="panel-sub" id="timer-status">Sin iniciar.</p>
+          <div class="timer-display" id="timer-display">--:--:--</div>
+          <div class="timer-controls">
+            <div class="field">
+              <label for="timer-duration">Duración (minutos)</label>
+              <input type="number" id="timer-duration" min="1" />
+            </div>
+            <button class="btn" id="timer-start">Iniciar</button>
+            <button class="btn btn-outline" id="timer-pause">Pausar</button>
+            <button class="btn btn-outline" id="timer-resume">Reanudar</button>
+            <div class="field">
+              <label for="timer-extend">Extender (minutos)</label>
+              <input type="number" id="timer-extend" min="1" value="5" />
+            </div>
+            <button class="btn btn-outline" id="timer-extend-btn">Extender</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h2>Orden de llegada</h2>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Puesto</th><th>Nombre</th><th>Código</th><th>Hora</th></tr></thead>
+              <tbody id="ranking-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Roles -->
+      <section class="admin-panel" id="panel-roles">
+        <div class="panel-header">
+          <div><h1>Roles especiales</h1><div class="panel-sub">Catálogo de estampillas de rol — crear, activar/desactivar, eliminar.</div></div>
+        </div>
+        <div class="admin-card">
+          <form id="new-role-form" style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap;">
+            <div class="field" style="margin:0; flex:1; min-width:200px;">
+              <label for="new-role-label">Nuevo rol</label>
+              <input type="text" id="new-role-label" placeholder="Ej. Testigos" required />
+            </div>
+            <button class="btn" type="submit">Agregar</button>
+          </form>
+          <p class="panel-sub" style="margin-top:10px;">Al crear un rol nuevo, sube su ícono a Supabase Storage → bucket <code>stamps</code> con el nombre <code>role-{slug}.svg</code> que se muestra en la tabla.</p>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>Ícono</th><th>Nombre</th><th>Archivo esperado</th><th>Activo</th><th></th></tr></thead>
+            <tbody id="roles-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Enlaces -->
+      <section class="admin-panel" id="panel-enlaces">
+        <div class="panel-header">
+          <div><h1>Enlaces para WhatsApp</h1><div class="panel-sub">Copia el mensaje sugerido y envíalo manualmente a cada invitado.</div></div>
+          <button class="btn btn-outline" id="export-csv">Exportar conteo de menú (CSV)</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>Nombre</th><th>Código</th><th>Link</th><th></th></tr></thead>
+            <tbody id="links-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal ficha de invitado -->
+  <div class="admin-modal-backdrop" id="guest-modal">
+    <div class="admin-modal-sheet">
+      <button class="admin-modal-close" id="guest-modal-close">×</button>
+      <h2 id="guest-modal-title">Editar invitado</h2>
+      <div id="guest-modal-body"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="../assets/js/supabase-client.js"></script>
+  <script type="module" src="../assets/js/admin.js"></script>
+</body>
+</html>

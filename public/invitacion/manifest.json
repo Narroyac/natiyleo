@@ -1,0 +1,17 @@
+{
+  "name": "Pasaporte de Boda — Nati & Leo",
+  "short_name": "Pasaporte N&L",
+  "description": "Confirma tu asistencia, elige tu menú y completa retos para ganar estampillas en la boda de Nati y Leo.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f2ec",
+  "theme_color": "#0d1f4e",
+  "lang": "es",
+  "icons": [
+    { "src": "../icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "../icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "../icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
