@@ -506,14 +506,7 @@ main > * + * { margin-top: var(--section-gap); }
 }
 .rsvp-card__body { font-family: var(--font-sans); font-size: 16px; line-height: 1.6; color: var(--navy); margin: 0 0 var(--space-4); }
 .rsvp-card__meta { font-family: var(--font-sans); font-size: 16px; line-height: 1.6; color: var(--navy); margin-bottom: var(--space-5); }
-.rsvp__form input {
-  text-align: center;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  background: var(--cream);
-  border: 0.5px solid var(--button-cream);
-  border-radius: 12px;
-}
+.rsvp__form input { max-width: 240px; }
 .rsvp__message { min-height: 20px; font-family: var(--font-sans); font-size: 14px; color: var(--navy); margin: var(--space-3) 0 0; }
 .rsvp__message.error { color: var(--danger); }
 
