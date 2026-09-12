@@ -8,6 +8,12 @@
 
 body { overflow-x: hidden; }
 
+/* Rosa pastel: acento secundario tomado del sitio de Framer (rgb(255,204,246)),
+   usado solo en el home para el CTA del menú y el sello circular del hero —
+   no forma parte de la paleta navy/crema de tokens.css porque no se usa en
+   el resto del sitio (pasaporte/admin). */
+:root { --pink: #ffccf6; }
+
 .site-header {
   position: sticky;
   top: 0;
@@ -34,27 +40,26 @@ body { overflow-x: hidden; }
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--white);
-  color: var(--navy);
+  background: var(--button-cream);
+  color: var(--navy-ink);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-soft);
+  z-index: 1;
+  position: relative;
 }
-.site-header__toggle svg { width: 20px; height: 20px; }
+.site-header__toggle svg { width: 18px; height: 18px; }
+
+/* El menú real no es una tarjeta con links adentro: son pastillas sueltas
+   apiladas debajo del botón hamburguesa, cada una flotando por separado. */
 .site-header__menu {
   position: absolute;
   top: calc(100% + var(--space-2));
   right: var(--space-5);
-  background: var(--paper);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-floating);
-  padding: var(--space-3);
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: flex-end;
   gap: var(--space-2);
-  min-width: 180px;
   opacity: 0;
   transform: translateY(-6px);
   pointer-events: none;
@@ -65,15 +70,17 @@ body { overflow-x: hidden; }
   transform: translateY(0);
   pointer-events: auto;
 }
-.site-header__menu a {
+.site-header__pill {
   text-decoration: none;
   color: var(--navy-ink);
   font-size: 14px;
-  padding: var(--space-2) var(--space-2);
-  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--button-cream);
+  box-shadow: var(--shadow-soft);
+  white-space: nowrap;
 }
-.site-header__menu a:hover { background: var(--slot); }
-.btn-sm { padding: 10px 16px; font-size: 13px; text-align: center; text-decoration: none; }
+.site-header__pill--cta { background: var(--pink); color: var(--navy-ink); }
 
 .section { padding: var(--space-7) var(--space-5); max-width: 1200px; margin: 0 auto; }
 
@@ -114,8 +121,8 @@ body { overflow-x: hidden; }
   position: absolute;
   top: var(--space-3);
   left: var(--space-3);
-  background: var(--navy);
-  color: var(--white);
+  background: var(--pink);
+  color: var(--navy-ink);
   font-size: 11px;
   letter-spacing: 0.5px;
   padding: 8px 12px;
