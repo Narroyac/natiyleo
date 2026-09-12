@@ -254,7 +254,10 @@ main > * + * { margin-top: var(--section-gap); }
   }
   .hero__photo { aspect-ratio: auto; }
   .hero__content { padding: var(--space-6) var(--space-7); }
-  .hero__names { font-size: 140px; }
+  /* clamp en vez de un valor fijo: a 140px "· & Leo" no cabe en la columna
+     entre ~900-1270px (laptops comunes) y se parte en dos líneas; con
+     clamp llega a 140px desde ~1270px y antes de eso escala sin romper. */
+  .hero__names { font-size: clamp(84px, 11vw, 140px); }
 }
 
 /* ---------------------------------------------------------------------- */

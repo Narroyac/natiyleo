@@ -107,3 +107,30 @@ form.addEventListener("submit", (e) => {
     if (e.key === "Escape" && !lightbox.hidden) close();
   });
 })();
+
+// Centra el punto de "· & Leo" respecto al centro de la "N" de "Nati" (no
+// comparten el mismo borde izquierdo: el punto queda alineado con el medio
+// de esa letra). Se recalcula en resize porque el ancho de la "N" cambia
+// según el tamaño de fuente de cada breakpoint.
+(function alignHeroDot() {
+  const n = document.getElementById("hero-n");
+  const dot2 = document.getElementById("hero-dot-2");
+  const names = document.querySelector(".hero__names");
+  if (!n || !dot2 || !names) return;
+
+  function align() {
+    dot2.style.marginLeft = "0px";
+    const namesRect = names.getBoundingClientRect();
+    const nRect = n.getBoundingClientRect();
+    const dotRect = dot2.getBoundingClientRect();
+    const nCenter = nRect.left + nRect.width / 2 - namesRect.left;
+    const dotCenter = dotRect.left + dotRect.width / 2 - namesRect.left;
+    dot2.style.marginLeft = `${nCenter - dotCenter}px`;
+  }
+
+  align();
+  window.addEventListener("resize", align);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(align);
+  }
+})();
