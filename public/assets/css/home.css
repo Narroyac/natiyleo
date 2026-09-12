@@ -525,7 +525,6 @@ main > * + * { margin-top: var(--section-gap); }
   .rsvp-grid { grid-template-columns: 320px 1fr; gap: var(--space-7); }
   .rsvp-intro__text { font-size: 32px; }
   .rsvp-card { padding: 48px 44px 56px; }
-  .rsvp-card__body { max-width: 420px; }
 }
 
 /* ---------------------------------------------------------------------- */
