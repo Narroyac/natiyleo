@@ -130,8 +130,8 @@ main > * + * { margin-top: var(--section-gap); }
 /* ---------------------------------------------------------------------- */
 .rotating-badge {
   position: relative;
-  width: 84px;
-  height: 84px;
+  width: 120px;
+  height: 120px;
   color: var(--cream);
 }
 .rotating-badge__ring {
