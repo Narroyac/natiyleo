@@ -102,9 +102,11 @@
 
 /* página 2 — info del evento, RSVP, menú, mesa */
 .info-page-body {
+  height: 100%;
   padding: 0 var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: var(--space-3);
 }
 .info-page-row {

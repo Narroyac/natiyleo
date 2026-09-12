@@ -124,6 +124,11 @@ function buildPages() {
   const pages = [];
 
   pages.push({ type: "cover" });
+  // Guarda (con showCover:true, la portada queda sola en su propio spread
+  // y el libro se ve cerrado también en desktop, igual que en mobile); al
+  // abrir, esta página vacía queda a la izquierda emparejada con la
+  // siguiente — por ahora sin diseño, solo en blanco.
+  pages.push({ type: "blank" });
   // Estampillas especiales: justo después de la portada, y SOLO si este
   // invitado tiene alguna — si no, la página ni existe (a pedido de Nati).
   if (state.roleBadges.length > 0) {
@@ -241,6 +246,11 @@ function buildPageElement(page) {
     return el;
   }
 
+  if (page.type === "blank") {
+    // Sin contenido por ahora — solo el fondo de cuadrícula de .book-page.
+    return el;
+  }
+
   if (page.type === "info") {
     const mesa = state.guest.table_number ? `#${state.guest.table_number}` : "por confirmar";
     el.innerHTML = `
@@ -348,7 +358,7 @@ function initFlipbook() {
     maxHeight: 602,
     autoSize: true,
     usePortrait: true,
-    showCover: false,
+    showCover: true,
     drawShadow: true,
     maxShadowOpacity: 0.5,
     flippingTime: prefersReducedMotion ? 1 : 700,
@@ -356,6 +366,7 @@ function initFlipbook() {
     swipeDistance: 30,
     clickEventForward: true,
     useMouseEvents: true,
+    disableFlipByClick: true,
   });
 
   pageFlip.on("flip", (e) => {
