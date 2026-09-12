@@ -8,9 +8,10 @@
 
 :root {
   --page-inset: 20px;
+  --section-gap: 64px;
 }
 @media (min-width: 900px) {
-  :root { --page-inset: 40px; }
+  :root { --page-inset: 32px; --section-gap: 120px; }
 }
 
 body { overflow-x: hidden; }
@@ -71,7 +72,7 @@ body { overflow-x: hidden; }
 }
 .site-header__pill--cta { background: var(--navy); color: var(--cream); }
 
-.section { padding: var(--space-7) var(--page-inset); max-width: 1200px; margin: 0 auto; }
+.section { padding: var(--section-gap) var(--page-inset); max-width: 1200px; margin: 0 auto; }
 
 /* ---------------------------------------------------------------------- */
 /* Tipografía compartida del home                                         */
@@ -188,7 +189,15 @@ body { overflow-x: hidden; }
   letter-spacing: -0.02em;
 }
 .hero__names-line { display: block; }
-.hero__dot { font-size: 0.45em; color: var(--navy); }
+.hero__dot {
+  display: inline-block;
+  width: 0.14em;
+  height: 0.14em;
+  border-radius: 50%;
+  background: var(--navy);
+  vertical-align: middle;
+  margin-bottom: 0.08em;
+}
 .hero__bottom { align-self: end; }
 .hero__date { font-family: var(--font-serif); font-size: 20px; color: var(--navy); margin-bottom: var(--space-4); }
 .hero__cta { text-decoration: none; }
@@ -249,7 +258,7 @@ body { overflow-x: hidden; }
 .timeline__sub { font-family: var(--font-serif); font-size: 16px; color: var(--navy); margin: var(--space-2) 0 0; }
 .timeline__illustration {
   margin-top: var(--space-4);
-  width: 168px;
+  width: 260px;
   max-width: 100%;
   aspect-ratio: 1;
   border-radius: var(--radius-md);
@@ -260,8 +269,18 @@ body { overflow-x: hidden; }
   justify-content: center;
   padding: var(--space-3);
   box-sizing: border-box;
+  overflow: hidden;
 }
-.timeline__illustration img { width: 100%; height: 100%; object-fit: contain; }
+.timeline__illustration img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+@media (min-width: 900px) {
+  .timeline__illustration { width: 320px; }
+}
 
 @media (min-width: 900px) {
   .section__grid { grid-template-columns: 1fr 1fr; align-items: start; }
@@ -341,7 +360,7 @@ body { overflow-x: hidden; }
 .gallery-grid {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--page-inset) var(--space-7);
+  padding: 0 var(--page-inset) var(--section-gap);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
