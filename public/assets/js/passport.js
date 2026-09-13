@@ -192,14 +192,20 @@ function escapeHtml(s) {
   return d.innerHTML;
 }
 
+/** Estampilla de la grilla "scatter" (retos 3-10). Si el reto ya tiene arte
+ * subido para su estado actual (icon_url cuando está lleno, icon_empty_url
+ * cuando está vacío) se muestra esa imagen tal cual — igual que confirmar/
+ * menú, con el texto incrustado en el propio SVG. Si todavía no se subió el
+ * arte vacío de ese reto, cae de vuelta al recuadro genérico con label + "+"
+ * para no dejar la estampilla en blanco mientras Nati sube el resto. */
 function stampSlotHtml(challenge) {
   const done = isDone(challenge);
   const label = SHORT_LABEL[challenge.sort_order] || challenge.title;
-  if (done) {
-    const src = storageUrl(challenge.icon_url);
+  const src = done ? challenge.icon_url : challenge.icon_empty_url;
+  if (src) {
     return `
-      <button class="stamp-slot is-done" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
-        <img class="stamp-slot-img" src="${src}" alt="${escapeHtml(label)}" />
+      <button class="stamp-slot passport-stamp${done ? " is-done" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
+        <img class="stamp-slot-img" src="${storageUrl(src)}" alt="${escapeHtml(label)}" />
       </button>
     `;
   }
