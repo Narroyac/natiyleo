@@ -210,6 +210,8 @@
 .scatter[data-count="3"].alt .stamp-slot:nth-child(1) { top: 0%;  left: 50%; width: 38%; }
 .scatter[data-count="3"].alt .stamp-slot:nth-child(2) { top: 32%; left: 6%;  width: 32%; }
 .scatter[data-count="3"].alt .stamp-slot:nth-child(3) { top: 58%; left: 50%; width: 28%; }
+.scatter[data-count="2"] .stamp-slot:nth-child(1) { top: 6%;  left: 12%; width: 42%; }
+.scatter[data-count="2"] .stamp-slot:nth-child(2) { top: 48%; left: 46%; width: 42%; }
 
 /* estampillas circulares de rol */
 .roles-wrap {

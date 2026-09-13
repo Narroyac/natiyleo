@@ -20,12 +20,11 @@ const SHORT_LABEL = {
   3: "AMIGX NUEVX",
   4: "BRINDIS CAPITÁN",
   5: "DECORACIÓN",
-  6: "BAILE",
-  7: "BRINDIS NOVIOS",
-  8: "NUEVX EN LA PISTA",
-  9: "KARAOKE",
-  10: "DESEO",
-  11: "MOMENTO ESPONTÁNEO",
+  6: "BRINDIS NOVIOS",
+  7: "DESEO",
+  8: "LOOK DE LA NOCHE",
+  9: "HORA LOCA",
+  10: "FOTO LIBRE",
 };
 
 const MAPS_URL =
@@ -148,7 +147,7 @@ function buildPages() {
   pages.push({ type: "info", rsvp: byOrder(1), menu: byOrder(2) });
   pages.push({ type: "stamps", ids: [3, 4, 5].map(byOrder).filter(Boolean), alt: false });
   pages.push({ type: "stamps", ids: [6, 7, 8].map(byOrder).filter(Boolean), alt: true });
-  pages.push({ type: "stamps", ids: [9, 10, 11].map(byOrder).filter(Boolean), alt: false });
+  pages.push({ type: "stamps", ids: [9, 10].map(byOrder).filter(Boolean), alt: false });
 
   state.pages = pages;
 }
