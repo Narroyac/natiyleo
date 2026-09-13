@@ -37,6 +37,9 @@ const CONFIRM_EMPTY_URL = storageUrl("stamps/confirmar_vacia.svg");
 const CONFIRM_DONE_URL = storageUrl("stamps/confirmar_llena.svg");
 const MENU_EMPTY_URL = storageUrl("stamps/menu_vacia.svg");
 const MENU_DONE_URL = storageUrl("stamps/menu_llena.svg");
+// Igual que las estampillas: Nati la reemplaza subiendo un archivo con este
+// mismo nombre al bucket "stamps" en Supabase Storage, sin deploy.
+const VENUE_PHOTO_URL = storageUrl("stamps/ubicacion-banner.jpg");
 
 // Debe coincidir con 2 * minWidth de initFlipbook(): por debajo de este ancho
 // StPageFlip cambia a modo portrait (una sola página a la vez, igual que en
@@ -264,11 +267,14 @@ function buildPageElement(page) {
     el.innerHTML = `
       <div class="info-page-body">
         <div class="info-banner">
-          <p>Nos encontraremos en el Club el Prado. Aquí compartiremos tanto la ceremonia como la recepción.</p>
-          <div class="info-banner-links">
-            <a href="${WAZE_URL}" target="_blank" rel="noopener">Ir con Waze ↗</a>
-            <a href="${MAPS_URL}" target="_blank" rel="noopener">Ir con Maps ↗</a>
+          <div class="info-banner-main">
+            <p>Nos encontraremos en el Club el Prado. Aquí compartiremos tanto la ceremonia como la recepción.</p>
+            <div class="info-banner-links">
+              <a href="${MAPS_URL}" target="_blank" rel="noopener">Ir con Maps ↗</a>
+              <a href="${WAZE_URL}" target="_blank" rel="noopener">Ir con Waze ↗</a>
+            </div>
           </div>
+          <img class="info-banner-photo" src="${VENUE_PHOTO_URL}" alt="Club el Prado" />
         </div>
         ${
           page.rsvp
@@ -281,9 +287,8 @@ function buildPageElement(page) {
           page.menu
             ? `<div class="info-page-row info-page-row--menu">
           ${infoStampHtml(page.menu, "menu", MENU_EMPTY_URL, MENU_DONE_URL)}
-          <div class="info-page-menu-text">
-            <p>Puedes elegir la proteína de tu preferencia</p>
-            <p>Tu mesa asignada es la:</p>
+          <div class="mesa-card">
+            <p>Tu mesa es la:</p>
             <span class="mesa-badge mesa-badge--lg">${escapeHtml(mesa)}</span>
           </div>
         </div>`

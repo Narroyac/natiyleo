@@ -125,7 +125,7 @@
   gap: var(--space-2);
 }
 .info-page-row--confirm { justify-content: center; }
-.info-page-row--menu { align-items: flex-start; }
+.info-page-row--menu { align-items: stretch; }
 .mesa-badge {
   display: inline-block;
   background: var(--slot);
@@ -149,13 +149,28 @@
 .passport-stamp--confirm { width: 100%; max-width: 190px; }
 .passport-stamp--menu { width: 80px; }
 
-.info-page-menu-text { flex: 1; min-width: 0; }
-.info-page-menu-text p {
+/* Tarjeta de mesa, estilo "estampilla llena" (borde punteado navy, igual
+ * que el arte de las estampillas confirm/menu cuando ya están completas):
+ * ver mockup Figma (node 1:39, grupo 1:185). */
+.mesa-card {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  border: 2px dashed var(--navy);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  text-align: center;
+}
+.mesa-card p {
   font-family: var(--font-sans);
   font-size: 12px;
   color: var(--navy-ink);
   line-height: 1.35;
-  margin: 0 0 var(--space-1);
+  margin: 0;
 }
 .mesa-badge--lg {
   display: block;
@@ -163,11 +178,11 @@
   max-width: 100%;
   text-align: center;
   white-space: normal;
-  margin: var(--space-1) 0 0;
-  padding: var(--space-1) var(--space-4);
+  background: var(--cream-deep);
+  padding: var(--space-1) var(--space-5);
   border-radius: 999px;
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
 }
 
