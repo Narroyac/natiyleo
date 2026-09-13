@@ -47,6 +47,16 @@
    página (fondo, bordes redondeados); el motor de flip en sí no se toca.
    Respeta prefers-reduced-motion bajando flippingTime a ~0 en la config
    de JS, no con una animación CSS aparte. */
+/* Portada "cerrada": mientras se muestra la página 0, angosta el libro al
+   ancho de una sola hoja para que en desktop también se vea como un libro
+   cerrado (sin esto, StPageFlip deja el marco a doble ancho con la mitad
+   izquierda vacía). !important porque StPageFlip le pone su propio
+   max-width inline (ver initFlipbook()/syncCoverWidth() en passport.js,
+   que agregan/quitan esta clase y fuerzan a StPageFlip a re-medir). */
+.passport-book.is-cover {
+  max-width: 420px !important;
+}
+
 .book-page {
   border-radius: var(--radius-passport);
   /* fondo de cuadrícula: imagen de Nati (assets/img/page-bg.png) */

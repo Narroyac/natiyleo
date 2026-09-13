@@ -38,6 +38,11 @@ const CONFIRM_DONE_URL = storageUrl("stamps/confirmar_llena.svg");
 const MENU_EMPTY_URL = storageUrl("stamps/menu_vacia.svg");
 const MENU_DONE_URL = storageUrl("stamps/menu_llena.svg");
 
+// Debe coincidir con 2 * minWidth de initFlipbook(): por debajo de este ancho
+// StPageFlip cambia a modo portrait (una sola página a la vez, igual que en
+// mobile); a partir de acá usa modo landscape (doble página, desktop).
+const DESKTOP_SPREAD_MIN_WIDTH = 560;
+
 const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const els = {
@@ -124,11 +129,14 @@ function buildPages() {
   const pages = [];
 
   pages.push({ type: "cover" });
-  // Guarda (con showCover:true, la portada queda sola en su propio spread
-  // y el libro se ve cerrado también en desktop, igual que en mobile); al
-  // abrir, esta página vacía queda a la izquierda emparejada con la
-  // siguiente — por ahora sin diseño, solo en blanco.
-  pages.push({ type: "blank" });
+  // Página en blanco: solo tiene sentido en desktop, donde ocupa la hoja
+  // izquierda del primer spread doble (junto a "info"). En mobile el libro
+  // siempre pasa una hoja a la vez (modo portrait), así que insertarla ahí
+  // haría que el invitado tuviera que pasarla como una página vacía más —
+  // por eso ni se agrega cuando el ancho no alcanza para doble página.
+  if (window.innerWidth >= DESKTOP_SPREAD_MIN_WIDTH) {
+    pages.push({ type: "blank" });
+  }
   // Estampillas especiales: justo después de la portada, y SOLO si este
   // invitado tiene alguna — si no, la página ni existe (a pedido de Nati).
   if (state.roleBadges.length > 0) {
@@ -347,7 +355,24 @@ function buildFlipPages() {
   return state.pages.map(buildPageElement);
 }
 
+/** Mientras se muestra la portada (page 0), fuerza el ancho del libro al de
+ * una sola hoja para que en desktop también se vea "cerrado" (igual que en
+ * mobile) en vez del hueco de una hoja izquierda vacía; al pasar la página,
+ * lo libera para que StPageFlip use su doble página normal en desktop. El
+ * ancho lo controla la clase .is-cover en passport.css (!important, porque
+ * StPageFlip le pone su propio max-width inline); acá solo se dispara un
+ * "resize" sintético para que StPageFlip vuelva a medir el contenedor —
+ * es el mismo evento que ya escucha para un resize real de ventana. */
+function syncCoverWidth() {
+  const isCover = state.currentPage === 0;
+  if (els.passportBook.classList.contains("is-cover") === isCover) return;
+  els.passportBook.classList.toggle("is-cover", isCover);
+  window.dispatchEvent(new Event("resize"));
+}
+
 function initFlipbook() {
+  els.passportBook.classList.add("is-cover");
+
   pageFlip = new PageFlip(els.passportBook, {
     width: 420,
     height: 602,
@@ -364,13 +389,21 @@ function initFlipbook() {
     flippingTime: prefersReducedMotion ? 1 : 700,
     mobileScrollSupport: true,
     swipeDistance: 30,
-    clickEventForward: true,
+    // clickEventForward ya evita que un tap en un <a>/<button> real (Waze,
+    // Maps, las estampillas) dispare un flip — mira target exacto, ver
+    // checkTarget() en el vendor y el pointer-events:none de .stamp-slot >
+    // * en passport.css. disableFlipByClick quedó DESACTIVADO (default) a
+    // propósito: además de no hacer falta para eso, flipPrev() en el vendor
+    // arma su punto de click sin sumarle el offset izquierdo del libro
+    // (a diferencia de flipNext()), así que con disableFlipByClick activo
+    // isPointOnCorners() lo descartaba como fuera de la esquina y el botón
+    // "‹" (prev-page) dejaba de funcionar.
     useMouseEvents: true,
-    disableFlipByClick: true,
   });
 
   pageFlip.on("flip", (e) => {
     state.currentPage = e.data;
+    syncCoverWidth();
     renderFrame();
   });
 
