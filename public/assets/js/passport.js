@@ -208,7 +208,7 @@ function stampCellHtml(challenge, { variant, caption } = {}) {
   const done = isDone(challenge);
   const label = SHORT_LABEL[challenge.sort_order] || challenge.title;
   const src = done ? challenge.icon_url : challenge.icon_empty_url;
-  const variantClass = variant ? ` passport-stamp passport-stamp--${variant}` : "";
+  const variantClass = src ? ` passport-stamp${variant ? ` passport-stamp--${variant}` : ""}` : "";
   const inner = src
     ? `
       <button class="stamp-slot${variantClass}${done ? " is-done" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
