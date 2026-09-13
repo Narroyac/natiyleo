@@ -32,10 +32,6 @@ const MAPS_URL =
 const WAZE_URL =
   "https://ul.waze.com/ul?venue_id=186515516.1865089627.37667875&overview=yes&utm_campaign=default&utm_source=waze_website&utm_medium=lm_share_location";
 
-const CONFIRM_EMPTY_URL = storageUrl("stamps/confirmar_vacia.svg");
-const CONFIRM_DONE_URL = storageUrl("stamps/confirmar_llena.svg");
-const MENU_EMPTY_URL = storageUrl("stamps/menu_vacia.svg");
-const MENU_DONE_URL = storageUrl("stamps/menu_llena.svg");
 // Imagen de recuerdo de la última página ("finale"): una sola, igual para
 // todos los invitados — Nati la diseña una vez y la sube a Storage con este
 // nombre; acá solo se muestra y se ofrece para descargar.
@@ -200,19 +196,22 @@ function stampIndexLabel(challenge) {
   return challenge.sort_order === 10 ? "Reto 10 - Final" : `Reto ${challenge.sort_order}`;
 }
 
-/** Estampilla de la grilla "scatter" (retos 3-10). Si el reto ya tiene arte
- * subido para su estado actual (icon_url cuando está lleno, icon_empty_url
- * cuando está vacío) se muestra esa imagen tal cual — igual que confirmar/
- * menú, con el texto incrustado en el propio SVG. Si todavía no se subió el
- * arte vacío de ese reto, cae de vuelta al recuadro genérico con label + "+"
- * para no dejar la estampilla en blanco mientras Nati sube el resto. */
-function stampSlotHtml(challenge) {
+/** Estampilla de cualquier reto (confirmar, menú, o la grilla "scatter"
+ * 3-10) — todas se manejan igual: icon_url cuando está lleno, icon_empty_url
+ * cuando está vacío, ambos subidos por Nati a Supabase Storage con el texto
+ * ya incrustado en el propio SVG. Si el reto todavía no tiene arte vacío
+ * subido, cae de vuelta al recuadro genérico con label + "+" para no dejar
+ * la estampilla en blanco. `variant` es opcional y solo aplica el tamaño
+ * especial de confirmar/menú (passport-stamp--confirm/--menu); `caption`
+ * por defecto es "Reto N", pero confirmar/menú pasan su propio texto. */
+function stampCellHtml(challenge, { variant, caption } = {}) {
   const done = isDone(challenge);
   const label = SHORT_LABEL[challenge.sort_order] || challenge.title;
   const src = done ? challenge.icon_url : challenge.icon_empty_url;
+  const variantClass = variant ? ` passport-stamp passport-stamp--${variant}` : "";
   const inner = src
     ? `
-      <button class="stamp-slot passport-stamp${done ? " is-done" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
+      <button class="stamp-slot${variantClass}${done ? " is-done" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
         <img class="stamp-slot-img" src="${storageUrl(src)}" alt="${escapeHtml(label)}" />
       </button>
     `
@@ -224,25 +223,8 @@ function stampSlotHtml(challenge) {
     `;
   return `
     <div class="stamp-cell">
-      <span class="stamp-index-label">${escapeHtml(stampIndexLabel(challenge))}</span>
+      <span class="stamp-index-label">${escapeHtml(caption ?? stampIndexLabel(challenge))}</span>
       ${inner}
-    </div>
-  `;
-}
-
-/** Estampilla grande de la página "info" (confirmar asistencia / elegir
- * menú): a diferencia de stampSlotHtml(), el texto ya viene incrustado en
- * el propio arte (SVG vacío/lleno subido a Supabase Storage), así que acá
- * solo se elige qué imagen mostrar — sin label ni overlay en HTML. */
-function infoStampHtml(challenge, variant, emptySrc, doneSrc, caption) {
-  const done = isDone(challenge);
-  const label = SHORT_LABEL[challenge.sort_order] || challenge.title;
-  return `
-    <div class="stamp-cell">
-      <span class="stamp-index-label">${escapeHtml(caption)}</span>
-      <button class="stamp-slot passport-stamp passport-stamp--${variant}${done ? " is-done" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
-        <img src="${done ? doneSrc : emptySrc}" alt="${escapeHtml(label)}" />
-      </button>
     </div>
   `;
 }
@@ -307,8 +289,8 @@ function buildPageElement(page) {
             </div>
           </div>
           <div class="info-grid-stamps">
-            ${page.rsvp ? infoStampHtml(page.rsvp, "confirm", CONFIRM_EMPTY_URL, CONFIRM_DONE_URL, "Reto 1 - Confirmación") : ""}
-            ${page.menu ? infoStampHtml(page.menu, "menu", MENU_EMPTY_URL, MENU_DONE_URL, "Reto 2 - Elegir proteína") : ""}
+            ${page.rsvp ? stampCellHtml(page.rsvp, { variant: "confirm", caption: "Reto 1 - Confirmación" }) : ""}
+            ${page.menu ? stampCellHtml(page.menu, { variant: "menu", caption: "Reto 2 - Elegir proteína" }) : ""}
           </div>
         </div>
       </div>
@@ -324,7 +306,7 @@ function buildPageElement(page) {
         <div class="page-sub">Toca una para reclamarla</div>
       </div>
       <div class="scatter" data-key="${page.key}">
-        ${page.ids.map(stampSlotHtml).join("")}
+        ${page.ids.map((c) => stampCellHtml(c)).join("")}
       </div>
     `;
     bindStampSlotHandlers(el);
