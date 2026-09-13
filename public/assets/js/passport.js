@@ -253,6 +253,10 @@ function buildPageElement(page) {
   el.className = "book-page";
 
   if (page.type === "cover") {
+    // Sin fondo de cuadrícula: la portada trae su propia ilustración de
+    // tapa a página completa (ver .book-page:not(.book-page--cover) en
+    // passport.css).
+    el.classList.add("book-page--cover");
     // Ilustración de Nati tal cual, sin reconstruir en HTML (spec sección 3).
     el.innerHTML = `
       <div class="cover-page">

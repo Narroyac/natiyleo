@@ -59,13 +59,17 @@
 
 .book-page {
   border-radius: var(--radius-passport);
-  /* fondo de cuadrícula: imagen de Nati (assets/img/page-bg.png) */
   background-color: var(--paper);
-  background-image: url("../img/page-bg.png");
+  overflow: hidden;
+}
+/* fondo de cuadrícula en todas las páginas menos la portada (la portada
+ * trae su propia ilustración de tapa a página completa, ver cover-page-img
+ * en buildPageElement()/passport.js). */
+.book-page:not(.book-page--cover) {
+  background-image: url("../img/fondo_paginas_1@2x.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  overflow: hidden;
 }
 /* Tappable area real de estampillas/banner: si el usuario toca un <span>
    decorativo DENTRO del botón en vez del <button> mismo, StPageFlip lo
