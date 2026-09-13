@@ -184,8 +184,8 @@
 }
 .passport-stamp img { width: 100%; height: auto; display: block; }
 .passport-stamp.is-done img { filter: drop-shadow(0 4px 8px rgba(13, 31, 78, 0.18)); }
-.passport-stamp--confirm,
-.passport-stamp--menu { width: 100%; }
+.passport-stamp--confirm { width: 75%; margin: 0 auto; }
+.passport-stamp--menu { width: 60%; margin: 0 auto; }
 
 /* Tarjeta de mesa, estilo "estampilla llena" (borde punteado navy, igual
  * que el arte de las estampillas confirm/menu cuando ya están completas):
