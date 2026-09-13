@@ -39,7 +39,7 @@ const MENU_EMPTY_URL = storageUrl("stamps/menu_vacia.svg");
 const MENU_DONE_URL = storageUrl("stamps/menu_llena.svg");
 // Igual que las estampillas: Nati la reemplaza subiendo un archivo con este
 // mismo nombre al bucket "stamps" en Supabase Storage, sin deploy.
-const VENUE_PHOTO_URL = storageUrl("stamps/ubicacion-banner.jpg");
+const VENUE_PHOTO_URL = storageUrl("stamps/ubicacion-banner.png");
 
 // Debe coincidir con 2 * minWidth de initFlipbook(): por debajo de este ancho
 // StPageFlip cambia a modo portrait (una sola página a la vez, igual que en
