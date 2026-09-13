@@ -31,11 +31,20 @@
 
 /* ---------- progress-bar ---------- */
 .progress-bar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
   padding: 0 var(--space-4);
   margin-bottom: var(--space-4);
+}
+.progress-bar-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+.progress-bar-title {
+  font-family: var(--font-sans);
+  font-size: var(--text-counter);
+  color: var(--navy-soft);
 }
 .progress-bar .progress-track {
   flex: 1;
@@ -106,31 +115,22 @@
 
 /* ---------- info-banner ---------- */
 .info-banner {
-  display: flex;
-  align-items: stretch;
-  gap: var(--space-2);
   background: var(--slot);
   color: var(--navy-ink);
   font-family: var(--font-sans);
   font-size: 12px;
   line-height: 1.35;
-  padding: var(--space-2);
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
 }
-.info-banner-main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-.info-banner-main p { margin: 0; }
+.info-banner p { margin: 0 0 var(--space-2); }
 .info-banner-links {
   display: flex;
+  justify-content: center;
   gap: var(--space-2);
 }
 .info-banner-links a {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -144,14 +144,6 @@
   white-space: nowrap;
 }
 .info-banner-links a:active { transform: scale(0.97); }
-.info-banner-photo {
-  flex: 0 0 28%;
-  min-width: 0;
-  aspect-ratio: 1;
-  align-self: center;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-}
 
 /* ---------- stamp-slot ---------- */
 .stamp-slot {

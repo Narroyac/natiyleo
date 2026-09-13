@@ -120,16 +120,8 @@
   padding: 0 var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: var(--space-3);
 }
-.info-page-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.info-page-row--confirm { justify-content: center; }
-.info-page-row--menu { align-items: stretch; }
 .mesa-badge {
   display: inline-block;
   background: var(--slot);
@@ -137,6 +129,48 @@
   padding: 2px 10px;
   font-weight: 600;
   color: var(--navy);
+}
+
+/* Mesa a la izquierda (grande) + confirmar/menú apiladas a la derecha
+ * (chicas), cada una con su etiqueta "Reto N" arriba — ver mockup Figma
+ * actualizado (node 1:39). */
+.info-grid {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: var(--space-3);
+}
+.info-grid-mesa {
+  flex: 0 0 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+.info-grid-mesa .mesa-card { flex: 1; width: 100%; }
+.info-grid-stamps {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: var(--space-4);
+}
+
+/* etiqueta pequeña "Reto N" / "Mesa" arriba de cada estampilla */
+.stamp-index-label {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  color: var(--navy-soft);
+  text-align: center;
+  white-space: nowrap;
+}
+.info-grid-stamps .stamp-cell,
+.info-grid-mesa .stamp-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
 /* estampillas grandes de la página "info" — el arte (vacío/lleno) ya trae
@@ -150,8 +184,8 @@
 }
 .passport-stamp img { width: 100%; height: auto; display: block; }
 .passport-stamp.is-done img { filter: drop-shadow(0 4px 8px rgba(13, 31, 78, 0.18)); }
-.passport-stamp--confirm { width: 100%; max-width: 190px; }
-.passport-stamp--menu { width: 80px; }
+.passport-stamp--confirm,
+.passport-stamp--menu { width: 100%; }
 
 /* Tarjeta de mesa, estilo "estampilla llena" (borde punteado navy, igual
  * que el arte de las estampillas confirm/menu cuando ya están completas):
@@ -190,32 +224,80 @@
   font-weight: 600;
 }
 
-/* grilla de estampillas (retos) — se conserva el estilo "scatter"
-   orgánico existente hasta definir con Nati el mapeo de retos por
-   página (fase 3, paso 4); estos slots seguirán consumiendo tokens
-   igual, solo cambia su disposición cuando se apruebe. */
+/* grilla de estampillas (retos) — disposición "scatter" orgánica, con las
+   posiciones/tamaños medidos del mockup Figma (node 1:39 y páginas "2","3",
+   "4"): 3 páginas con agrupación 2+4+2 (antes 3+3+2), cada una con su propio
+   data-key porque los tamaños de cada estampilla no son simétricos. */
 .scatter {
   position: absolute;
-  top: 74px; left: 0; right: 0; bottom: 12px;
+  top: 90px; left: 0; right: 0; bottom: 12px;
+}
+.scatter .stamp-cell {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.scatter .stamp-cell .stamp-index-label {
+  position: absolute;
+  top: -14px;
+  left: 0;
+  right: 0;
 }
 .scatter .stamp-slot {
-  position: absolute;
-  width: 34%;
-  aspect-ratio: 4 / 5;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 .scatter .stamp-slot.is-done { padding: 0; }
 .scatter .stamp-slot .stamp-slot-img {
   width: 100%;
   height: 100%;
 }
-.scatter[data-count="3"]:not(.alt) .stamp-slot:nth-child(1) { top: 0%;  left: 6%;  width: 36%; }
-.scatter[data-count="3"]:not(.alt) .stamp-slot:nth-child(2) { top: 30%; left: 54%; width: 34%; }
-.scatter[data-count="3"]:not(.alt) .stamp-slot:nth-child(3) { top: 58%; left: 14%; width: 28%; }
-.scatter[data-count="3"].alt .stamp-slot:nth-child(1) { top: 0%;  left: 50%; width: 38%; }
-.scatter[data-count="3"].alt .stamp-slot:nth-child(2) { top: 32%; left: 6%;  width: 32%; }
-.scatter[data-count="3"].alt .stamp-slot:nth-child(3) { top: 58%; left: 50%; width: 28%; }
-.scatter[data-count="2"] .stamp-slot:nth-child(1) { top: 6%;  left: 12%; width: 42%; }
-.scatter[data-count="2"] .stamp-slot:nth-child(2) { top: 48%; left: 46%; width: 42%; }
+
+.scatter[data-key="34"] .stamp-cell:nth-child(1) { top: 13%;  left: 11%; width: 54%; height: 48%; }
+.scatter[data-key="34"] .stamp-cell:nth-child(2) { top: 69%;  left: 41%; width: 54%; height: 22%; }
+
+.scatter[data-key="5678"] .stamp-cell:nth-child(1) { top: 12%; left: 8%;  width: 40%; height: 39%; }
+.scatter[data-key="5678"] .stamp-cell:nth-child(2) { top: 21%; left: 53%; width: 42%; height: 20%; }
+.scatter[data-key="5678"] .stamp-cell:nth-child(3) { top: 62%; left: 8%;  width: 42%; height: 20%; }
+.scatter[data-key="5678"] .stamp-cell:nth-child(4) { top: 50%; left: 55%; width: 40%; height: 39%; }
+
+.scatter[data-key="910"] .stamp-cell:nth-child(1) { top: 14%; left: 6%;  width: 74%; height: 39%; }
+.scatter[data-key="910"] .stamp-cell:nth-child(2) { top: 64%; left: 31%; width: 62%; height: 25%; }
+
+/* última página — recuerdo descargable, una sola imagen igual para todos
+ * los invitados (Nati la sube a Storage; ver FINALE_IMAGE_URL en
+ * passport.js). */
+.finale-page-body {
+  height: 100%;
+  padding: var(--space-4) var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+.finale-page-body p {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--navy-ink);
+  line-height: 1.4;
+  margin: 0;
+}
+.finale-image {
+  flex: 1;
+  min-height: 0;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+.finale-page-body .btn-secondary {
+  flex: 0 0 auto;
+  width: 100%;
+  margin: 0;
+}
 
 /* estampillas circulares de rol */
 .roles-wrap {

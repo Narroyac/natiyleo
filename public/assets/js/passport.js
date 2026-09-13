@@ -36,9 +36,10 @@ const CONFIRM_EMPTY_URL = storageUrl("stamps/confirmar_vacia.svg");
 const CONFIRM_DONE_URL = storageUrl("stamps/confirmar_llena.svg");
 const MENU_EMPTY_URL = storageUrl("stamps/menu_vacia.svg");
 const MENU_DONE_URL = storageUrl("stamps/menu_llena.svg");
-// Igual que las estampillas: Nati la reemplaza subiendo un archivo con este
-// mismo nombre al bucket "stamps" en Supabase Storage, sin deploy.
-const VENUE_PHOTO_URL = storageUrl("stamps/ubicacion-banner.png");
+// Imagen de recuerdo de la última página ("finale"): una sola, igual para
+// todos los invitados — Nati la diseña una vez y la sube a Storage con este
+// nombre; acá solo se muestra y se ofrece para descargar.
+const FINALE_IMAGE_URL = storageUrl("stamps/recuerdo-final.jpg");
 
 // Debe coincidir con 2 * minWidth de initFlipbook(): por debajo de este ancho
 // StPageFlip cambia a modo portrait (una sola página a la vez, igual que en
@@ -145,9 +146,10 @@ function buildPages() {
     pages.push({ type: "roles" });
   }
   pages.push({ type: "info", rsvp: byOrder(1), menu: byOrder(2) });
-  pages.push({ type: "stamps", ids: [3, 4, 5].map(byOrder).filter(Boolean), alt: false });
-  pages.push({ type: "stamps", ids: [6, 7, 8].map(byOrder).filter(Boolean), alt: true });
-  pages.push({ type: "stamps", ids: [9, 10].map(byOrder).filter(Boolean), alt: false });
+  pages.push({ type: "stamps", key: "34", ids: [3, 4].map(byOrder).filter(Boolean) });
+  pages.push({ type: "stamps", key: "5678", ids: [5, 6, 7, 8].map(byOrder).filter(Boolean) });
+  pages.push({ type: "stamps", key: "910", ids: [9, 10].map(byOrder).filter(Boolean) });
+  pages.push({ type: "finale" });
 
   state.pages = pages;
 }
@@ -192,6 +194,12 @@ function escapeHtml(s) {
   return d.innerHTML;
 }
 
+/** Etiqueta pequeña "Reto N" que va arriba de cada estampilla de la grilla
+ * (spec del mockup: cada estampilla trae su número de reto). */
+function stampIndexLabel(challenge) {
+  return challenge.sort_order === 10 ? "Reto 10 - Final" : `Reto ${challenge.sort_order}`;
+}
+
 /** Estampilla de la grilla "scatter" (retos 3-10). Si el reto ya tiene arte
  * subido para su estado actual (icon_url cuando está lleno, icon_empty_url
  * cuando está vacío) se muestra esa imagen tal cual — igual que confirmar/
@@ -202,18 +210,23 @@ function stampSlotHtml(challenge) {
   const done = isDone(challenge);
   const label = SHORT_LABEL[challenge.sort_order] || challenge.title;
   const src = done ? challenge.icon_url : challenge.icon_empty_url;
-  if (src) {
-    return `
+  const inner = src
+    ? `
       <button class="stamp-slot passport-stamp${done ? " is-done" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
         <img class="stamp-slot-img" src="${storageUrl(src)}" alt="${escapeHtml(label)}" />
       </button>
+    `
+    : `
+      <button class="stamp-slot" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
+        <span class="stamp-slot-label">${escapeHtml(label)}</span>
+        <span class="stamp-slot-btn">＋</span>
+      </button>
     `;
-  }
   return `
-    <button class="stamp-slot" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
-      <span class="stamp-slot-label">${escapeHtml(label)}</span>
-      <span class="stamp-slot-btn">＋</span>
-    </button>
+    <div class="stamp-cell">
+      <span class="stamp-index-label">${escapeHtml(stampIndexLabel(challenge))}</span>
+      ${inner}
+    </div>
   `;
 }
 
@@ -221,13 +234,16 @@ function stampSlotHtml(challenge) {
  * menú): a diferencia de stampSlotHtml(), el texto ya viene incrustado en
  * el propio arte (SVG vacío/lleno subido a Supabase Storage), así que acá
  * solo se elige qué imagen mostrar — sin label ni overlay en HTML. */
-function infoStampHtml(challenge, variant, emptySrc, doneSrc) {
+function infoStampHtml(challenge, variant, emptySrc, doneSrc, caption) {
   const done = isDone(challenge);
   const label = SHORT_LABEL[challenge.sort_order] || challenge.title;
   return `
-    <button class="stamp-slot passport-stamp passport-stamp--${variant}${done ? " is-done" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
-      <img src="${done ? doneSrc : emptySrc}" alt="${escapeHtml(label)}" />
-    </button>
+    <div class="stamp-cell">
+      <span class="stamp-index-label">${escapeHtml(caption)}</span>
+      <button class="stamp-slot passport-stamp passport-stamp--${variant}${done ? " is-done" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
+        <img src="${done ? doneSrc : emptySrc}" alt="${escapeHtml(label)}" />
+      </button>
+    </div>
   `;
 }
 
@@ -276,33 +292,25 @@ function buildPageElement(page) {
     el.innerHTML = `
       <div class="info-page-body">
         <div class="info-banner">
-          <div class="info-banner-main">
-            <p>Nos encontraremos en el Club el Prado. Aquí compartiremos tanto la ceremonia como la recepción.</p>
-            <div class="info-banner-links">
-              <a href="${MAPS_URL}" target="_blank" rel="noopener">Ir con Maps ↗</a>
-              <a href="${WAZE_URL}" target="_blank" rel="noopener">Ir con Waze ↗</a>
+          <p>Nos encontraremos en el Club el Prado. Aquí compartiremos tanto la ceremonia como la recepción.</p>
+          <div class="info-banner-links">
+            <a href="${MAPS_URL}" target="_blank" rel="noopener">Ir con Maps ↗</a>
+            <a href="${WAZE_URL}" target="_blank" rel="noopener">Ir con Waze ↗</a>
+          </div>
+        </div>
+        <div class="info-grid">
+          <div class="info-grid-mesa">
+            <span class="stamp-index-label">Mesa</span>
+            <div class="mesa-card">
+              <p>Tu mesa es la:</p>
+              <span class="mesa-badge mesa-badge--lg">${escapeHtml(mesa)}</span>
             </div>
           </div>
-          <img class="info-banner-photo" src="${VENUE_PHOTO_URL}" alt="Club el Prado" />
-        </div>
-        ${
-          page.rsvp
-            ? `<div class="info-page-row info-page-row--confirm">
-          ${infoStampHtml(page.rsvp, "confirm", CONFIRM_EMPTY_URL, CONFIRM_DONE_URL)}
-        </div>`
-            : ""
-        }
-        ${
-          page.menu
-            ? `<div class="info-page-row info-page-row--menu">
-          ${infoStampHtml(page.menu, "menu", MENU_EMPTY_URL, MENU_DONE_URL)}
-          <div class="mesa-card">
-            <p>Tu mesa es la:</p>
-            <span class="mesa-badge mesa-badge--lg">${escapeHtml(mesa)}</span>
+          <div class="info-grid-stamps">
+            ${page.rsvp ? infoStampHtml(page.rsvp, "confirm", CONFIRM_EMPTY_URL, CONFIRM_DONE_URL, "Reto 1 - Confirmación") : ""}
+            ${page.menu ? infoStampHtml(page.menu, "menu", MENU_EMPTY_URL, MENU_DONE_URL, "Reto 2 - Elegir proteína") : ""}
           </div>
-        </div>`
-            : ""
-        }
+        </div>
       </div>
     `;
     bindStampSlotHandlers(el);
@@ -310,17 +318,27 @@ function buildPageElement(page) {
   }
 
   if (page.type === "stamps") {
-    const count = page.ids.length;
     el.innerHTML = `
       <div class="page-header">
         <div class="page-title">Estampillas</div>
         <div class="page-sub">Toca una para reclamarla</div>
       </div>
-      <div class="scatter ${page.alt ? "alt" : ""}" data-count="${count}">
+      <div class="scatter" data-key="${page.key}">
         ${page.ids.map(stampSlotHtml).join("")}
       </div>
     `;
     bindStampSlotHandlers(el);
+    return el;
+  }
+
+  if (page.type === "finale") {
+    el.innerHTML = `
+      <div class="finale-page-body">
+        <p>¡Gracias por completar todos los retos! Aquí puedes descargar tu recuerdo de esta experiencia:</p>
+        <img class="finale-image" src="${FINALE_IMAGE_URL}" alt="Recuerdo del pasaporte — Nati &amp; Leo" />
+        <a class="btn-secondary" href="${FINALE_IMAGE_URL}" target="_blank" rel="noopener">Descargar recuerdo</a>
+      </div>
+    `;
     return el;
   }
 
