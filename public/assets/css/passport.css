@@ -145,9 +145,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--space-1);
 }
-.info-grid-mesa .mesa-card { flex: 1; width: 100%; }
+.info-grid-mesa .mesa-card { width: 100%; }
 .info-grid-stamps {
   flex: 1;
   min-width: 0;
@@ -187,23 +188,30 @@
 .passport-stamp--confirm { width: 75%; margin: 0 auto; }
 .passport-stamp--menu { width: 60%; margin: 0 auto; }
 
-/* Tarjeta de mesa, estilo "estampilla llena" (borde punteado navy, igual
- * que el arte de las estampillas confirm/menu cuando ya están completas):
- * ver mockup Figma (node 1:39, grupo 1:185). */
+/* Tarjeta de mesa: contorno de estampilla real (mesa.svg, subido por Nati a
+ * Supabase Storage — sin texto incrustado, porque el número de mesa varía
+ * por invitado), con el texto superpuesto encima. */
 .mesa-card {
-  flex: 1;
+  position: relative;
   min-width: 0;
+}
+.mesa-card-frame {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.mesa-card-content {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--space-1);
-  border: 2px dashed var(--navy);
-  border-radius: var(--radius-md);
-  padding: var(--space-2);
+  padding: 10%;
   text-align: center;
 }
-.mesa-card p {
+.mesa-card-content p {
   font-family: var(--font-sans);
   font-size: 12px;
   color: var(--navy-ink);

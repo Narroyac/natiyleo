@@ -36,6 +36,11 @@ const WAZE_URL =
 // todos los invitados — Nati la diseña una vez y la sube a Storage con este
 // nombre; acá solo se muestra y se ofrece para descargar.
 const FINALE_IMAGE_URL = storageUrl("stamps/recuerdo-final.jpg");
+// Contorno de estampilla de la tarjeta de mesa — un solo SVG decorativo
+// (sin texto incrustado, a diferencia de las demás estampillas, porque el
+// número de mesa varía por invitado), Nati lo reemplaza subiendo un archivo
+// con este mismo nombre.
+const MESA_FRAME_URL = storageUrl("stamps/mesa.svg");
 
 // Debe coincidir con 2 * minWidth de initFlipbook(): por debajo de este ancho
 // StPageFlip cambia a modo portrait (una sola página a la vez, igual que en
@@ -284,8 +289,11 @@ function buildPageElement(page) {
           <div class="info-grid-mesa">
             <span class="stamp-index-label">Mesa</span>
             <div class="mesa-card">
-              <p>Tu mesa es la:</p>
-              <span class="mesa-badge mesa-badge--lg">${escapeHtml(mesa)}</span>
+              <img class="mesa-card-frame" src="${MESA_FRAME_URL}" alt="" />
+              <div class="mesa-card-content">
+                <p>Tu mesa es la:</p>
+                <span class="mesa-badge mesa-badge--lg">${escapeHtml(mesa)}</span>
+              </div>
             </div>
           </div>
           <div class="info-grid-stamps">
