@@ -204,25 +204,31 @@ function openGuestModal(guest) {
     })
     .join("");
 
+  const isConfirmed = guest.rsvp_status === "confirmed";
+  const isDeclined = guest.rsvp_status === "declined";
+  const isPending = !isConfirmed && !isDeclined;
+
   els.guestModalBody.innerHTML = `
     <div class="field">
       <label>Confirmación de asistencia</label>
       <div style="display:flex; gap:10px;">
-        <button class="btn ${guest.rsvp_status === "confirmed" ? "" : "btn-outline"}" id="gm-confirm">Confirmar</button>
-        <button class="btn ${guest.rsvp_status === "declined" ? "" : "btn-outline"}" id="gm-decline">No asiste</button>
+        <button class="btn ${isConfirmed ? "" : "btn-outline"}" id="gm-confirm">Confirmar</button>
+        <button class="btn ${isPending ? "" : "btn-outline"}" id="gm-pending">Pendiente</button>
+        <button class="btn ${isDeclined ? "" : "btn-outline"}" id="gm-decline">No asiste</button>
       </div>
     </div>
     <div class="field">
       <label for="gm-menu">Menú</label>
-      <select id="gm-menu" class="inline-input" style="border:1.5px solid var(--navy-soft); padding:10px;">
+      <select id="gm-menu" class="inline-input" style="border:1.5px solid var(--navy-soft); padding:10px;" ${isConfirmed ? "" : "disabled"}>
         <option value="">Sin elegir</option>
         <option value="lomo" ${guest.menu_choice === "lomo" ? "selected" : ""}>Lomo en salsa de caramelo</option>
         <option value="pechuga" ${guest.menu_choice === "pechuga" ? "selected" : ""}>Pechuga de pollo en salsa de caramelo</option>
       </select>
+      ${isConfirmed ? "" : '<p class="panel-sub">Solo disponible si confirmó asistencia.</p>'}
     </div>
     <div class="field">
       <label for="gm-notes">Restricciones / alergias</label>
-      <textarea id="gm-notes" class="inline-input" style="border:1.5px solid var(--navy-soft); padding:10px;">${escapeHtml(guest.dietary_notes || "")}</textarea>
+      <textarea id="gm-notes" class="inline-input" style="border:1.5px solid var(--navy-soft); padding:10px;" ${isConfirmed ? "" : "disabled"}>${escapeHtml(isConfirmed ? guest.dietary_notes || "" : "")}</textarea>
     </div>
     <div class="field">
       <label>Roles especiales</label>
@@ -233,26 +239,36 @@ function openGuestModal(guest) {
 
   els.guestModal.classList.add("show");
 
-  document.getElementById("gm-confirm").addEventListener("click", async () => {
-    await supabase.rpc("submit_rsvp", { p_code: guest.code, p_status: "confirmed" });
-    toast("Asistencia confirmada.");
+  async function setRsvp(status, message) {
+    if (status === "pending") {
+      // No hay RPC para "volver a pendiente" (submit_rsvp solo maneja
+      // confirmed/declined) — se actualiza directo, y de paso se limpia
+      // menú/restricciones porque dejan de tener sentido sin asistencia.
+      await supabase.from("guests").update({ rsvp_status: null, menu_choice: null, dietary_notes: null }).eq("id", guest.id);
+    } else {
+      await supabase.rpc("submit_rsvp", { p_code: guest.code, p_status: status });
+      if (status === "declined") {
+        await supabase.from("guests").update({ menu_choice: null, dietary_notes: null }).eq("id", guest.id);
+      }
+    }
+    toast(message);
     await refreshAndRerenderInvitados();
-    closeGuestModal();
-  });
-  document.getElementById("gm-decline").addEventListener("click", async () => {
-    await supabase.rpc("submit_rsvp", { p_code: guest.code, p_status: "declined" });
-    toast("Registrado como 'no asiste'.");
-    await refreshAndRerenderInvitados();
-    closeGuestModal();
-  });
+    openGuestModal(db.guests.find((g) => g.id === guest.id));
+  }
+
+  document.getElementById("gm-confirm").addEventListener("click", () => setRsvp("confirmed", "Asistencia confirmada."));
+  document.getElementById("gm-pending").addEventListener("click", () => setRsvp("pending", "Vuelto a dejar pendiente."));
+  document.getElementById("gm-decline").addEventListener("click", () => setRsvp("declined", "Registrado como 'no asiste'."));
 
   document.getElementById("gm-save").addEventListener("click", async () => {
-    const menu = document.getElementById("gm-menu").value;
-    const notes = document.getElementById("gm-notes").value.trim();
-    if (menu) {
-      await supabase.rpc("submit_menu", { p_code: guest.code, p_menu: menu, p_notes: notes || null });
-    } else if (notes) {
-      await supabase.from("guests").update({ dietary_notes: notes }).eq("id", guest.id);
+    if (isConfirmed) {
+      const menu = document.getElementById("gm-menu").value;
+      const notes = document.getElementById("gm-notes").value.trim();
+      if (menu) {
+        await supabase.rpc("submit_menu", { p_code: guest.code, p_menu: menu, p_notes: notes || null });
+      } else if (notes) {
+        await supabase.from("guests").update({ dietary_notes: notes }).eq("id", guest.id);
+      }
     }
     const selectedBadgeIds = Array.from(els.guestModalBody.querySelectorAll(".role-check:checked")).map(
       (c) => c.dataset.badge
