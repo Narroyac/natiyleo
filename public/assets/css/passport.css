@@ -231,6 +231,13 @@
   font-size: 20px;
   font-weight: 600;
 }
+/* "por confirmar" — todavía no hay mesa asignada, letra más chica que el
+ * número real para no darle el mismo peso visual a un dato pendiente. */
+.mesa-badge--pending {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+}
 
 /* grilla de estampillas (retos) — disposición "scatter" orgánica, con las
    posiciones/tamaños medidos del mockup Figma (node 1:39 y páginas "2","3",

@@ -275,7 +275,8 @@ function buildPageElement(page) {
   }
 
   if (page.type === "info") {
-    const mesa = state.guest.table_number ? `#${state.guest.table_number}` : "por confirmar";
+    const mesaAssigned = Boolean(state.guest.table_number);
+    const mesa = mesaAssigned ? `#${state.guest.table_number}` : "por confirmar";
     el.innerHTML = `
       <div class="info-page-body">
         <div class="info-banner">
@@ -292,7 +293,7 @@ function buildPageElement(page) {
               <img class="mesa-card-frame" src="${MESA_FRAME_URL}" alt="" />
               <div class="mesa-card-content">
                 <p>Tu mesa es la:</p>
-                <span class="mesa-badge mesa-badge--lg">${escapeHtml(mesa)}</span>
+                <span class="mesa-badge mesa-badge--lg${mesaAssigned ? "" : " mesa-badge--pending"}">${escapeHtml(mesa)}</span>
               </div>
             </div>
           </div>
