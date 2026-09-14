@@ -244,9 +244,20 @@ function openGuestModal(guest) {
       // No hay RPC para "volver a pendiente" (submit_rsvp solo maneja
       // confirmed/declined) — se actualiza directo, y de paso se limpia
       // menú/restricciones porque dejan de tener sentido sin asistencia.
-      await supabase.from("guests").update({ rsvp_status: null, menu_choice: null, dietary_notes: null }).eq("id", guest.id);
+      const { error } = await supabase
+        .from("guests")
+        .update({ rsvp_status: "pending", menu_choice: null, dietary_notes: null })
+        .eq("id", guest.id);
+      if (error) {
+        toast(`No se pudo actualizar: ${error.message}`, true);
+        return;
+      }
     } else {
-      await supabase.rpc("submit_rsvp", { p_code: guest.code, p_status: status });
+      const { error } = await supabase.rpc("submit_rsvp", { p_code: guest.code, p_status: status });
+      if (error) {
+        toast(`No se pudo actualizar: ${error.message}`, true);
+        return;
+      }
       if (status === "declined") {
         await supabase.from("guests").update({ menu_choice: null, dietary_notes: null }).eq("id", guest.id);
       }
