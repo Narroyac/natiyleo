@@ -626,8 +626,14 @@ function renderLinks() {
 document.getElementById("export-csv").addEventListener("click", () => {
   const rows = [["Nombre", "Código", "Menú", "Restricciones"]];
   db.guests.forEach((g) => rows.push([g.first_name, g.code, menuLabel(g.menu_choice), g.dietary_notes || ""]));
-  const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const escapeCell = (v) => `"${String(v).replace(/"/g, '""')}"`;
+  // "sep=," fuerza a Excel a usar coma como separador de columnas sin
+  // importar la configuración regional del equipo (en español suele venir
+  // en ";", lo que hacía que todo el archivo se viera en una sola columna
+  // al abrirlo directamente). El BOM al inicio es para que tildes/ñ no
+  // salgan corruptas en Excel.
+  const csv = "sep=,\r\n" + rows.map((r) => r.map(escapeCell).join(",")).join("\r\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
   link.download = "conteo-menu.csv";
