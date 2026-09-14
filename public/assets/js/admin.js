@@ -135,8 +135,15 @@ function renderInvitadosStats() {
     <div class="stat-card"><div class="stat-value">${confirmed}</div><div class="stat-label">Confirmados</div></div>
     <div class="stat-card"><div class="stat-value">${declined}</div><div class="stat-label">No asisten</div></div>
     <div class="stat-card"><div class="stat-value">${lomo} / ${pechuga}</div><div class="stat-label">Lomo / Pechuga</div></div>
-    <div class="stat-card"><div class="stat-value">${completed}</div><div class="stat-label">Pasaportes completos</div></div>
+    <div class="stat-card" id="stat-completos" style="cursor:pointer" title="Ver quiénes completaron su pasaporte"><div class="stat-value">${completed}</div><div class="stat-label">Pasaportes completos</div></div>
   `;
+
+  // La lista de quién completó ya vive en la pestaña Finalización
+  // (renderRanking) — acá solo se reusa ese tab en vez de duplicar la
+  // tabla.
+  document.getElementById("stat-completos").addEventListener("click", () => {
+    document.querySelector('.admin-tab-btn[data-tab="finalizacion"]')?.click();
+  });
 }
 
 function renderGuestsTable() {
