@@ -245,6 +245,40 @@ function bindStampSlotHandlers(container) {
   });
 }
 
+/** Descarga la imagen de recuerdo directo (sin pasar por una pestaña
+ * nueva). En mobile usa el share sheet nativo (navigator.share con un
+ * File), que en iOS/Android trae "Guardar en Fotos" a un toque — ahí no
+ * hace falta que el usuario sepa que debe mantener presionada la imagen.
+ * En navegadores sin soporte de share con archivos (la mayoría de
+ * escritorio) cae a un <a download> con blob URL, que si funciona porque
+ * ya es same-origin (a diferencia del <a> original, que apuntaba directo
+ * a Supabase y por eso el navegador ignoraba "download" y solo abría la
+ * imagen). Si ambos fallan (ej. fetch bloqueado), se abre en pestaña
+ * nueva como último recurso. */
+async function downloadFinaleImage(url) {
+  const filename = "recuerdo-nati-y-leo" + (url.endsWith(".png") ? ".png" : ".jpg");
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const file = new File([blob], filename, { type: blob.type });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file] });
+      return;
+    }
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(objectUrl);
+  } catch (err) {
+    if (err?.name === "AbortError") return; // el usuario cerró el share sheet
+    window.open(url, "_blank", "noopener");
+  }
+}
+
 /** Construye el <div> de una página como elemento DOM independiente — ya
  * no se escribe dentro de un contenedor compartido, porque StPageFlip
  * necesita los N elementos de todas las páginas de una vez (loadFromHTML).
@@ -341,6 +375,10 @@ function buildPageElement(page) {
       },
       { once: true }
     );
+    downloadLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      downloadFinaleImage(downloadLink.href);
+    });
     return el;
   }
 
