@@ -431,18 +431,6 @@ function initFlipbook() {
   });
 
   pageFlip.loadFromHTML(buildFlipPages());
-
-  // showCover:true fuerza a la portada (y, si queda sola al parear dos
-  // páginas en modo landscape, a veces a la última) a densidad "hard" — un
-  // giro 3D rígido, con su propio cálculo de sombra, muy distinto de la
-  // curva de papel "soft" del resto (ver createSpread() en
-  // page-flip.module.js). Ese cambio de motor de animación justo al
-  // entrar/salir de la portada es lo que se ve como un glitch en mobile.
-  // Se revierte a "soft" en todas las páginas para que la animación sea
-  // consistente en todo el libro.
-  for (let i = 0; i < pageFlip.getPageCount(); i++) {
-    pageFlip.getPage(i).setDensity("soft");
-  }
 }
 
 els.prevBtn.addEventListener("click", () => pageFlip?.flipPrev());
