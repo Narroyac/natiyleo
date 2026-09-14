@@ -47,8 +47,6 @@ const MESA_FRAME_URL = storageUrl("stamps/mesa.svg");
 // mobile); a partir de acá usa modo landscape (doble página, desktop).
 const DESKTOP_SPREAD_MIN_WIDTH = 560;
 
-const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
 const els = {
   app: document.getElementById("app"),
   loading: document.getElementById("loading-screen"),
@@ -370,8 +368,10 @@ function buildPageElement(page) {
 // Page-flip: motor real de StPageFlip (assets/js/vendor/page-flip.module.js)
 // — dibuja la curva de la hoja con clip-path + rotación (no física, no
 // canvas, no video), respondiendo a swipe, tap en la esquina, y a las
-// flechas. flippingTime casi 0 con prefers-reduced-motion en vez de una
-// animación aparte, para no duplicar lógica de flip.
+// flechas. flippingTime casi 0 (sin animación de curva) porque esa curva
+// generaba un glitch visual en mobile que no se pudo resolver a nivel de
+// configuración/parche de la librería — el cambio de página queda
+// instantáneo hasta que se investigue más a fondo.
 // ---------------------------------------------------------------------------
 
 function buildFlipPages() {
@@ -407,9 +407,9 @@ function initFlipbook() {
     autoSize: true,
     usePortrait: true,
     showCover: true,
-    drawShadow: true,
+    drawShadow: false,
     maxShadowOpacity: 0.5,
-    flippingTime: prefersReducedMotion ? 1 : 700,
+    flippingTime: 1,
     mobileScrollSupport: true,
     swipeDistance: 30,
     // clickEventForward ya evita que un tap en un <a>/<button> real (Waze,
