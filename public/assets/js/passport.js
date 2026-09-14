@@ -34,8 +34,11 @@ const WAZE_URL =
 
 // Imagen de recuerdo de la última página ("finale"): una sola, igual para
 // todos los invitados — Nati la diseña una vez y la sube a Storage con este
-// nombre; acá solo se muestra y se ofrece para descargar.
-const FINALE_IMAGE_URL = storageUrl("stamps/recuerdo-final.jpg");
+// nombre; acá solo se muestra y se ofrece para descargar. Prueba .jpg y si
+// no existe cae a .png (ver el onerror donde se arma la página "finale"),
+// así no importa en qué formato la suba.
+const FINALE_IMAGE_JPG = storageUrl("stamps/recuerdo-final.jpg");
+const FINALE_IMAGE_PNG = storageUrl("stamps/recuerdo-final.png");
 // Contorno de estampilla de la tarjeta de mesa — un solo SVG decorativo
 // (sin texto incrustado, a diferencia de las demás estampillas, porque el
 // número de mesa varía por invitado), Nati lo reemplaza subiendo un archivo
@@ -324,10 +327,20 @@ function buildPageElement(page) {
     el.innerHTML = `
       <div class="finale-page-body">
         <p>¡Gracias por completar todos los retos! Aquí puedes descargar tu recuerdo de esta experiencia:</p>
-        <img class="finale-image" src="${FINALE_IMAGE_URL}" alt="Recuerdo del pasaporte — Nati &amp; Leo" />
-        <a class="btn-secondary" href="${FINALE_IMAGE_URL}" target="_blank" rel="noopener">Descargar recuerdo</a>
+        <img class="finale-image" src="${FINALE_IMAGE_JPG}" alt="Recuerdo del pasaporte — Nati &amp; Leo" />
+        <a class="btn-secondary" href="${FINALE_IMAGE_JPG}" target="_blank" rel="noopener">Descargar recuerdo</a>
       </div>
     `;
+    const img = el.querySelector(".finale-image");
+    const downloadLink = el.querySelector(".btn-secondary");
+    img.addEventListener(
+      "error",
+      () => {
+        img.src = FINALE_IMAGE_PNG;
+        downloadLink.href = FINALE_IMAGE_PNG;
+      },
+      { once: true }
+    );
     return el;
   }
 
