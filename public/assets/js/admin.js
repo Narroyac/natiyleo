@@ -593,9 +593,31 @@ function guestUrl(code) {
   return new URL(`../invitacion/pasaporte.html?c=${encodeURIComponent(code)}`, window.location.href).href;
 }
 
+function siteUrl() {
+  return new URL("../", window.location.href).href;
+}
+
 function whatsappMessage(guest) {
-  const url = guestUrl(guest.code);
-  return `¡Hola ${guest.first_name}! 💌 Este es tu Pasaporte para nuestra boda. Entra aquí para confirmar tu asistencia, elegir tu menú y completar retos el día del evento: ${url}\n\nTu código por si lo necesitas: ${guest.code}`;
+  const site = siteUrl();
+  const passport = guestUrl(guest.code);
+  return `¡Hola, ${guest.first_name}! 💌
+
+Nos hace muy felices compartir contigo este momento tan especial.
+
+Aquí encuentras toda la información de nuestra boda:
+${site}
+
+Y este es tu *Pasaporte de Boda* ✨
+Allí podrás confirmar tu asistencia, elegir la proteína de tu preferencia y, el día de la boda, completar algunos retos:
+
+${passport}
+
+Tu código personal es: *${guest.code}*
+
+Nos emociona muchísimo celebrar contigo. 💙
+Si tienes alguna duda, escríbenos con toda confianza.
+
+Nati & Leo`;
 }
 
 function renderLinks() {
