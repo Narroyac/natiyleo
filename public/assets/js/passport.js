@@ -419,10 +419,10 @@ function buildPageElement(page) {
 // Page-flip: motor real de StPageFlip (assets/js/vendor/page-flip.module.js)
 // — dibuja la curva de la hoja con clip-path + rotación (no física, no
 // canvas, no video), respondiendo a swipe, tap en la esquina, y a las
-// flechas. flippingTime casi 0 (sin animación de curva) porque esa curva
-// generaba un glitch visual en mobile que no se pudo resolver a nivel de
-// configuración/parche de la librería — el cambio de página queda
-// instantáneo hasta que se investigue más a fondo.
+// flechas. El glitch de swipe rápido en mobile (el "flip enlatado" de
+// onTouchEnd pisando un arrastre en vivo ya en curso) se parcheó directo
+// en el vendor — ver el comentario en page-flip.module.js junto a
+// "read"===this.app.getState().
 // ---------------------------------------------------------------------------
 
 function buildFlipPages() {
@@ -458,9 +458,9 @@ function initFlipbook() {
     autoSize: true,
     usePortrait: true,
     showCover: true,
-    drawShadow: false,
+    drawShadow: true,
     maxShadowOpacity: 0.5,
-    flippingTime: 1,
+    flippingTime: 700,
     mobileScrollSupport: true,
     swipeDistance: 30,
     // clickEventForward ya evita que un tap en un <a>/<button> real (Waze,
