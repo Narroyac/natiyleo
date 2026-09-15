@@ -3,7 +3,7 @@
 // abra rápido e instalada como PWA. Los datos (Supabase) siempre van por red:
 // este SW nunca intercepta peticiones a otros orígenes.
 
-const CACHE_VERSION = "pasaporte-shell-v24";
+const CACHE_VERSION = "pasaporte-shell-v25";
 
 const SHELL_FILES = [
   "./index.html",
