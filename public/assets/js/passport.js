@@ -540,7 +540,7 @@ function openChallengeModal(challenge) {
   if (challenge.sort_order >= 3 && !done && !state.challengesUnlocked) {
     els.modalTitle.textContent = challenge.title;
     els.modalInstructions.textContent = "";
-    els.modalBody.innerHTML = `<p>Este reto todavía no está disponible. ¡Vuelve a intentarlo el día de la boda! ✦</p>`;
+    els.modalBody.innerHTML = `<p>Los retos se activarán el día de la boda. ¡Esperamos que los puedas completar y seas el ganador! ✦</p>`;
     return openModal();
   }
 
