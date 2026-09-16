@@ -436,6 +436,91 @@ function renderRanking() {
     .join("");
 }
 
+// ---------------------------------------------------------------------------
+// Activación de retos 3-10 (RSVP y menú siempre quedan activos aparte)
+// ---------------------------------------------------------------------------
+
+function challengesEffectiveUnlocked(c) {
+  if (!c) return false;
+  if (c.challenges_unlocked) return true;
+  return Boolean(c.challenges_unlock_at) && new Date(c.challenges_unlock_at).getTime() <= Date.now();
+}
+
+// Colombia (America/Bogota) no usa horario de verano: UTC-5 fijo, así que
+// alcanza con anexar ese offset directo en vez de una librería de zonas horarias.
+function bogotaLocalToUtcIso(localValue) {
+  return new Date(`${localValue}:00-05:00`).toISOString();
+}
+
+function utcIsoToBogotaLocal(isoString) {
+  if (!isoString) return "";
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Bogota",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(new Date(isoString));
+  const get = (type) => parts.find((p) => p.type === type)?.value;
+  return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`;
+}
+
+function renderChallengeGate() {
+  const c = db.appConfig;
+  document.getElementById("challenges-toggle").checked = Boolean(c?.challenges_unlocked);
+  document.getElementById("challenges-schedule").value = utcIsoToBogotaLocal(c?.challenges_unlock_at);
+
+  const statusEl = document.getElementById("challenges-status");
+  const scheduleLabel = c?.challenges_unlock_at
+    ? new Date(c.challenges_unlock_at).toLocaleString("es-CO", { timeZone: "America/Bogota", dateStyle: "long", timeStyle: "short" })
+    : null;
+
+  if (c?.challenges_unlocked) {
+    statusEl.textContent = "✅ Activados manualmente ahora mismo.";
+  } else if (challengesEffectiveUnlocked(c)) {
+    statusEl.textContent = `✅ Se activaron automáticamente el ${scheduleLabel} (hora Colombia).`;
+  } else if (scheduleLabel) {
+    statusEl.textContent = `⏳ Programados para activarse el ${scheduleLabel} (hora Colombia).`;
+  } else {
+    statusEl.textContent = "🔒 Bloqueados — actívalos manualmente o programa una fecha.";
+  }
+}
+
+document.getElementById("challenges-toggle").addEventListener("change", async (e) => {
+  const { error } = await supabase.from("app_config").update({ challenges_unlocked: e.target.checked }).eq("id", true);
+  if (error) {
+    toast("No se pudo actualizar.", true);
+    e.target.checked = !e.target.checked;
+    return;
+  }
+  toast(e.target.checked ? "Retos activados." : "Retos desactivados.");
+  await loadAll();
+  renderChallengeGate();
+});
+
+document.getElementById("challenges-save-schedule").addEventListener("click", async () => {
+  const value = document.getElementById("challenges-schedule").value;
+  if (!value) return toast("Elige una fecha y hora.", true);
+  const { error } = await supabase
+    .from("app_config")
+    .update({ challenges_unlock_at: bogotaLocalToUtcIso(value) })
+    .eq("id", true);
+  if (error) return toast("No se pudo guardar la fecha.", true);
+  toast("Fecha programada guardada.");
+  await loadAll();
+  renderChallengeGate();
+});
+
+document.getElementById("challenges-clear-schedule").addEventListener("click", async () => {
+  const { error } = await supabase.from("app_config").update({ challenges_unlock_at: null }).eq("id", true);
+  if (error) return toast("No se pudo quitar la fecha.", true);
+  toast("Fecha programada eliminada.");
+  await loadAll();
+  renderChallengeGate();
+});
+
 let timerInterval = null;
 
 function computeDeadline() {
@@ -839,6 +924,7 @@ async function boot() {
   renderGuestsTable();
   renderGallery();
   renderRanking();
+  renderChallengeGate();
   renderTimer();
   renderRoles();
   renderLinks();

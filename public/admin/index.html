@@ -111,6 +111,24 @@
         </div>
 
         <div class="admin-card">
+          <h2 style="margin-bottom:4px;">Activación de retos (3 al 10)</h2>
+          <p class="panel-sub" style="margin-bottom: var(--space-4);">Reto 1 (RSVP) y Reto 2 (menú) siempre están disponibles. Esto controla cuándo se habilitan los demás.</p>
+          <div class="field" style="display:flex; align-items:center; gap:10px; margin-bottom: var(--space-3);">
+            <input type="checkbox" id="challenges-toggle" style="width:20px; height:20px; margin:0;" />
+            <label for="challenges-toggle" style="margin:0;">Activar ahora (anula la fecha programada)</label>
+          </div>
+          <div class="field">
+            <label for="challenges-schedule">O programar activación (hora Colombia)</label>
+            <input type="datetime-local" id="challenges-schedule" class="inline-input" />
+          </div>
+          <div style="display:flex; gap:10px; margin-top: var(--space-2);">
+            <button class="btn" id="challenges-save-schedule">Guardar fecha</button>
+            <button class="btn btn-outline" id="challenges-clear-schedule">Quitar fecha</button>
+          </div>
+          <p class="panel-sub" id="challenges-status" style="margin-top: var(--space-3);"></p>
+        </div>
+
+        <div class="admin-card">
           <h2 style="margin-bottom:4px;">Cronómetro</h2>
           <p class="panel-sub" id="timer-status">Sin iniciar.</p>
           <div class="timer-display" id="timer-display">--:--:--</div>

@@ -88,6 +88,7 @@ let state = {
   roleBadges: [],
   pages: [],
   currentPage: 0,
+  challengesUnlocked: false,
 };
 
 let pageFlip = null;
@@ -106,12 +107,13 @@ function getCodeFromUrlOrStorage() {
 
 async function loadData() {
   const code = state.code;
-  const [{ data: guestRows, error: guestErr }, { data: challenges }, { data: submissions }, { data: badges }] =
+  const [{ data: guestRows, error: guestErr }, { data: challenges }, { data: submissions }, { data: badges }, { data: appConfig }] =
     await Promise.all([
       supabase.rpc("get_guest_by_code", { p_code: code }),
       supabase.from("challenges").select("*").order("sort_order"),
       supabase.rpc("get_guest_submissions", { p_code: code }),
       supabase.from("special_badges").select("*").eq("is_active", true).order("sort_order"),
+      supabase.from("app_config").select("challenges_unlocked, challenges_unlock_at").single(),
     ]);
 
   if (guestErr || !guestRows || guestRows.length === 0) {
@@ -121,6 +123,9 @@ async function loadData() {
 
   state.guest = guestRows[0];
   state.challenges = challenges || [];
+  state.challengesUnlocked =
+    Boolean(appConfig?.challenges_unlocked) ||
+    (Boolean(appConfig?.challenges_unlock_at) && new Date(appConfig.challenges_unlock_at).getTime() <= Date.now());
   state.submissionsByChallengeId = new Map((submissions || []).map((s) => [s.challenge_id, s]));
   const myBadgeIds = new Set(state.guest.badge_ids || []);
   state.roleBadges = (badges || []).filter((b) => myBadgeIds.has(b.id));
@@ -529,6 +534,15 @@ els.modal.addEventListener("click", (e) => {
 function openChallengeModal(challenge) {
   const done = isDone(challenge);
   const sub = state.submissionsByChallengeId.get(challenge.id);
+
+  // Retos 3-10: Nati los activa desde el admin (manual o programado). RSVP
+  // y menú (1 y 2) quedan siempre disponibles, no pasan por acá.
+  if (challenge.sort_order >= 3 && !done && !state.challengesUnlocked) {
+    els.modalTitle.textContent = challenge.title;
+    els.modalInstructions.textContent = "";
+    els.modalBody.innerHTML = `<p>Este reto todavía no está disponible. ¡Vuelve a intentarlo el día de la boda! ✦</p>`;
+    return openModal();
+  }
 
   if (challenge.sort_order === 1) return openRsvpModal(challenge, done, sub);
   if (challenge.sort_order === 2) return openMenuModal(challenge, done, sub);
