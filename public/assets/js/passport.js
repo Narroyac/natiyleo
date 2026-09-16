@@ -179,7 +179,7 @@ function progressCount() {
 
 function renderFrame() {
   els.greetingName.textContent = `${state.guest.first_name},`;
-  els.galleryLink.href = `/galeria.html?c=${encodeURIComponent(state.code)}`;
+  els.galleryLink.href = `./galeria.html?c=${encodeURIComponent(state.code)}`;
 
   const { done, total } = progressCount();
   const pct = total ? Math.round((done / total) * 100) : 0;

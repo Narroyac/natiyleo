@@ -71,7 +71,7 @@ function getCode() {
 
 (function setBackLink() {
   const code = getCode();
-  els.backLink.href = code ? `/pasaporte.html?c=${encodeURIComponent(code)}` : "/";
+  els.backLink.href = code ? `./pasaporte.html?c=${encodeURIComponent(code)}` : "./index.html";
 })();
 
 // ---------------------------------------------------------------------------
