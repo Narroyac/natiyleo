@@ -101,6 +101,13 @@
   text-transform: uppercase;
   color: var(--navy-soft);
 }
+.page-header .page-sub.page-sub--sentence {
+  font-size: 12px;
+  letter-spacing: normal;
+  text-transform: none;
+  line-height: 1.4;
+  margin-top: 2px;
+}
 
 /* portada — ilustración de Nati tal cual (spec: "no reconstruir en HTML") */
 .cover-page {
@@ -317,15 +324,16 @@
 /* estampillas circulares de rol */
 .roles-wrap {
   position: absolute;
-  top: 70px; left: 0; right: 0; bottom: 12px;
+  top: 108px; left: 0; right: 0; bottom: 12px;
   display: flex;
   flex-wrap: wrap;
-  align-content: flex-start;
+  align-content: center;
   justify-content: center;
   gap: 14px 10px;
   padding: 0 var(--space-4);
 }
-.roles-wrap .role-badge { width: 40%; }
+.roles-wrap .role-badge { width: 44%; }
+.roles-wrap--single .role-badge { width: 62%; }
 .roles-wrap .role-badge img { width: 100%; filter: drop-shadow(0 6px 10px rgba(13, 31, 78, 0.18)); }
 .roles-wrap .role-badge .stamp-label { margin-top: 4px; font-size: 10.5px; color: var(--navy-soft); text-align: center; }
 .roles-empty {

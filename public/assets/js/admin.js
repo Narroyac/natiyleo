@@ -122,6 +122,12 @@ function menuLabel(m) {
   return "—";
 }
 
+const MENU_LABELS_FULL = {
+  lomo: "Lomo de res, puré cremoso de papa amarilla y canasta de vegetales en salsa de la casa.",
+  pechuga:
+    "Pechuga de pollo envuelta en tocineta con salsa de uchuva, puré cremoso de papa amarilla y canasta de vegetales en salsa de la casa.",
+};
+
 function renderInvitadosStats() {
   const total = db.guests.length;
   const confirmed = db.guests.filter((g) => g.rsvp_status === "confirmed").length;
@@ -228,8 +234,8 @@ function openGuestModal(guest) {
       <label for="gm-menu">Menú</label>
       <select id="gm-menu" class="inline-input" style="border:1.5px solid var(--navy-soft); padding:10px;" ${isConfirmed ? "" : "disabled"}>
         <option value="">Sin elegir</option>
-        <option value="lomo" ${guest.menu_choice === "lomo" ? "selected" : ""}>Lomo en salsa de caramelo</option>
-        <option value="pechuga" ${guest.menu_choice === "pechuga" ? "selected" : ""}>Pechuga de pollo en salsa de caramelo</option>
+        <option value="lomo" ${guest.menu_choice === "lomo" ? "selected" : ""}>${MENU_LABELS_FULL.lomo}</option>
+        <option value="pechuga" ${guest.menu_choice === "pechuga" ? "selected" : ""}>${MENU_LABELS_FULL.pechuga}</option>
       </select>
       ${isConfirmed ? "" : '<p class="panel-sub">Solo disponible si confirmó asistencia.</p>'}
     </div>

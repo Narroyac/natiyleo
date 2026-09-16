@@ -45,6 +45,12 @@ const FINALE_IMAGE_PNG = storageUrl("stamps/recuerdo-final.png");
 // con este mismo nombre.
 const MESA_FRAME_URL = storageUrl("stamps/mesa.svg");
 
+const MENU_LABELS = {
+  lomo: "Lomo de res, puré cremoso de papa amarilla y canasta de vegetales en salsa de la casa.",
+  pechuga:
+    "Pechuga de pollo envuelta en tocineta con salsa de uchuva, puré cremoso de papa amarilla y canasta de vegetales en salsa de la casa.",
+};
+
 // Debe coincidir con 2 * minWidth de initFlipbook(): por debajo de este ancho
 // StPageFlip cambia a modo portrait (una sola página a la vez, igual que en
 // mobile); a partir de acá usa modo landscape (doble página, desktop).
@@ -152,6 +158,7 @@ function buildPages() {
   pages.push({ type: "stamps", key: "5678", ids: [5, 6, 7, 8].map(byOrder).filter(Boolean) });
   pages.push({ type: "stamps", key: "910", ids: [9, 10].map(byOrder).filter(Boolean) });
   pages.push({ type: "finale" });
+  pages.push({ type: "back-cover" });
 
   state.pages = pages;
 }
@@ -382,6 +389,22 @@ function buildPageElement(page) {
     return el;
   }
 
+  if (page.type === "back-cover") {
+    // Misma lógica que la portada: ilustración de tapa a página completa,
+    // sin el fondo de cuadrícula (.book-page--cover en passport.css), y
+    // densidad "hard" explícita (via data-density) para que se vea como
+    // una tapa rígida igual que la portada, sin depender de si el total
+    // de páginas es par o impar.
+    el.classList.add("book-page--cover");
+    el.dataset.density = "hard";
+    el.innerHTML = `
+      <div class="cover-page">
+        <img class="cover-page-img" src="../assets/img/contraportada-pasaporte.png" alt="Contraportada — Nati &amp; Leo" />
+      </div>
+    `;
+    return el;
+  }
+
   if (page.type === "roles") {
     if (state.roleBadges.length === 0) {
       el.innerHTML = `
@@ -394,10 +417,10 @@ function buildPageElement(page) {
     }
     el.innerHTML = `
       <div class="page-header">
-        <div class="page-title">Estampillas especiales</div>
-        <div class="page-sub">Otorgadas, no se reclaman</div>
+        <div class="page-title">Estampilla especial</div>
+        <div class="page-sub page-sub--sentence">Otorgada a ti por ser una persona muy especial para nosotros en este día</div>
       </div>
-      <div class="roles-wrap">
+      <div class="roles-wrap${state.roleBadges.length === 1 ? " roles-wrap--single" : ""}">
         ${state.roleBadges
           .map(
             (b) => `
@@ -543,7 +566,7 @@ async function submitRsvp(status) {
 function openMenuModal(challenge, done, sub) {
   els.modalTitle.textContent = challenge.title;
   els.modalInstructions.textContent = done
-    ? `Ya elegiste tu menú: ${state.guest.menu_choice === "lomo" ? "Lomo en salsa de caramelo" : "Pechuga de pollo en salsa de caramelo"}.`
+    ? `Ya elegiste tu menú: ${MENU_LABELS[state.guest.menu_choice]}`
     : "Escoge tu opción para el día de la boda.";
   if (done) {
     els.modalBody.innerHTML = "";
@@ -551,8 +574,8 @@ function openMenuModal(challenge, done, sub) {
   }
   els.modalBody.innerHTML = `
     <div class="menu-options">
-      <label class="menu-option"><input type="radio" name="menu" value="lomo" /> Lomo en salsa de caramelo</label>
-      <label class="menu-option"><input type="radio" name="menu" value="pechuga" /> Pechuga de pollo en salsa de caramelo</label>
+      <label class="menu-option"><input type="radio" name="menu" value="lomo" /> ${MENU_LABELS.lomo}</label>
+      <label class="menu-option"><input type="radio" name="menu" value="pechuga" /> ${MENU_LABELS.pechuga}</label>
     </div>
     <div class="field">
       <label for="menu-notes">Restricciones o alergias (opcional)</label>
