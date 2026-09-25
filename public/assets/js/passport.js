@@ -196,7 +196,12 @@ function buildPages() {
   pages.push({ type: "stamps", key: "34", ids: [3, 4].map(byOrder).filter(Boolean) });
   pages.push({ type: "stamps", key: "5678", ids: [5, 6, 7, 8].map(byOrder).filter(Boolean) });
   pages.push({ type: "stamps", key: "910", ids: [9, 10].map(byOrder).filter(Boolean) });
-  pages.push({ type: "finale" });
+  // Recuerdo descargable: solo si ya completó todos los retos — antes de
+  // eso no tiene nada que descargar todavía.
+  const { done, total } = progressCount();
+  if (total > 0 && done === total) {
+    pages.push({ type: "finale" });
+  }
   pages.push({ type: "back-cover" });
 
   state.pages = pages;
