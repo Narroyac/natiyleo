@@ -656,7 +656,7 @@ function openMenuModal(challenge, done) {
         <label class="menu-option"><input type="radio" name="menu" value="pechuga" /> ${MENU_LABELS.pechuga}</label>
       </div>
       <div class="field">
-        <label for="menu-notes">Restricciones o alergias (opcional)</label>
+        <label for="menu-notes">Alergias a considerar (opcional)</label>
         <textarea id="menu-notes" placeholder="Ej. alergia a los mariscos">${escapeHtml(state.guest.dietary_notes || "")}</textarea>
       </div>
       <button class="btn" id="menu-submit" style="width:100%" ${state.guest.menu_choice ? "" : "disabled"}>Confirmar menú</button>
@@ -966,141 +966,151 @@ function compressVideo(file, { maxDim = 1280, onProgress } = {}) {
 
 function openPhotoModal(challenge, done, sub) {
   els.modalTitle.textContent = challenge.title;
-  els.modalInstructions.textContent = done
-    ? "Ya completaste este reto."
-    : "Toma o elige una foto o un video (máx. 30 segundos).";
-  if (done) {
-    if (sub?.media_type === "video" && sub?.photo_url) {
-      els.modalBody.innerHTML = `<video class="preview" src="${sub.photo_url}" controls playsinline style="max-height:260px;border-radius:8px;width:100%;"></video>`;
-    } else {
-      els.modalBody.innerHTML = sub?.photo_url
-        ? `<img class="preview" src="${sub.photo_url}" alt="" style="max-height:260px;border-radius:8px;" />`
-        : "";
-    }
-    return openModal();
-  }
-  els.modalBody.innerHTML = `
-    <div class="upload-zone" id="upload-zone">
-      <p class="lede" style="margin-bottom:12px;">📷 Toca para elegir una foto o video</p>
-      <input type="file" accept="image/*,video/*" id="photo-input" />
-    </div>
-    <button class="btn" id="photo-submit" style="width:100%" disabled>Enviar</button>
-  `;
-  openModal();
-  const zone = document.getElementById("upload-zone");
-  const input = document.getElementById("photo-input");
-  const submitBtn = document.getElementById("photo-submit");
-  let selectedFile = null;
-  let selectedKind = null; // "photo" | "video"
-  let selectedDuration = null;
 
-  function resetZone(message) {
-    zone.innerHTML = `<p class="lede" style="margin-bottom:12px;">📷 Toca para elegir una foto o video</p>`;
-    zone.appendChild(input);
-    submitBtn.disabled = true;
-    selectedFile = null;
-    selectedKind = null;
-    selectedDuration = null;
-    if (message) toast(message, true);
-  }
+  function renderUploadForm() {
+    els.modalInstructions.textContent = "Toma o elige una foto o un video (máx. 30 segundos).";
+    els.modalBody.innerHTML = `
+      <div class="upload-zone" id="upload-zone">
+        <p class="lede" style="margin-bottom:12px;">📷 Toca para elegir una foto o video</p>
+        <input type="file" accept="image/*,video/*" id="photo-input" />
+      </div>
+      <button class="btn" id="photo-submit" style="width:100%" disabled>Enviar</button>
+    `;
+    const zone = document.getElementById("upload-zone");
+    const input = document.getElementById("photo-input");
+    const submitBtn = document.getElementById("photo-submit");
+    let selectedFile = null;
+    let selectedKind = null; // "photo" | "video"
+    let selectedDuration = null;
 
-  zone.addEventListener("click", () => input.click());
-  input.addEventListener("change", async () => {
-    const file = input.files[0];
-    if (!file) return;
-    const kind = file.type.startsWith("video/") ? "video" : file.type.startsWith("image/") ? "photo" : null;
-    if (!kind) return resetZone("Elige una foto o un video.");
-
-    if (kind === "video") {
-      zone.innerHTML = `<p class="lede">Revisando el video…</p>`;
-      let duration;
-      try {
-        duration = await getVideoDuration(file);
-      } catch {
-        return resetZone("No se pudo leer ese video. Intenta con otro.");
-      }
-      if (duration > 30.5) {
-        return resetZone(`Ese video dura ${formatDuration(duration)} — elige uno de máximo 30 segundos.`);
-      }
-      selectedFile = file;
-      selectedKind = "video";
-      selectedDuration = Math.min(30, Math.round(duration));
-      const previewUrl = URL.createObjectURL(file);
-      zone.innerHTML = `<video class="preview" src="${previewUrl}" controls playsinline muted style="max-height:260px;border-radius:8px;width:100%;"></video><p class="lede">Toca para cambiar el video · ${formatDuration(duration)}</p>`;
+    function resetZone(message) {
+      zone.innerHTML = `<p class="lede" style="margin-bottom:12px;">📷 Toca para elegir una foto o video</p>`;
       zone.appendChild(input);
-      submitBtn.disabled = false;
-    } else {
-      selectedFile = file;
-      selectedKind = "photo";
+      submitBtn.disabled = true;
+      selectedFile = null;
+      selectedKind = null;
       selectedDuration = null;
-      const reader = new FileReader();
-      reader.onload = () => {
-        zone.innerHTML = `<img class="preview" src="${reader.result}" alt="" /><p class="lede">Toca para cambiar la foto</p>`;
-        zone.appendChild(input);
-      };
-      reader.readAsDataURL(file);
-      submitBtn.disabled = false;
+      if (message) toast(message, true);
     }
-  });
 
-  submitBtn.addEventListener("click", async () => {
-    if (!selectedFile) return;
-    submitBtn.disabled = true;
+    zone.addEventListener("click", () => input.click());
+    input.addEventListener("change", async () => {
+      const file = input.files[0];
+      if (!file) return;
+      const kind = file.type.startsWith("video/") ? "video" : file.type.startsWith("image/") ? "photo" : null;
+      if (!kind) return resetZone("Elige una foto o un video.");
 
-    if (selectedKind === "video") {
-      submitBtn.textContent = "Procesando video…";
+      if (kind === "video") {
+        zone.innerHTML = `<p class="lede">Revisando el video…</p>`;
+        let duration;
+        try {
+          duration = await getVideoDuration(file);
+        } catch {
+          return resetZone("No se pudo leer ese video. Intenta con otro.");
+        }
+        if (duration > 30.5) {
+          return resetZone(`Ese video dura ${formatDuration(duration)} — elige uno de máximo 30 segundos.`);
+        }
+        selectedFile = file;
+        selectedKind = "video";
+        selectedDuration = Math.min(30, Math.round(duration));
+        const previewUrl = URL.createObjectURL(file);
+        zone.innerHTML = `<video class="preview" src="${previewUrl}" controls playsinline muted style="max-height:260px;border-radius:8px;width:100%;"></video><p class="lede">Toca para cambiar el video · ${formatDuration(duration)}</p>`;
+        zone.appendChild(input);
+        submitBtn.disabled = false;
+      } else {
+        selectedFile = file;
+        selectedKind = "photo";
+        selectedDuration = null;
+        const reader = new FileReader();
+        reader.onload = () => {
+          zone.innerHTML = `<img class="preview" src="${reader.result}" alt="" /><p class="lede">Toca para cambiar la foto</p>`;
+          zone.appendChild(input);
+        };
+        reader.readAsDataURL(file);
+        submitBtn.disabled = false;
+      }
+    });
+
+    submitBtn.addEventListener("click", async () => {
+      if (!selectedFile) return;
+      submitBtn.disabled = true;
+
+      if (selectedKind === "video") {
+        submitBtn.textContent = "Procesando video…";
+        try {
+          const { blob, mimeType } = await compressVideo(selectedFile, {
+            onProgress: (t) => {
+              submitBtn.textContent = `Procesando video… ${formatDuration(t)}`;
+            },
+          });
+          submitBtn.textContent = "Subiendo…";
+          const ext = mimeType.includes("mp4") ? "mp4" : "webm";
+          const path = `${state.code}/${challenge.id}-${Date.now()}.${ext}`;
+          const { error: uploadError } = await supabase.storage.from("photos").upload(path, blob, {
+            upsert: false,
+            contentType: mimeType,
+            cacheControl: "31536000",
+          });
+          if (uploadError) throw uploadError;
+          const { data: pub } = supabase.storage.from("photos").getPublicUrl(path);
+          await submitChallengeAndCelebrate(challenge, {
+            photo_url: pub.publicUrl,
+            media_type: "video",
+            duration_seconds: selectedDuration,
+            isEdit: done,
+          });
+        } catch (err) {
+          toast("No se pudo subir el video. Intenta de nuevo.", true);
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Enviar";
+        }
+        return;
+      }
+
+      submitBtn.textContent = "Subiendo…";
       try {
-        const { blob, mimeType } = await compressVideo(selectedFile, {
-          onProgress: (t) => {
-            submitBtn.textContent = `Procesando video… ${formatDuration(t)}`;
-          },
-        });
-        submitBtn.textContent = "Subiendo…";
-        const ext = mimeType.includes("mp4") ? "mp4" : "webm";
-        const path = `${state.code}/${challenge.id}-${Date.now()}.${ext}`;
-        const { error: uploadError } = await supabase.storage.from("photos").upload(path, blob, {
+        const compressed = await compressImage(selectedFile);
+        const path = `${state.code}/${challenge.id}-${Date.now()}.jpg`;
+        const { error: uploadError } = await supabase.storage.from("photos").upload(path, compressed, {
           upsert: false,
-          contentType: mimeType,
+          contentType: "image/jpeg",
           cacheControl: "31536000",
         });
         if (uploadError) throw uploadError;
         const { data: pub } = supabase.storage.from("photos").getPublicUrl(path);
-        await submitChallengeAndCelebrate(challenge, {
-          photo_url: pub.publicUrl,
-          media_type: "video",
-          duration_seconds: selectedDuration,
-        });
+        await submitChallengeAndCelebrate(challenge, { photo_url: pub.publicUrl, media_type: "photo", isEdit: done });
       } catch (err) {
-        toast("No se pudo subir el video. Intenta de nuevo.", true);
+        toast("No se pudo subir la foto. Intenta de nuevo.", true);
         submitBtn.disabled = false;
         submitBtn.textContent = "Enviar";
       }
-      return;
-    }
+    });
+  }
 
-    submitBtn.textContent = "Subiendo…";
-    try {
-      const compressed = await compressImage(selectedFile);
-      const path = `${state.code}/${challenge.id}-${Date.now()}.jpg`;
-      const { error: uploadError } = await supabase.storage.from("photos").upload(path, compressed, {
-        upsert: false,
-        contentType: "image/jpeg",
-        cacheControl: "31536000",
-      });
-      if (uploadError) throw uploadError;
-      const { data: pub } = supabase.storage.from("photos").getPublicUrl(path);
-      await submitChallengeAndCelebrate(challenge, { photo_url: pub.publicUrl, media_type: "photo" });
-    } catch (err) {
-      toast("No se pudo subir la foto. Intenta de nuevo.", true);
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Enviar";
-    }
-  });
+  if (!done) {
+    renderUploadForm();
+    return openModal();
+  }
+
+  els.modalInstructions.textContent = "Ya completaste este reto.";
+  const preview =
+    sub?.media_type === "video" && sub?.photo_url
+      ? `<video class="preview" src="${sub.photo_url}" controls playsinline style="max-height:260px;border-radius:8px;width:100%;"></video>`
+      : sub?.photo_url
+        ? `<img class="preview" src="${sub.photo_url}" alt="" style="max-height:260px;border-radius:8px;" />`
+        : "";
+  els.modalBody.innerHTML = `
+    ${preview}
+    <button class="btn btn-outline" style="width:100%; margin-top:12px;" id="photo-modify">Cambiar foto o video</button>
+  `;
+  openModal();
+  document.getElementById("photo-modify").addEventListener("click", renderUploadForm);
 }
 
 async function submitChallengeAndCelebrate(
   challenge,
-  { photo_url, text_content, media_type = "photo", duration_seconds = null } = {}
+  { photo_url, text_content, media_type = "photo", duration_seconds = null, isEdit = false } = {}
 ) {
   const wasCompleted = !!state.guest.completed_at;
   const { error } = await supabase.rpc("submit_challenge", {
@@ -1115,7 +1125,7 @@ async function submitChallengeAndCelebrate(
     toast("No se pudo guardar. Intenta de nuevo.", true);
     return;
   }
-  toast("¡Estampilla desbloqueada! ✦");
+  toast(isEdit ? "¡Actualizado!" : "¡Estampilla desbloqueada! ✦");
   closeModal();
   state.justCompletedChallengeId = challenge.id;
   await refreshAndRerender();
