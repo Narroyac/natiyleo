@@ -89,6 +89,10 @@ let state = {
   pages: [],
   currentPage: 0,
   challengesUnlocked: false,
+  // id del reto recién completado en esta misma sesión — dispara la
+  // animación de sellado (.is-stamping) una sola vez al re-renderizar;
+  // se limpia justo después en refreshAndRerender().
+  justCompletedChallengeId: null,
 };
 
 let pageFlip = null;
@@ -227,9 +231,10 @@ function stampCellHtml(challenge, { variant, caption } = {}) {
   const label = SHORT_LABEL[challenge.sort_order] || challenge.title;
   const src = done ? challenge.icon_url : challenge.icon_empty_url;
   const variantClass = src ? ` passport-stamp${variant ? ` passport-stamp--${variant}` : ""}` : "";
+  const justCompleted = done && challenge.id === state.justCompletedChallengeId;
   const inner = src
     ? `
-      <button class="stamp-slot${variantClass}${done ? " is-done" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
+      <button class="stamp-slot${variantClass}${done ? " is-done" : ""}${justCompleted ? " is-stamping" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
         <img class="stamp-slot-img" src="${storageUrl(src)}" alt="${escapeHtml(label)}" />
       </button>
     `
@@ -574,6 +579,7 @@ async function submitRsvp(status) {
   if (error) return toast("No se pudo guardar. Intenta de nuevo.", true);
   toast(status === "confirmed" ? "¡Gracias por confirmar! 🎉" : "Quedó registrado, gracias por avisar.");
   closeModal();
+  state.justCompletedChallengeId = state.challenges.find((c) => c.sort_order === 1)?.id ?? null;
   await refreshAndRerender();
 }
 
@@ -622,6 +628,7 @@ function openMenuModal(challenge, done, sub) {
     }
     toast("¡Menú guardado!");
     closeModal();
+    state.justCompletedChallengeId = challenge.id;
     await refreshAndRerender();
   });
 }
@@ -1030,6 +1037,7 @@ async function submitChallengeAndCelebrate(
   }
   toast("¡Estampilla desbloqueada! ✦");
   closeModal();
+  state.justCompletedChallengeId = challenge.id;
   await refreshAndRerender();
 
   if (!wasCompleted && state.guest.completed_at) {
@@ -1061,6 +1069,7 @@ async function refreshAndRerender() {
     // antes de reconstruir), así que no hace falta volver a navegar.
     pageFlip.updateFromHtml(buildFlipPages());
   }
+  state.justCompletedChallengeId = null;
   renderFrame();
 }
 
