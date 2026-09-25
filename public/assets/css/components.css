@@ -240,9 +240,9 @@
    interfiere con el drag-to-flip de StPageFlip. */
 .tap-hint {
   position: absolute;
-  right: 12%;
+  right: 0;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(50%, -50%);
   width: 40px;
   height: 40px;
   display: flex;
