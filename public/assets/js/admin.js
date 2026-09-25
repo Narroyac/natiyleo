@@ -330,42 +330,73 @@ function renderGallery() {
   const photos = db.submissions.filter((s) => s.photo_url);
   if (photos.length === 0) {
     grid.innerHTML = `<p class="panel-sub">Todavía no hay fotos subidas.</p>`;
+  } else {
+    grid.innerHTML = photos
+      .map((s) => {
+        const guest = db.guests.find((g) => g.id === s.guest_id);
+        const challenge = db.challenges.find((c) => c.id === s.challenge_id);
+        const media =
+          s.media_type === "video"
+            ? `<video src="${s.photo_url}" muted playsinline preload="metadata" controls></video>`
+            : `<img src="${s.photo_url}" alt="" loading="lazy" />`;
+        return `
+        <div class="gallery-item ${s.is_hidden ? "hidden-item" : ""}" data-id="${s.id}">
+          ${media}
+          <div class="gallery-meta">
+            <div class="gallery-guest">${escapeHtml(guest?.first_name || "—")}</div>
+            <div class="gallery-challenge">${escapeHtml(challenge?.title || "")}</div>
+            <button class="icon-btn toggle-hide-btn" style="width:100%">${s.is_hidden ? "Mostrar" : "Ocultar"}</button>
+          </div>
+        </div>
+      `;
+      })
+      .join("");
+
+    grid.querySelectorAll(".toggle-hide-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const item = btn.closest(".gallery-item");
+        const id = item.dataset.id;
+        const sub = db.submissions.find((s) => s.id === id);
+        const { error } = await supabase.from("submissions").update({ is_hidden: !sub.is_hidden }).eq("id", id);
+        if (error) return toast("No se pudo actualizar.", true);
+        sub.is_hidden = !sub.is_hidden;
+        renderGallery();
+      });
+    });
+  }
+
+  renderComments();
+  renderWishes();
+}
+
+/** Mensajes/deseos de texto (reto "Déjanos un mensaje") — se guardan en
+ * submissions.text_content, sin photo_url. A propósito nunca aparecen en
+ * la galería pública ni en get_public_gallery(); esta es la única vista
+ * para leerlos. */
+function renderWishes() {
+  const tbody = document.getElementById("wishes-tbody");
+  if (!tbody) return;
+  const wishes = db.submissions
+    .filter((s) => s.text_content && !s.photo_url)
+    .slice()
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  if (wishes.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="3" class="panel-sub">Todavía no hay mensajes.</td></tr>`;
     return;
   }
-  grid.innerHTML = photos
+  tbody.innerHTML = wishes
     .map((s) => {
       const guest = db.guests.find((g) => g.id === s.guest_id);
-      const challenge = db.challenges.find((c) => c.id === s.challenge_id);
-      const media =
-        s.media_type === "video"
-          ? `<video src="${s.photo_url}" muted playsinline preload="metadata" controls></video>`
-          : `<img src="${s.photo_url}" alt="" loading="lazy" />`;
+      const time = new Date(s.created_at).toLocaleString("es-CO", { dateStyle: "short", timeStyle: "short" });
       return `
-      <div class="gallery-item ${s.is_hidden ? "hidden-item" : ""}" data-id="${s.id}">
-        ${media}
-        <div class="gallery-meta">
-          <div class="gallery-guest">${escapeHtml(guest?.first_name || "—")}</div>
-          <div class="gallery-challenge">${escapeHtml(challenge?.title || "")}</div>
-          <button class="icon-btn toggle-hide-btn" style="width:100%">${s.is_hidden ? "Mostrar" : "Ocultar"}</button>
-        </div>
-      </div>
+      <tr>
+        <td>${escapeHtml(guest?.first_name || "—")}</td>
+        <td>${escapeHtml(s.text_content)}</td>
+        <td>${time}</td>
+      </tr>
     `;
     })
     .join("");
-
-  grid.querySelectorAll(".toggle-hide-btn").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const item = btn.closest(".gallery-item");
-      const id = item.dataset.id;
-      const sub = db.submissions.find((s) => s.id === id);
-      const { error } = await supabase.from("submissions").update({ is_hidden: !sub.is_hidden }).eq("id", id);
-      if (error) return toast("No se pudo actualizar.", true);
-      sub.is_hidden = !sub.is_hidden;
-      renderGallery();
-    });
-  });
-
-  renderComments();
 }
 
 function renderComments() {
