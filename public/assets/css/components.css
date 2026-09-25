@@ -122,6 +122,9 @@
 .btn-secondary:active { transform: scale(0.98); }
 
 /* ---------- info-banner ---------- */
+/* Sangra hasta el borde de la página (cancela el padding lateral de
+   .info-page-body) — el overflow:hidden + border-radius de .book-page se
+   encarga de recortarlo a las esquinas redondeadas de la página. */
 .info-banner {
   background: var(--slot);
   color: var(--navy-ink);
@@ -129,6 +132,7 @@
   font-size: 12px;
   line-height: 1.35;
   padding: var(--space-3) var(--space-2);
+  margin: 0 calc(var(--space-4) * -1);
   text-align: center;
 }
 .info-banner p { margin: 0 0 var(--space-2); }
