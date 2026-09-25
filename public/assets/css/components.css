@@ -207,7 +207,15 @@
  * cubrirlo del todo — un crossfade real, no un swap. Se dispara agregando
  * .is-stamping (una sola vez, ver justCompletedChallengeId en
  * passport.js); el fondo solo se agrega al HTML mientras dura la
- * transición. */
+ * transición.
+ *
+ * Es un transition (no @keyframes) que arranca cuando JS agrega
+ * .is-stamping-play (ver playStampingAnimations() en passport.js),
+ * DESPUÉS de que la imagen llena termine de cargar — no cuando se inserta
+ * el HTML. Motivo (confirmado con video): en una red lenta la imagen
+ * puede tardar más que la duración de la animación en descargarse; si la
+ * animación arranca al insertarse el HTML, para cuando la imagen por fin
+ * carga la animación ya terminó y se ve como que "aparece de golpe". */
 .stamp-slot.is-stamping { position: relative; }
 .stamp-slot.is-stamping .stamp-slot-ghost {
   position: absolute;
@@ -220,11 +228,11 @@
 .stamp-slot.is-stamping .stamp-slot-img {
   position: relative;
   z-index: 1;
-  animation: stamp-fade-in 0.8s ease forwards;
+  opacity: 0;
+  transition: opacity 0.8s ease;
 }
-@keyframes stamp-fade-in {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+.stamp-slot.is-stamping.is-stamping-play .stamp-slot-img {
+  opacity: 1;
 }
 /* A propósito NO se respeta prefers-reduced-motion acá (a pedido de Nati):
    es la transición central del sellado y debe verse siempre, para todos —

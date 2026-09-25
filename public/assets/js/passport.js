@@ -1158,9 +1158,30 @@ async function refreshAndRerender() {
     // updateFromHtml conserva la página actual (lee getCurrentPageIndex()
     // antes de reconstruir), así que no hace falta volver a navegar.
     pageFlip.updateFromHtml(buildFlipPages());
+    playStampingAnimations();
   }
   state.justCompletedChallengeId = null;
   renderFrame();
+}
+
+/** Dispara el fade de sellado (.is-stamping-play, ver components.css) recién
+ * cuando la imagen llena ya terminó de cargar — no al insertarse el HTML.
+ * En redes lentas la descarga de la imagen puede tardar más que la propia
+ * animación; si arrancara al insertarse, para cuando la imagen carga la
+ * animación ya habría terminado y se vería como que "aparece de golpe"
+ * (confirmado con un video real en celular). */
+function playStampingAnimations() {
+  document.querySelectorAll(".stamp-slot.is-stamping").forEach((slot) => {
+    const img = slot.querySelector(".stamp-slot-img");
+    if (!img) return;
+    const play = () => requestAnimationFrame(() => requestAnimationFrame(() => slot.classList.add("is-stamping-play")));
+    if (img.complete) {
+      play();
+    } else {
+      img.addEventListener("load", play, { once: true });
+      img.addEventListener("error", play, { once: true }); // que no quede en blanco si la carga falla
+    }
+  });
 }
 
 // ---------------------------------------------------------------------------
