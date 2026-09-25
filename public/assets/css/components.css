@@ -226,10 +226,10 @@
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .stamp-slot.is-stamping .stamp-slot-img { animation: none; opacity: 1; }
-  .stamp-slot.is-stamping .stamp-slot-ghost { display: none; }
-}
+/* A propósito NO se respeta prefers-reduced-motion acá (a pedido de Nati):
+   es la transición central del sellado y debe verse siempre, para todos —
+   a diferencia del tap-hint más abajo, que sí lo respeta por ser un
+   adorno secundario. */
 
 /* ---------- tap-hint ---------- */
 /* Indicador animado de "toca aquí" sobre la estampilla de confirmación,
