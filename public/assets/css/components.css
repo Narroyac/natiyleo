@@ -190,18 +190,31 @@
   filter: drop-shadow(0 4px 8px rgba(13, 31, 78, 0.18));
 }
 
-/* sellado: la estampilla "cae" desde arriba como un sello de verdad,
- * golpea con rebote+asentamiento, y el impacto suelta un anillo de tinta
- * que se expande y se desvanece. Se dispara agregando .is-stamping
- * (una sola vez, ver justCompletedChallengeId en passport.js). */
-.stamp-slot.is-stamping .stamp-slot-img {
-  animation: stamp-seal 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+/* sellado: el arte vacío se queda de fondo como un "fantasma" (opacidad
+ * baja) mientras el arte lleno se desvanece encima hasta cubrirlo del
+ * todo — como si la tinta fuera llenando el troquelado que ya estaba
+ * ahí — y el impacto suelta un anillo que se expande y se desvanece.
+ * Se dispara agregando .is-stamping (una sola vez, ver
+ * justCompletedChallengeId en passport.js). El fantasma (stamp-slot-ghost)
+ * solo se agrega al HTML mientras dura esta transición. */
+.stamp-slot.is-stamping { position: relative; }
+.stamp-slot.is-stamping .stamp-slot-ghost {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.3;
+  z-index: 0;
 }
-@keyframes stamp-seal {
-  0% { transform: translateY(-60px) scale(0.5) rotate(-18deg); opacity: 0; }
-  55% { transform: translateY(0) scale(1.14) rotate(5deg); opacity: 1; }
-  75% { transform: scale(0.95) rotate(-2deg); }
-  100% { transform: scale(1) rotate(0deg); }
+.stamp-slot.is-stamping .stamp-slot-img {
+  position: relative;
+  z-index: 1;
+  animation: stamp-fade-in 0.9s ease;
+}
+@keyframes stamp-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 .stamp-slot.is-stamping::after {
   content: "";
@@ -214,19 +227,16 @@
   border: 3px solid var(--navy);
   opacity: 0;
   pointer-events: none;
-  animation: stamp-ring 0.55s ease-out 0.42s;
+  animation: stamp-ring 0.55s ease-out 0.35s;
 }
 @keyframes stamp-ring {
   0% { transform: scale(0.4); opacity: 0.55; }
   100% { transform: scale(2.4); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .stamp-slot.is-stamping .stamp-slot-img { animation: stamp-seal-fade 0.3s ease; }
+  .stamp-slot.is-stamping .stamp-slot-img { animation: none; opacity: 1; }
+  .stamp-slot.is-stamping .stamp-slot-ghost { display: none; }
   .stamp-slot.is-stamping::after { animation: none; content: none; }
-}
-@keyframes stamp-seal-fade {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
 }
 
 /* ---------- passport-book (marco del libro) ---------- */
