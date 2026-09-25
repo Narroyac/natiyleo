@@ -378,10 +378,6 @@ function buildPageElement(page) {
 
   if (page.type === "stamps") {
     el.innerHTML = `
-      <div class="page-header">
-        <div class="page-title">Estampillas</div>
-        <div class="page-sub">Toca una para reclamarla</div>
-      </div>
       <div class="scatter" data-key="${page.key}">
         ${page.ids.map((c) => stampCellHtml(c)).join("")}
       </div>

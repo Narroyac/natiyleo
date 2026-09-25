@@ -252,7 +252,11 @@
    data-key porque los tamaños de cada estampilla no son simétricos. */
 .scatter {
   position: absolute;
-  top: 90px; left: 0; right: 0; bottom: 12px;
+  /* Antes dejaba 90px arriba para el título/subtítulo (ya quitados) y 12px
+     abajo; se reparte ese mismo total (102px) en partes iguales para
+     centrar el bloque verticalmente sin tocar las posiciones en % de las
+     estampillas dentro de él (son relativas a esta caja). */
+  top: 51px; left: 0; right: 0; bottom: 51px;
 }
 .scatter .stamp-cell {
   position: absolute;
