@@ -190,14 +190,43 @@
   filter: drop-shadow(0 4px 8px rgba(13, 31, 78, 0.18));
 }
 
-/* sellado: rebote + marca de tinta, se dispara agregando .is-stamping */
+/* sellado: la estampilla "cae" desde arriba como un sello de verdad,
+ * golpea con rebote+asentamiento, y el impacto suelta un anillo de tinta
+ * que se expande y se desvanece. Se dispara agregando .is-stamping
+ * (una sola vez, ver justCompletedChallengeId en passport.js). */
 .stamp-slot.is-stamping .stamp-slot-img {
-  animation: stamp-seal 0.4s var(--ease-page);
+  animation: stamp-seal 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes stamp-seal {
-  0% { transform: scale(0.4) rotate(-14deg); opacity: 0; }
-  60% { transform: scale(1.12) rotate(4deg); opacity: 1; }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  0% { transform: translateY(-60px) scale(0.5) rotate(-18deg); opacity: 0; }
+  55% { transform: translateY(0) scale(1.14) rotate(5deg); opacity: 1; }
+  75% { transform: scale(0.95) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+.stamp-slot.is-stamping::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 45%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 3px solid var(--navy);
+  opacity: 0;
+  pointer-events: none;
+  animation: stamp-ring 0.55s ease-out 0.42s;
+}
+@keyframes stamp-ring {
+  0% { transform: scale(0.4); opacity: 0.55; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stamp-slot.is-stamping .stamp-slot-img { animation: stamp-seal-fade 0.3s ease; }
+  .stamp-slot.is-stamping::after { animation: none; content: none; }
+}
+@keyframes stamp-seal-fade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 /* ---------- passport-book (marco del libro) ---------- */

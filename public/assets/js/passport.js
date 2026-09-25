@@ -51,6 +51,14 @@ const MENU_LABELS = {
     "Pechuga de pollo envuelta en tocineta con salsa de uchuva, puré cremoso de papa amarilla y canasta de vegetales en salsa de la casa.",
 };
 
+// Colombia no usa horario de verano (UTC-5 fijo), así que basta con el
+// offset explícito en vez de una librería de zonas horarias.
+const RESPONSE_DEADLINE = new Date("2026-11-01T00:00:00-05:00");
+const RESPONSE_DEADLINE_LABEL = "1 de noviembre a las 12:00 a.m. (hora Colombia)";
+function canModifyResponse() {
+  return Date.now() < RESPONSE_DEADLINE.getTime();
+}
+
 // Debe coincidir con 2 * minWidth de initFlipbook(): por debajo de este ancho
 // StPageFlip cambia a modo portrait (una sola página a la vez, igual que en
 // mobile); a partir de acá usa modo landscape (doble página, desktop).
@@ -557,21 +565,36 @@ function openChallengeModal(challenge) {
 
 function openRsvpModal(challenge, done) {
   els.modalTitle.textContent = challenge.title;
-  els.modalInstructions.textContent = done
-    ? `Ya confirmaste: ${state.guest.rsvp_status === "confirmed" ? "vas a asistir 🎉" : "no podrás asistir"}.`
-    : "Confírmanos si nos acompañas en nuestro día.";
-  els.modalBody.innerHTML = done
-    ? ""
-    : `
-    <div style="display:flex; gap:12px;">
-      <button class="btn" style="flex:1" id="rsvp-yes">Sí, ahí estaré</button>
-      <button class="btn btn-outline" style="flex:1" id="rsvp-no">No podré ir</button>
-    </div>
+
+  function renderChoice() {
+    els.modalInstructions.textContent = "Confírmanos si nos acompañas en nuestro día.";
+    els.modalBody.innerHTML = `
+      <div style="display:flex; gap:12px;">
+        <button class="btn" style="flex:1" id="rsvp-yes">Sí, ahí estaré</button>
+        <button class="btn btn-outline" style="flex:1" id="rsvp-no">No podré ir</button>
+      </div>
+    `;
+    document.getElementById("rsvp-yes").addEventListener("click", () => submitRsvp("confirmed"));
+    document.getElementById("rsvp-no").addEventListener("click", () => submitRsvp("declined"));
+  }
+
+  if (!done) {
+    renderChoice();
+    return openModal();
+  }
+
+  const canModify = canModifyResponse();
+  els.modalInstructions.textContent = `Ya confirmaste: ${state.guest.rsvp_status === "confirmed" ? "vas a asistir 🎉" : "no podrás asistir"}.`;
+  els.modalBody.innerHTML = `
+    <p class="modal-deadline-note">${
+      canModify
+        ? `Puedes modificar tu respuesta hasta el ${RESPONSE_DEADLINE_LABEL}.`
+        : `El plazo para modificar tu respuesta venció el ${RESPONSE_DEADLINE_LABEL}.`
+    }</p>
+    ${canModify ? `<button class="btn btn-outline" style="width:100%" id="rsvp-modify">Modificar respuesta</button>` : ""}
   `;
   openModal();
-  if (done) return;
-  document.getElementById("rsvp-yes").addEventListener("click", () => submitRsvp("confirmed"));
-  document.getElementById("rsvp-no").addEventListener("click", () => submitRsvp("declined"));
+  if (canModify) document.getElementById("rsvp-modify").addEventListener("click", renderChoice);
 }
 
 async function submitRsvp(status) {
@@ -583,54 +606,72 @@ async function submitRsvp(status) {
   await refreshAndRerender();
 }
 
-function openMenuModal(challenge, done, sub) {
+function openMenuModal(challenge, done) {
   els.modalTitle.textContent = challenge.title;
-  els.modalInstructions.textContent = done
-    ? `Ya elegiste tu menú: ${MENU_LABELS[state.guest.menu_choice]}`
-    : "Escoge tu opción para el día de la boda.";
-  if (done) {
-    els.modalBody.innerHTML = "";
+
+  function renderChoice() {
+    els.modalInstructions.textContent = "Escoge tu opción para el día de la boda.";
+    els.modalBody.innerHTML = `
+      <div class="menu-options">
+        <label class="menu-option"><input type="radio" name="menu" value="lomo" /> ${MENU_LABELS.lomo}</label>
+        <label class="menu-option"><input type="radio" name="menu" value="pechuga" /> ${MENU_LABELS.pechuga}</label>
+      </div>
+      <div class="field">
+        <label for="menu-notes">Restricciones o alergias (opcional)</label>
+        <textarea id="menu-notes" placeholder="Ej. alergia a los mariscos">${escapeHtml(state.guest.dietary_notes || "")}</textarea>
+      </div>
+      <button class="btn" id="menu-submit" style="width:100%" ${state.guest.menu_choice ? "" : "disabled"}>Confirmar menú</button>
+    `;
+    const radios = els.modalBody.querySelectorAll('input[name="menu"]');
+    const submitBtn = document.getElementById("menu-submit");
+    radios.forEach((r) => {
+      if (r.value === state.guest.menu_choice) {
+        r.checked = true;
+        r.closest(".menu-option").classList.add("selected");
+      }
+      r.addEventListener("change", () => {
+        els.modalBody.querySelectorAll(".menu-option").forEach((o) => o.classList.remove("selected"));
+        r.closest(".menu-option").classList.add("selected");
+        submitBtn.disabled = false;
+      });
+    });
+    submitBtn.addEventListener("click", async () => {
+      const choice = els.modalBody.querySelector('input[name="menu"]:checked')?.value;
+      if (!choice) return;
+      const notes = document.getElementById("menu-notes").value.trim();
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Guardando…";
+      const { error } = await supabase.rpc("submit_menu", { p_code: state.code, p_menu: choice, p_notes: notes || null });
+      if (error) {
+        toast("No se pudo guardar. Intenta de nuevo.", true);
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Confirmar menú";
+        return;
+      }
+      toast("¡Menú guardado!");
+      closeModal();
+      state.justCompletedChallengeId = challenge.id;
+      await refreshAndRerender();
+    });
+  }
+
+  if (!done) {
+    renderChoice();
     return openModal();
   }
+
+  const canModify = canModifyResponse();
+  els.modalInstructions.textContent = `Ya elegiste tu menú: ${MENU_LABELS[state.guest.menu_choice]}`;
   els.modalBody.innerHTML = `
-    <div class="menu-options">
-      <label class="menu-option"><input type="radio" name="menu" value="lomo" /> ${MENU_LABELS.lomo}</label>
-      <label class="menu-option"><input type="radio" name="menu" value="pechuga" /> ${MENU_LABELS.pechuga}</label>
-    </div>
-    <div class="field">
-      <label for="menu-notes">Restricciones o alergias (opcional)</label>
-      <textarea id="menu-notes" placeholder="Ej. alergia a los mariscos"></textarea>
-    </div>
-    <button class="btn" id="menu-submit" style="width:100%" disabled>Confirmar menú</button>
+    <p class="modal-deadline-note">${
+      canModify
+        ? `Puedes modificar tu elección hasta el ${RESPONSE_DEADLINE_LABEL}.`
+        : `El plazo para modificar tu elección venció el ${RESPONSE_DEADLINE_LABEL}.`
+    }</p>
+    ${canModify ? `<button class="btn btn-outline" style="width:100%" id="menu-modify">Modificar menú</button>` : ""}
   `;
   openModal();
-  const radios = els.modalBody.querySelectorAll('input[name="menu"]');
-  const submitBtn = document.getElementById("menu-submit");
-  radios.forEach((r) =>
-    r.addEventListener("change", () => {
-      els.modalBody.querySelectorAll(".menu-option").forEach((o) => o.classList.remove("selected"));
-      r.closest(".menu-option").classList.add("selected");
-      submitBtn.disabled = false;
-    })
-  );
-  submitBtn.addEventListener("click", async () => {
-    const choice = els.modalBody.querySelector('input[name="menu"]:checked')?.value;
-    if (!choice) return;
-    const notes = document.getElementById("menu-notes").value.trim();
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Guardando…";
-    const { error } = await supabase.rpc("submit_menu", { p_code: state.code, p_menu: choice, p_notes: notes || null });
-    if (error) {
-      toast("No se pudo guardar. Intenta de nuevo.", true);
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Confirmar menú";
-      return;
-    }
-    toast("¡Menú guardado!");
-    closeModal();
-    state.justCompletedChallengeId = challenge.id;
-    await refreshAndRerender();
-  });
+  if (canModify) document.getElementById("menu-modify").addEventListener("click", renderChoice);
 }
 
 function openTextModal(challenge, done, sub) {

@@ -379,6 +379,12 @@
 }
 .modal-sheet h2 { font-size: 20px; color: var(--navy); padding-right: 24px; }
 
+.modal-deadline-note {
+  font-size: 12.5px;
+  color: var(--navy-soft);
+  margin-bottom: var(--space-3);
+}
+
 .menu-options { display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-4); }
 .menu-option {
   border: 1.5px solid var(--navy-soft);
