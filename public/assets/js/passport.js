@@ -1152,7 +1152,14 @@ async function showCelebration() {
 els.celebrationClose.addEventListener("click", () => els.celebration.classList.remove("show"));
 
 async function refreshAndRerender() {
-  await loadData();
+  // Precarga la imagen llena de la estampilla recién completada EN PARALELO
+  // con loadData(), para que cuando updateFromHtml() reconstruya la página
+  // ya esté en caché — así el fantasma no se queda solo (ni la página en
+  // blanco) esperando a que la imagen llegue por red. playStampingAnimations()
+  // más abajo es el respaldo por si aun así no llegó a tiempo.
+  const pendingChallenge = state.challenges.find((c) => c.id === state.justCompletedChallengeId);
+  const preload = preloadImage(pendingChallenge?.icon_url ? storageUrl(pendingChallenge.icon_url) : null);
+  await Promise.all([loadData(), preload]);
   buildPages();
   if (pageFlip) {
     // updateFromHtml conserva la página actual (lee getCurrentPageIndex()
@@ -1164,12 +1171,27 @@ async function refreshAndRerender() {
   renderFrame();
 }
 
+/** Resuelve cuando la imagen ya está en caché del navegador (cargada u
+ * ocurrió un error), con un tope de 3s para no bloquear el rerender
+ * indefinidamente en una red muy mala. */
+function preloadImage(url, timeoutMs = 3000) {
+  return new Promise((resolve) => {
+    if (!url) return resolve();
+    const img = new Image();
+    img.onload = resolve;
+    img.onerror = resolve;
+    img.src = url;
+    setTimeout(resolve, timeoutMs);
+  });
+}
+
 /** Dispara el fade de sellado (.is-stamping-play, ver components.css) recién
  * cuando la imagen llena ya terminó de cargar — no al insertarse el HTML.
  * En redes lentas la descarga de la imagen puede tardar más que la propia
  * animación; si arrancara al insertarse, para cuando la imagen carga la
  * animación ya habría terminado y se vería como que "aparece de golpe"
- * (confirmado con un video real en celular). */
+ * (confirmado con un video real en celular). Con preloadImage() de arriba
+ * esto normalmente ya encuentra la imagen lista; queda como respaldo. */
 function playStampingAnimations() {
   document.querySelectorAll(".stamp-slot.is-stamping").forEach((slot) => {
     const img = slot.querySelector(".stamp-slot-img");
