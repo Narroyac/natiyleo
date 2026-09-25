@@ -167,8 +167,18 @@ main > * + * { margin-top: var(--section-gap); }
 /* Hero — ocupa exactamente el viewport, sin scroll extra                 */
 /* ---------------------------------------------------------------------- */
 .hero {
+  /* 100dvh es el valor moderno correcto, pero algunos navegadores
+     integrados (el de WhatsApp en iOS, por ejemplo) lo calculan mal —
+     reportan más alto de lo que realmente se ve. --vh (medida por JS en
+     home.js con window.innerHeight, que esos navegadores sí reportan
+     bien) va al final para pisarlo; si por algo JS no corrió todavía,
+     var(--vh, 1vh) cae de vuelta a 100vh y no a 0. */
+  height: 100vh;
   height: 100dvh;
+  height: calc(var(--vh, 1vh) * 100);
+  min-height: 100vh;
   min-height: 100dvh;
+  min-height: calc(var(--vh, 1vh) * 100);
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;

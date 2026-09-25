@@ -7,6 +7,22 @@
 
 import { lookupGuestByCode, getUrlCode, getSavedCode, saveCode } from "./entry-core.js";
 
+// El hero usa "calc(var(--vh, 1vh) * 100)" en vez de 100dvh directamente
+// (ver .hero en home.css): algunos navegadores integrados (el de WhatsApp
+// en iOS, por ejemplo) calculan mal dvh/vh — reportan una altura mayor a
+// la que realmente se ve, así que el contenido anclado al fondo del hero
+// (el botón "¡Allá estaré!") termina flotando sobre la sección de abajo.
+// window.innerHeight sí lo reportan bien esos navegadores, así que lo
+// medimos por JS y lo exponemos como variable CSS.
+(function fixViewportHeight() {
+  function setVh() {
+    document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
+  }
+  setVh();
+  window.addEventListener("resize", setVh);
+  window.addEventListener("orientationchange", setVh);
+})();
+
 const form = document.getElementById("rsvp-form");
 const input = document.getElementById("rsvp-code-input");
 const submitBtn = document.getElementById("rsvp-submit");
