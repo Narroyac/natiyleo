@@ -725,24 +725,20 @@ function siteUrl() {
 function whatsappMessage(guest) {
   const site = siteUrl();
   const passport = guestUrl(guest.code);
-  return `¡Hola, ${guest.first_name}! 💌
+  return `🤍¡Hola, ${guest.first_name}! 🤍
 
-Nos hace muy felices compartir contigo este momento tan especial.
+¡Ya falta poco! Te compartimos dos enlaces importantes para nuestra boda:
 
-Aquí encuentras toda la información de nuestra boda:
+💌 *Invitación:* aquí encuentras ubicación, horarios y todos los detalles:
 ${site}
 
-Y este es tu *Pasaporte de Boda* ✨
-Allí podrás confirmar tu asistencia, elegir la proteína de tu preferencia y, el día de la boda, completar algunos retos:
-
+📷 *Tu Pasaporte de Boda:* confirma tu asistencia, elige tu proteína y úsalo el día de la boda para completar algunos retos:
 ${passport}
 
-Tu código personal es: *${guest.code}*
+*Tu código:* ${guest.code}
 
-Nos emociona muchísimo celebrar contigo. 💙
-Si tienes alguna duda, escríbenos con toda confianza.
-
-Nati & Leo`;
+Nos emociona muchísimo celebrar contigo.
+Nati & Leo 💙`;
 }
 
 function renderLinks() {
