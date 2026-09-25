@@ -190,53 +190,18 @@
   filter: drop-shadow(0 4px 8px rgba(13, 31, 78, 0.18));
 }
 
-/* sellado: el arte vacío se queda de fondo como un "fantasma" (opacidad
- * baja) mientras el arte lleno se desvanece encima hasta cubrirlo del
- * todo — como si la tinta fuera llenando el troquelado que ya estaba
- * ahí — y el impacto suelta un anillo que se expande y se desvanece.
- * Se dispara agregando .is-stamping (una sola vez, ver
- * justCompletedChallengeId en passport.js). El fantasma (stamp-slot-ghost)
- * solo se agrega al HTML mientras dura esta transición. */
-.stamp-slot.is-stamping { position: relative; }
-.stamp-slot.is-stamping .stamp-slot-ghost {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  opacity: 0.3;
-  z-index: 0;
-}
+/* sellado: el arte lleno simplemente se desvanece hasta aparecer, como si
+ * se hubiera pegado sobre la hoja. Se dispara agregando .is-stamping (una
+ * sola vez, ver justCompletedChallengeId en passport.js). */
 .stamp-slot.is-stamping .stamp-slot-img {
-  position: relative;
-  z-index: 1;
-  animation: stamp-fade-in 0.9s ease;
+  animation: stamp-fade-in 0.6s ease;
 }
 @keyframes stamp-fade-in {
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
-.stamp-slot.is-stamping::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 45%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 3px solid var(--navy);
-  opacity: 0;
-  pointer-events: none;
-  animation: stamp-ring 0.55s ease-out 0.35s;
-}
-@keyframes stamp-ring {
-  0% { transform: scale(0.4); opacity: 0.55; }
-  100% { transform: scale(2.4); opacity: 0; }
-}
 @media (prefers-reduced-motion: reduce) {
   .stamp-slot.is-stamping .stamp-slot-img { animation: none; opacity: 1; }
-  .stamp-slot.is-stamping .stamp-slot-ghost { display: none; }
-  .stamp-slot.is-stamping::after { animation: none; content: none; }
 }
 
 /* ---------- passport-book (marco del libro) ---------- */

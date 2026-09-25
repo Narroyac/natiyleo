@@ -240,17 +240,9 @@ function stampCellHtml(challenge, { variant, caption } = {}) {
   const src = done ? challenge.icon_url : challenge.icon_empty_url;
   const variantClass = src ? ` passport-stamp${variant ? ` passport-stamp--${variant}` : ""}` : "";
   const justCompleted = done && challenge.id === state.justCompletedChallengeId;
-  // Mientras dura la transición, el arte vacío se queda debajo como
-  // "fantasma" (ver .stamp-slot.is-stamping .stamp-slot-ghost) y el arte
-  // lleno se desvanece encima hasta cubrirlo del todo.
-  const ghostImg =
-    justCompleted && challenge.icon_empty_url
-      ? `<img class="stamp-slot-ghost" src="${storageUrl(challenge.icon_empty_url)}" alt="" aria-hidden="true" />`
-      : "";
   const inner = src
     ? `
       <button class="stamp-slot${variantClass}${done ? " is-done" : ""}${justCompleted ? " is-stamping" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
-        ${ghostImg}
         <img class="stamp-slot-img" src="${storageUrl(src)}" alt="${escapeHtml(label)}" />
       </button>
     `
