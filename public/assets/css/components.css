@@ -231,6 +231,53 @@
   .stamp-slot.is-stamping .stamp-slot-ghost { display: none; }
 }
 
+/* ---------- tap-hint ---------- */
+/* Indicador animado de "toca aquí" sobre la estampilla de confirmación,
+   solo la primera vez que el invitado abre su pasaporte (ver
+   hasSeenTapHint()/markTapHintSeen() en passport.js). Vive como hijo
+   directo del botón .stamp-slot, así que hereda pointer-events:none de
+   ".stamp-slot > *" (passport.css) y nunca bloquea el click real ni
+   interfiere con el drag-to-flip de StPageFlip. */
+.tap-hint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tap-hint-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--accent-pink);
+  animation: tap-hint-ring 1.4s ease-out infinite;
+}
+.tap-hint-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-pink);
+  animation: tap-hint-dot 1.4s ease-in-out infinite;
+}
+@keyframes tap-hint-ring {
+  0% { transform: scale(0.4); opacity: 0.9; }
+  70% { opacity: 0; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes tap-hint-dot {
+  0%, 100% { transform: scale(1); }
+  30% { transform: scale(0.7); }
+  45% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tap-hint-ring { animation: none; opacity: 0; }
+  .tap-hint-dot { animation: none; }
+}
+
 /* ---------- passport-book (marco del libro) ---------- */
 .passport-book {
   position: relative;

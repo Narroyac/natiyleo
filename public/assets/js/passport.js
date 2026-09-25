@@ -59,6 +59,28 @@ function canModifyResponse() {
   return Date.now() < RESPONSE_DEADLINE.getTime();
 }
 
+// Hint animado ("toca aquí") sobre la estampilla de confirmación — solo la
+// primera vez que el invitado abre su pasaporte, hasta que toque cualquier
+// estampilla por primera vez. Persistido en localStorage (mismo patrón que
+// GUEST_CODE_KEY en supabase-client.js) para que no vuelva a aparecer en
+// visitas futuras del mismo navegador.
+const TAP_HINT_SEEN_KEY = "pasaporte_tap_hint_seen";
+function hasSeenTapHint() {
+  try {
+    return localStorage.getItem(TAP_HINT_SEEN_KEY) === "1";
+  } catch {
+    return true; // sin localStorage no podemos recordar, mejor no insistir
+  }
+}
+function markTapHintSeen() {
+  document.querySelectorAll(".tap-hint").forEach((el) => el.remove());
+  try {
+    localStorage.setItem(TAP_HINT_SEEN_KEY, "1");
+  } catch {
+    /* localStorage no disponible, seguimos sin recordarlo */
+  }
+}
+
 // Debe coincidir con 2 * minWidth de initFlipbook(): por debajo de este ancho
 // StPageFlip cambia a modo portrait (una sola página a la vez, igual que en
 // mobile); a partir de acá usa modo landscape (doble página, desktop).
@@ -233,8 +255,11 @@ function stampIndexLabel(challenge) {
  * subido, cae de vuelta al recuadro genérico con label + "+" para no dejar
  * la estampilla en blanco. `variant` es opcional y solo aplica el tamaño
  * especial de confirmar/menú (passport-stamp--confirm/--menu); `caption`
- * por defecto es "Reto N", pero confirmar/menú pasan su propio texto. */
-function stampCellHtml(challenge, { variant, caption } = {}) {
+ * por defecto es "Reto N", pero confirmar/menú pasan su propio texto.
+ * `showTapHint` agrega el indicador animado de "toca aquí" (ver .tap-hint
+ * en components.css) — hijo del botón para heredar el pointer-events:none
+ * de ".stamp-slot > *" y no interferir con el click ni con StPageFlip. */
+function stampCellHtml(challenge, { variant, caption, showTapHint } = {}) {
   const done = isDone(challenge);
   const label = SHORT_LABEL[challenge.sort_order] || challenge.title;
   const src = done ? challenge.icon_url : challenge.icon_empty_url;
@@ -247,11 +272,15 @@ function stampCellHtml(challenge, { variant, caption } = {}) {
     justCompleted && challenge.icon_empty_url
       ? `<img class="stamp-slot-ghost" src="${storageUrl(challenge.icon_empty_url)}" alt="" aria-hidden="true" />`
       : "";
+  const tapHint = showTapHint
+    ? `<span class="tap-hint" aria-hidden="true"><span class="tap-hint-ring"></span><span class="tap-hint-dot"></span></span>`
+    : "";
   const inner = src
     ? `
       <button class="stamp-slot${variantClass}${done ? " is-done" : ""}${justCompleted ? " is-stamping" : ""}" data-challenge-id="${challenge.id}" aria-label="${escapeHtml(challenge.title)}">
         ${ghostImg}
         <img class="stamp-slot-img" src="${storageUrl(src)}" alt="${escapeHtml(label)}" />
+        ${tapHint}
       </button>
     `
     : `
@@ -271,6 +300,7 @@ function stampCellHtml(challenge, { variant, caption } = {}) {
 function bindStampSlotHandlers(container) {
   container.querySelectorAll(".stamp-slot").forEach((btn) => {
     btn.addEventListener("click", () => {
+      markTapHintSeen();
       const challengeId = btn.dataset.challengeId;
       const challenge = state.challenges.find((c) => c.id === challengeId);
       if (challenge) openChallengeModal(challenge);
@@ -366,7 +396,7 @@ function buildPageElement(page) {
             </div>
           </div>
           <div class="info-grid-stamps">
-            ${page.rsvp ? stampCellHtml(page.rsvp, { variant: "confirm", caption: "Reto 1 - Confirmación" }) : ""}
+            ${page.rsvp ? stampCellHtml(page.rsvp, { variant: "confirm", caption: "Reto 1 - Confirmación", showTapHint: !hasSeenTapHint() && progressCount().done === 0 }) : ""}
             ${page.menu ? stampCellHtml(page.menu, { variant: "menu", caption: "Reto 2 - Elegir proteína" }) : ""}
           </div>
         </div>
