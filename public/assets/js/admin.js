@@ -782,6 +782,8 @@ function renderLinks() {
         <td>${escapeHtml(g.code)}</td>
         <td style="max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${guestUrl(g.code)}</td>
         <td><button class="icon-btn copy-link-btn">Copiar mensaje</button></td>
+        <td style="text-align:center;"><input type="checkbox" class="sent-check" data-field="invitation_sent" style="width:20px; height:20px; margin:0;" ${g.invitation_sent ? "checked" : ""} /></td>
+        <td style="text-align:center;"><input type="checkbox" class="sent-check" data-field="reminder_sent" style="width:20px; height:20px; margin:0;" ${g.reminder_sent ? "checked" : ""} /></td>
       </tr>
     `
     )
@@ -793,6 +795,23 @@ function renderLinks() {
       const guest = db.guests.find((g) => g.id === id);
       await navigator.clipboard.writeText(whatsappMessage(guest));
       toast("Mensaje copiado.");
+    });
+  });
+
+  // Casillas "Invitación"/"Recordatorio": marca manual, solo para llevar
+  // control de a quién ya le escribieron — no dispara ningún envío.
+  tbody.querySelectorAll(".sent-check").forEach((checkbox) => {
+    checkbox.addEventListener("change", async () => {
+      const id = checkbox.closest("tr").dataset.id;
+      const field = checkbox.dataset.field;
+      const value = checkbox.checked;
+      const { error } = await supabase.from("guests").update({ [field]: value }).eq("id", id);
+      if (error) {
+        checkbox.checked = !value;
+        return toast("No se pudo guardar.", true);
+      }
+      const guest = db.guests.find((g) => g.id === id);
+      guest[field] = value;
     });
   });
 }
