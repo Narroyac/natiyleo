@@ -33,7 +33,7 @@
   opacity: 0.3;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.page-dots .dot.active { opacity: 1; transform: scale(1.25); }
+.page-dots .dot.active { opacity: 1; transform: scale(1.25); background: var(--accent-pink); }
 
 /* ---------------------------------------------------------------------
    Motor de page-flip: StPageFlip (vendorizado en
@@ -393,8 +393,8 @@
   display: flex; align-items: center; gap: var(--space-3);
   text-align: left;
 }
-.menu-option.selected { border-color: var(--navy); background: rgba(13, 31, 78,0.06); }
-.menu-option input { accent-color: var(--navy); width: 18px; height: 18px; }
+.menu-option.selected { border-color: var(--accent-pink); background: rgba(236, 38, 129, 0.08); }
+.menu-option input { accent-color: var(--accent-pink); width: 18px; height: 18px; }
 
 .upload-zone {
   border: 1.5px dashed var(--navy-soft);
@@ -417,9 +417,9 @@
   width: 100px; height: 100px;
   margin: 0 auto var(--space-4);
   border-radius: 50%;
-  border: 3px solid var(--navy);
+  border: 3px solid var(--accent-pink);
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-serif);
   font-size: 34px;
-  color: var(--navy);
+  color: var(--accent-pink);
 }

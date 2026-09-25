@@ -3,6 +3,14 @@
    define color/tipografía/radio propio. Ver components.md para el
    inventario documentado con fragmentos HTML de cada uno. */
 
+:root {
+  /* Acento rosa exclusivo del Pasaporte, usado en momentos interactivos/
+     celebratorios (progreso, medalla, selección). A propósito NO vive en
+     tokens.css: ese archivo también lo carga el home (index.html), que no
+     debe llevar ningún cambio visual. */
+  --accent-pink: #ec2681;
+}
+
 /* ---------- greeting ---------- */
 .greeting {
   padding: var(--space-5) var(--space-4) var(--space-3);
@@ -56,7 +64,7 @@
 .progress-bar .progress-fill {
   height: 100%;
   border-radius: 999px;
-  background: var(--navy);
+  background: var(--accent-pink);
   width: 0%;
   transition: width 0.5s var(--ease-page);
 }
