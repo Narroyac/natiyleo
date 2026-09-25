@@ -715,29 +715,38 @@ function openMenuModal(challenge, done) {
 
 function openTextModal(challenge, done, sub) {
   els.modalTitle.textContent = challenge.title;
-  els.modalInstructions.textContent = done
-    ? "Ya enviaste tu deseo. Solo los novios pueden leerlo — no aparece en la galería."
-    : "Este mensaje solo lo van a leer Nati y Leo, no aparece en la galería pública.";
-  if (done) {
-    els.modalBody.innerHTML = `<p style="font-style:italic;">${escapeHtml(sub?.text_content || "")}</p>`;
+
+  function renderForm(existingText) {
+    els.modalInstructions.textContent = "Este mensaje solo lo van a leer Nati y Leo, no aparece en la galería pública.";
+    els.modalBody.innerHTML = `
+      <div class="field">
+        <label for="wish-text">Tu deseo</label>
+        <textarea id="wish-text" rows="5" placeholder="Escribe aquí…">${escapeHtml(existingText || "")}</textarea>
+      </div>
+      <button class="btn" id="wish-submit" style="width:100%">${existingText ? "Guardar cambios" : "Enviar deseo"}</button>
+    `;
+    document.getElementById("wish-submit").addEventListener("click", async () => {
+      const text = document.getElementById("wish-text").value.trim();
+      if (!text) return toast("Escribe algo antes de enviar.", true);
+      const btn = document.getElementById("wish-submit");
+      btn.disabled = true;
+      btn.textContent = "Enviando…";
+      await submitChallengeAndCelebrate(challenge, { text_content: text, isEdit: done });
+    });
+  }
+
+  if (!done) {
+    renderForm();
     return openModal();
   }
+
+  els.modalInstructions.textContent = "Ya enviaste tu deseo. Solo los novios pueden leerlo — no aparece en la galería.";
   els.modalBody.innerHTML = `
-    <div class="field">
-      <label for="wish-text">Tu deseo</label>
-      <textarea id="wish-text" rows="5" placeholder="Escribe aquí…"></textarea>
-    </div>
-    <button class="btn" id="wish-submit" style="width:100%">Enviar deseo</button>
+    <p style="font-style:italic;">${escapeHtml(sub?.text_content || "")}</p>
+    <button class="btn btn-outline" style="width:100%; margin-top:12px;" id="wish-modify">Modificar deseo</button>
   `;
   openModal();
-  document.getElementById("wish-submit").addEventListener("click", async () => {
-    const text = document.getElementById("wish-text").value.trim();
-    if (!text) return toast("Escribe algo antes de enviar.", true);
-    const btn = document.getElementById("wish-submit");
-    btn.disabled = true;
-    btn.textContent = "Enviando…";
-    await submitChallengeAndCelebrate(challenge, { text_content: text });
-  });
+  document.getElementById("wish-modify").addEventListener("click", () => renderForm(sub?.text_content));
 }
 
 /** Redimensiona y comprime una foto en el navegador antes de subirla (fotos de
