@@ -760,7 +760,7 @@ function whatsappMessage(guest) {
 
 ¡Ya falta poco! Te compartimos dos enlaces importantes para nuestra boda:
 
-💌 *Invitación:* aquí encuentras ubicación, horarios y todos los detalles:
+💌 *Información general:* aquí encuentras ubicación, horarios y todos los detalles:
 ${site}
 
 📷 *Tu Pasaporte de Boda:* confirma tu asistencia, elige tu proteína y úsalo el día de la boda para completar algunos retos:
