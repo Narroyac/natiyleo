@@ -184,11 +184,26 @@
 /* estampillas grandes de la página "info" — el arte (vacío/lleno) ya trae
  * el texto incrustado, así que acá solo se dimensiona la imagen. */
 .passport-stamp {
+  position: relative;
   background: none;
   border: none;
   padding: 0;
   border-radius: 0;
   flex: 0 0 auto;
+}
+/* Área táctil invisible más grande que la imagen (la de "menú" en
+ * particular queda angosta — 60% del ancho de la página). El pseudo-
+ * elemento no cambia el tamaño de la imagen ni del layout, pero sí cuenta
+ * como parte del botón para el hit-test: un toque que caiga apenas afuera
+ * del arte visible sigue resolviendo el target al <button> mismo, que es
+ * justo lo que necesita StPageFlip (page-flip.module.js, checkTarget())
+ * para reenviar el click en vez de tomarlo como inicio de arrastre de
+ * página — con dedos reales (menos precisos que un mouse) un toque al
+ * borde del arte podía caer justo afuera del botón. */
+.passport-stamp::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
 }
 .passport-stamp img { width: 100%; height: auto; display: block; }
 .passport-stamp.is-done img { filter: drop-shadow(0 4px 8px rgba(13, 31, 78, 0.18)); }
