@@ -313,6 +313,21 @@ function bindStampSlotHandlers(container) {
   });
 }
 
+/** Evita que un toque/arrastre que empieza dentro de esta página dispare
+ * el gesto de cambio de página de StPageFlip — mousedown/touchstart están
+ * escuchados en window (page-flip.module.js), así que cortar la
+ * propagación acá arriba (antes de llegar a window) es suficiente. Los
+ * clicks en botones/links de la propia página no se ven afectados (sus
+ * listeners ya corrieron antes de burbujear hasta acá), y las flechas de
+ * navegación tampoco (usan flipPrev()/flipNext() directo, no el gesto de
+ * arrastre) — solo se pierde la posibilidad de arrastrar para pasar de
+ * página empezando el gesto justo sobre esta página. */
+function disablePageFlipGesture(el) {
+  const stop = (e) => e.stopPropagation();
+  el.addEventListener("mousedown", stop);
+  el.addEventListener("touchstart", stop, { passive: true });
+}
+
 /** Descarga la imagen de recuerdo directo (sin pasar por una pestaña
  * nueva). En mobile usa el share sheet nativo (navigator.share con un
  * File), que en iOS/Android trae "Guardar en Fotos" a un toque — ahí no
@@ -407,6 +422,7 @@ function buildPageElement(page) {
         </div>
       </div>
     `;
+    disablePageFlipGesture(el);
     bindStampSlotHandlers(el);
     return el;
   }
