@@ -13,14 +13,22 @@
 
 .podio-shell {
   display: none;
-  min-height: 100vh;
   flex-direction: column;
-  gap: var(--space-6);
-  background: radial-gradient(ellipse at top, #ffffff 0%, var(--cream) 55%, var(--cream-deep) 100%);
+  background: var(--cream);
   color: var(--navy);
-  padding: var(--space-6) var(--space-7) var(--space-7);
 }
 .podio-shell.show { display: flex; }
+
+/* Primera pantalla: header + podio + leyenda ocupan exactamente el alto de
+   la ventana al cargar. El ranking de todos los invitados vive fuera de
+   este bloque, más abajo — hay que hacer scroll para verlo, a propósito. */
+.podio-first-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-7) var(--space-7);
+}
 
 /* ---------- header ---------- */
 .podio-header {
@@ -73,7 +81,8 @@
    render). */
 .podio-podium-stage {
   position: relative;
-  min-height: 340px;
+  flex: 1;
+  min-height: 280px;
   padding-top: 60px;
   overflow: hidden;
 }
@@ -84,7 +93,22 @@
   align-items: flex-end;
   justify-content: center;
   gap: var(--space-3);
+  height: 100%;
   padding: 0 var(--space-4);
+}
+
+/* Tapete del podio — la franja de color debajo de los escalones, como el
+   tapete rojo del mockup (acá en navy). Ancho fijo centrado, apenas más
+   angosto que el trío de escalones para que sobresalgan un poco a los
+   lados, como en la referencia. */
+.podio-carpet {
+  position: relative;
+  z-index: 1;
+  height: 22px;
+  width: min(560px, 86%);
+  margin: 0 auto;
+  background: var(--navy);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
 }
 .podio-empty-msg {
   align-self: center;
@@ -175,6 +199,10 @@
   color: var(--navy);
 }
 .pedestal-card.rank-1 .pedestal-medal { width: 56px; height: 56px; font-size: 24px; }
+/* Sin medalla real todavía (en vivo, no confirmado): un punto chico en vez
+   de un círculo grande vacío — el número de puesto ya se ve una sola vez,
+   grande, en el escalón. */
+.pedestal-medal:empty { width: 10px; height: 10px; margin-bottom: var(--space-3); }
 .pedestal-card.is-official.rank-1 .pedestal-medal { background: var(--accent-pink); color: var(--white); }
 .pedestal-card.is-official.rank-2 .pedestal-medal { background: var(--navy); color: var(--cream); }
 .pedestal-card.is-official.rank-3 .pedestal-medal { background: var(--navy-soft); color: var(--white); }
@@ -267,14 +295,15 @@
 .legend-dot-live { background: var(--navy-soft); }
 
 /* ---------- ranking (all guests) ---------- */
+/* Sección aparte, fuera de .podio-first-screen (que ya ocupa el 100vh
+   inicial) — queda debajo del pliegue, se llega a ella con scroll. */
 .podio-ranking-wrap {
-  flex: 1;
   background: var(--paper);
   border: 1px solid var(--cream-deep);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
   padding: var(--space-5);
-  min-height: 0;
+  margin: 0 var(--space-7) var(--space-7);
   display: flex;
   flex-direction: column;
 }
@@ -338,7 +367,8 @@
 }
 
 @media (max-width: 900px) {
-  .podio-shell { padding: var(--space-5); }
+  .podio-first-screen { padding: var(--space-5); }
+  .podio-ranking-wrap { margin: 0 var(--space-5) var(--space-5); }
   .podio-timer { font-size: 44px; }
   .podio-podium { flex-wrap: wrap; }
   .pedestal-card { width: 44%; }

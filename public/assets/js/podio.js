@@ -176,12 +176,15 @@ function renderPodium() {
     return;
   }
 
+  // El número de puesto solo se muestra UNA vez (el grande, de fondo, en el
+  // escalón — ver .pedestal-base::before en podio.css); ni la medalla ni el
+  // texto del escalón lo repiten.
   const medal = ["🥇", "🥈", "🥉"];
   els.podium.innerHTML = contenders
     .map(({ g, count, isComplete, isOfficialWinner }, i) => {
       const rank = i + 1;
       const cardClass = isOfficialWinner ? "is-official" : "is-live";
-      const medalContent = isOfficialWinner ? medal[i] || rank : `#${rank}`;
+      const medalContent = isOfficialWinner ? medal[i] || "🏅" : "";
       let statusHtml;
       if (isOfficialWinner) {
         const time = new Date(g.completed_at).toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
@@ -191,7 +194,7 @@ function renderPodium() {
       } else {
         statusHtml = `<div class="pedestal-live"><span class="live-dot"></span>${count}/${total} estampillas</div>`;
       }
-      const baseLabel = isOfficialWinner ? `#${rank} · Ganador` : `#${rank}`;
+      const baseLabel = isOfficialWinner ? "Ganador" : isComplete ? "Completo" : "En vivo";
       return `
       <div class="pedestal-card rank-${rank} ${cardClass}">
         <div class="pedestal-info">
