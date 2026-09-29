@@ -194,10 +194,12 @@ function renderPodium() {
       const baseLabel = isOfficialWinner ? `#${rank} · Ganador` : `#${rank}`;
       return `
       <div class="pedestal-card rank-${rank} ${cardClass}">
-        <div class="pedestal-medal">${medalContent}</div>
-        <div class="pedestal-name">${escapeHtml(displayName(g))}</div>
-        <div class="pedestal-table">${g.table_number ? `Mesa ${g.table_number}` : ""}</div>
-        ${statusHtml}
+        <div class="pedestal-info">
+          <div class="pedestal-medal">${medalContent}</div>
+          <div class="pedestal-name">${escapeHtml(displayName(g))}</div>
+          <div class="pedestal-table">${g.table_number ? `Mesa ${g.table_number}` : ""}</div>
+          ${statusHtml}
+        </div>
         <div class="pedestal-base">${baseLabel}</div>
       </div>
     `;
