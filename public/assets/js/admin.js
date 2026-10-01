@@ -165,6 +165,7 @@ function renderGuestsTable() {
         <td style="font-variant-numeric: tabular-nums;">${escapeHtml(g.code)}</td>
         <td>${rsvpBadge(g.rsvp_status)}</td>
         <td>${menuLabel(g.menu_choice)}</td>
+        <td>${escapeHtml(g.dietary_notes || "—")}</td>
         <td><input class="inline-input table-input" data-field="table_number" type="number" min="1" style="width:64px" value="${g.table_number ?? ""}" placeholder="—" /></td>
         <td><span class="badge badge-count">${done}/${total}</span></td>
         <td>${myBadges.map((b) => `<span class="role-chip">${escapeHtml(b.label)}</span>`).join("") || "—"}</td>
